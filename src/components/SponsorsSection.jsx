@@ -1,0 +1,143 @@
+import SectionHeader from './SectionHeader';
+import IdCardGenerator from './IdCardGenerator';
+
+export default function SponsorsSection() {
+  return (
+    <section id="sponsors" className="relative z-10 section-pad overflow-hidden">
+
+      {/* Bg glow */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] pointer-events-none"
+        style={{ background: 'radial-gradient(ellipse, var(--glow) 0%, transparent 70%)' }} />
+
+      <div className="max-container">
+        <SectionHeader
+          label="Our Partners"
+          title="Sponsors & Partners"
+          sub="We thank our sponsors and partners for supporting AI Conclave 3.0 and helping us create impactful learning experiences."
+        />
+
+        {/* Flat, equal grid — no tier hierarchy */}
+        <div className="relative py-20">
+          {/* Background Glow */}
+          <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-[140px]" />
+
+          <div
+            className="
+              flex flex-col lg:flex-row
+              justify-center items-center
+              gap-12 lg:gap-24
+              [perspective:1200px]
+            "
+          >
+            {[
+              {
+                src: new URL(
+                  "../assets/icons/gdg white logo.png",
+                  import.meta.url
+                ).toString(),
+                alt: "Group",
+              },
+              {
+                src: new URL(
+                  "../assets/icons/Mask group.png",
+                  import.meta.url
+                ).toString(),
+                alt: "Mask group",
+              },
+            ].map((img, idx) => (
+              <div
+                key={idx}
+                className={`
+                  relative group
+                  w-[280px] sm:w-[340px]
+                  h-[170px] sm:h-[210px]
+                  rounded-[40px]
+                  overflow-hidden
+                  backdrop-blur-2xl
+                  border border-cyan-400/20
+                  bg-white/5
+                  shadow-[0_0_50px_rgba(0,255,255,0.15)]
+                  transition-all duration-700
+                  hover:scale-110
+                  hover:rotate-0
+                  hover:shadow-[0_0_80px_rgba(0,255,255,0.35)]
+                  ${
+                    idx === 0
+                      ? "float-left rotate-[-8deg]"
+                      : "float-right rotate-[8deg]"
+                  }
+                `}
+                style={{
+                  transformStyle: "preserve-3d",
+                }}
+              >
+                {/* Animated Gradient */}
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10" />
+
+                {/* Moving Shine */}
+                <div className="
+                  absolute
+                  -left-40
+                  top-0
+                  h-full
+                  w-32
+                  rotate-12
+                  bg-white/10
+                  blur-xl
+                  transition-all
+                  duration-1000
+                  group-hover:left-[120%]
+                " />
+
+                {/* Inner Glass */}
+                <div className="absolute inset-2 rounded-[32px] border border-white/10 bg-black/30" />
+
+                {/* Logo */}
+                <div
+                  className="
+                    relative z-10
+                    flex h-full w-full
+                    items-center justify-center
+                  "
+                  style={{
+                    transform: "translateZ(50px)",
+                  }}
+                >
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="
+                      max-w-[78%]
+                      max-h-[78%]
+                      object-contain
+                      transition-all
+                      duration-700
+                      group-hover:scale-110
+                    "
+                  />
+                </div>
+
+                {/* Bottom Glow */}
+                <div className="
+                  absolute bottom-0 left-1/2
+                  h-10 w-48
+                  -translate-x-1/2
+                  rounded-full
+                  bg-cyan-400/30
+                  blur-3xl
+                " />
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+          {/* Create Event ID Card */}
+          <div id="badge-section" className="mt-16 relative rounded-3xl p-0 sm:p-0">
+            <IdCardGenerator />
+          </div>
+        </div>
+    </section>
+  );
+}
+

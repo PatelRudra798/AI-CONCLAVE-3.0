@@ -1,0 +1,161 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Sora:wght@300;400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ══════════════════════════════════════════════════
+   DARK MODE (default) — original cyan / purple deep-space theme
+   ══════════════════════════════════════════════════ */
+:root {
+  --bg:          #060B14;
+  --bg2:         #0A1325;
+  --card:        #0C1826;
+  --card2:       #0F1E30;
+  --card-border: rgba(0,229,255,0.12);
+  --text:        #D8E8F5;
+  --muted:       #6B8299;
+  --nav-bg:      rgba(6,11,20,0.88);
+  --scroll-bg:   #060B14;
+  --scroll-thumb:rgba(0,229,255,0.3);
+
+  /* Theme-routed accent (used by .text-accent, .bg-accent utilities etc.) */
+  --accent:      #00E5FF;   /* cyan   */
+  --accent-dim:  #00B8D4;
+  --accent2:     #6A0DAD;   /* purple */
+  --accent2-light: #B07FFF;
+  --glow:        rgba(0,229,255,0.18);
+
+  /* Raw R,G,B triplets for Tailwind's rgb(var(--x) / <alpha-value>) pattern */
+  --accent-rgb:        0,229,255;
+  --accent2-rgb:       106,13,173;
+  --accent2-light-rgb: 176,127,255;
+
+  --particle-c1: 0,229,255;
+  --particle-c2: 106,13,173;
+}
+
+/* ══════════════════════════════════════════════════
+   LIGHT MODE — green / black poster brand theme
+   ══════════════════════════════════════════════════ */
+html.light {
+  --bg:          #0B1410;
+  --bg2:         #101D16;
+  --card:        #131F18;
+  --card2:       #16241C;
+  --card-border: rgba(57,255,143,0.26);
+  --text:        #EFFFF4;
+  --muted:       #8FB3A0;
+  --nav-bg:      rgba(11,20,16,0.92);
+  --scroll-bg:   #0B1410;
+  --scroll-thumb:rgba(57,255,143,0.45);
+
+  --accent:      #39FF8F;   /* green        */
+  --accent-dim:  #22C46E;
+  --accent2:     #0F7A45;   /* deep green   */
+  --accent2-light: #7CFFB8;
+  --glow:        rgba(57,255,143,0.28);
+
+  --accent-rgb:        57,255,143;
+  --accent2-rgb:       15,122,69;
+  --accent2-light-rgb: 124,255,184;
+
+  --particle-c1: 57,255,143;
+  --particle-c2: 124,255,184;
+}
+
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    overflow-x: hidden;
+    transition: background 0.35s ease, color 0.35s ease;
+  }
+  ::-webkit-scrollbar       { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--scroll-bg); }
+  ::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border-radius: 2px; }
+}
+
+@layer components {
+  .t-card {
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    transition: background 0.35s ease, border-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .t-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+    box-shadow: 0 18px 50px var(--glow);
+  }
+  .t-card-purple:hover {
+    border-color: var(--accent2) !important;
+    box-shadow: 0 18px 50px var(--glow) !important;
+  }
+  .t-text     { color: var(--text); }
+  .t-muted    { color: var(--muted); }
+  .t-bg       { background: var(--bg); }
+  .t-card-bg  { background: var(--card); }
+  .t-card2-bg { background: var(--card2); }
+  .t-border   { border-color: var(--card-border); }
+  .t-nav {
+    background: var(--nav-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--card-border);
+    transition: background 0.35s ease;
+  }
+
+  .section-pad   { @apply py-16 px-5 sm:py-20 sm:px-8 lg:py-24 lg:px-14; }
+  .t-divider     { height:1px; background: linear-gradient(90deg,transparent,var(--card-border),transparent); }
+  .max-container { @apply max-w-6xl mx-auto w-full; }
+
+  .speaker-card { position: relative; overflow: hidden; }
+  .speaker-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, var(--glow), rgba(0,0,0,0.4));
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-end;
+    padding: 16px;
+  }
+  .speaker-card:hover .speaker-overlay { opacity: 1; }
+  .speaker-card:hover .speaker-base    { transform: scale(0.96); filter: blur(1px); }
+  .speaker-base { transition: transform 0.3s ease, filter 0.3s ease; }
+
+  /* Sponsor card shine-sweep effect */
+  .sponsor-card { isolation: isolate; }
+  .sponsor-shine {
+    position: absolute;
+    top: 0; left: -60%;
+    width: 50%; height: 100%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,0.08), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+    z-index: 1;
+  }
+  .sponsor-card:hover .sponsor-shine { left: 130%; }
+}
+
+@layer utilities {
+  /* Gradient text — now theme-routed via CSS vars instead of fixed colors */
+  .text-gradient-cyan,
+  .text-gradient-brand,
+  .text-gradient-num {
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2-light) 55%, var(--accent2) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .text-gradient-timer {
+    background: linear-gradient(180deg, var(--text), var(--accent));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+
+  .glow-ring {
+    box-shadow: 0 0 0 1px var(--card-border), 0 0 30px var(--glow);
+  }
+}
