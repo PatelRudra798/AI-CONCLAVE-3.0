@@ -8,11 +8,16 @@ export default function IdCardGenerator() {
   const [error, setError] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
+  const [tierType, setTierType] = useState('IEEE Student');
+  const [tierPrice, setTierPrice] = useState('150');
+
   const cardRef = useRef(null);
 
   const safeName = (name || '').trim().slice(0, 40) || 'Your Name';
   const safeRegNo = (regNo || '').trim().slice(0, 20) || 'AI-0001';
-  const safeRole = 'Participant';
+  const safeRole = tierType || 'Participant';
+  const safePrice = String(tierPrice || '0').trim();
+
 
   const download = async () => {
     if (!cardRef.current) return;
@@ -28,7 +33,7 @@ export default function IdCardGenerator() {
       });
 
       const link = document.createElement('a');
-      link.download = `AI-Conclave-3.0-ID-${safeRegNo}.png`;
+      link.download = `AI-Conclave-3.0-ID-${safeRegNo}-${safeRole.replace(/\s+/g, '-').toUpperCase()}-RS-${safePrice}.png`;
       link.href = dataUrl;
       link.click();
     } catch (e) {
@@ -38,6 +43,7 @@ export default function IdCardGenerator() {
       setIsGenerating(false);
     }
   };
+
 
   return (
     <div className="w-full max-w-5xl mx-auto">
@@ -77,7 +83,39 @@ export default function IdCardGenerator() {
                   placeholder="e.g. AI-0001"
                 />
               </label>
+
+              <label className="flex flex-col gap-2">
+                <span className="text-[13px] text-white/80 font-semibold ml-1">Professional Type</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    { type: 'IEEE Student', price: '150' },
+                    { type: 'Non-IEEE Student', price: '200' },
+                    { type: 'Professional', price: '350' },
+                  ].map((t) => {
+                    const selected = tierType === t.type;
+                    return (
+                      <button
+                        key={t.type}
+                        type="button"
+                        onClick={() => {
+                          setTierType(t.type);
+                          setTierPrice(t.price);
+                        }}
+                        className={`rounded-2xl px-3 py-3 border text-[12px] font-bold transition-all duration-300 uppercase tracking-wide ${
+                          selected
+                            ? 'bg-red-500/15 border-red-400/40 text-red-200'
+                            : 'bg-white/5 border-white/10 text-white/70 hover:border-red-400/30 hover:text-red-200'
+                        }`}
+                      >
+                        {t.type.replace('Member', 'M').replace('Student', 'S')}<br />
+                        ₹{t.price}
+                      </button>
+                    );
+                  })}
+                </div>
+              </label>
             </div>
+
 
             {error && (
               <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold flex items-center gap-2">
@@ -93,8 +131,8 @@ export default function IdCardGenerator() {
                 onClick={download}
                 disabled={isGenerating}
                 className={`w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-[#0A1325] font-bold text-[14px] px-8 py-4 rounded-xl transition-all duration-300 ${isGenerating
-                    ? 'opacity-50 cursor-not-allowed scale-[0.98]'
-                    : 'hover:scale-[1.02] hover:shadow-[0_10px_30px_rgba(255,255,255,0.2)]'
+                  ? 'opacity-50 cursor-not-allowed scale-[0.98]'
+                  : 'hover:scale-[1.02] hover:shadow-[0_10px_30px_rgba(255,255,255,0.2)]'
                   }`}
               >
                 {isGenerating ? (
@@ -127,23 +165,36 @@ export default function IdCardGenerator() {
               {/* The Actual Badge to be downloaded */}
               <div
                 ref={cardRef}
-                className="relative bg-[#080E1A] w-[320px] aspect-[1/1.45] rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+                className="relative bg-gradient-to-b from-[#0a172a] to-[#080E1A] w-[320px] aspect-[1/1.45] rounded-3xl overflow-hidden shadow-2xl flex flex-col"
                 style={{
-                  border: '1px solid rgba(255,255,255,0.08)'
+                  border: '1px solid var(--accent)'
                 }}
               >
                 {/* Lanyard Hole */}
                 <div className="absolute top-5 left-1/2 -translate-x-1/2 w-16 h-3 rounded-full bg-[#040810] z-20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5" />
 
+                {/* Gradient overlay for subtle background flair */}
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-transparent to-accent2/20 opacity-30 pointer-events-none" />
                 {/* Top Colored Section */}
-                <div className="relative pt-14 pb-8 flex flex-col items-center border-b border-accent/20">
+                <div className="relative bg-gradient-to-r from-accent to-accent2 pt-14 pb-8 flex flex-col items-center border-b border-accent/20">
                   <div className="absolute inset-0 bg-gradient-to-b from-accent/20 to-transparent opacity-80" />
 
                   {/* Event Logo / Text */}
                   <h3 className="relative z-10 font-sora font-black text-[22px] tracking-wide text-white drop-shadow-md">
-                    AI CONCLAVE <span className="text-accent">3.0</span>
+                    <span className="flex items-center gap-2">
+                      <span className="text-accent">AI CONCLAVE </span>3.0
+                    </span>
                   </h3>
+                  <p className="text-white/70 text-[12px] mt-1 text-center">13‑14 Oct 2026 • Online</p>
                 </div>
+
+                {/* Event Logo Placeholder */}
+                <div className="flex justify-center mt-2 mb-2">
+                  <div className="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    LOGO
+                  </div>
+                </div>
+
 
                 {/* Middle Content */}
                 <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
@@ -154,7 +205,7 @@ export default function IdCardGenerator() {
                   </div>
 
                   {/* QR Code Container */}
-                  <div className="relative z-10 mb-8 p-3.5 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-white/20">
+                  <div className="relative z-10 mb-8 p-4 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-accent/20">
                     <QRCode
                       value={safeRegNo}
                       size={120}
@@ -166,18 +217,28 @@ export default function IdCardGenerator() {
 
                   {/* Name and Role */}
                   <div className="relative z-10 flex flex-col items-center text-center w-full">
-                    <h4 className="font-sora font-bold text-[28px] text-white leading-tight mb-2 drop-shadow-md break-words max-w-full px-2">
+                    <h4 className="font-sora font-bold text-[28px] text-gradient-brand leading-tight mb-3 drop-shadow-md break-words max-w-full px-2">
                       {safeName}
                     </h4>
-                    <span className="inline-block px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 font-space font-bold text-accent text-[12px] uppercase tracking-widest">
-                      {safeRole}
-                    </span>
+
+                    {/* Red box tier (fixed layout, always aligned) */}
+                    <div className="w-full flex justify-center">
+                      <div className="w-[92%] max-w-[260px] rounded-2xl bg-red-500/15 border border-red-400/35 px-4 py-2 flex items-center justify-center gap-2">
+                        <span className="text-red-200 font-space font-bold text-[12px] uppercase tracking-widest whitespace-nowrap">
+                          {safeRole}
+                        </span>
+                        <span className="text-white/80 font-mono font-bold text-[12px]">
+                          ₹{safePrice}
+                        </span>
+                      </div>
+                    </div>
                   </div>
+
                 </div>
 
                 {/* Footer Section */}
-                <div className="bg-[#050912] py-5 flex flex-col items-center justify-center border-t border-white/5 relative z-10">
-                  <p className="text-white/40 text-[9px] font-bold tracking-[0.2em] mb-1">
+                <div className="bg-gradient-to-r from-accent/20 to-accent2/20 py-5 flex flex-col items-center justify-center border-t border-white/5 relative z-10">
+                  <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] mb-1">
                     REGISTRATION ID
                   </p>
                   <p className="text-white font-mono font-bold text-[18px] tracking-wider">
