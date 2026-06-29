@@ -6,8 +6,12 @@ export default function WorkshopsSection() {
     <section id="workshops" className="relative z-10 section-pad">
       <div className="max-container">
         <SectionHeader label="Hands-On Learning" title="Workshops" sub="Two deep-dive workshops — practical, guided, and certificate-backed" />
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 sm:gap-6">
-          {WORKSHOPS.map((w) => <WorkshopCard key={w.num} {...w} />)}
+        <div className="flex flex-col gap-6 sm:gap-8 pb-10">
+          {WORKSHOPS.map((w, index) => (
+            <div key={w.num} className="sticky" style={{ top: `${120 + index * 30}px`, zIndex: 10 + index }}>
+              <WorkshopCard {...w} />
+            </div>
+          ))}
         </div>
       </div>
     </section>

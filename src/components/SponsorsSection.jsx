@@ -1,5 +1,4 @@
 import SectionHeader from './SectionHeader';
-import IdCardGenerator from './IdCardGenerator';
 
 export default function SponsorsSection() {
   return (
@@ -131,12 +130,7 @@ export default function SponsorsSection() {
           </div>
         </div>
 
-
-          {/* Create Event ID Card */}
-          <div id="badge-section" className="mt-16 relative rounded-3xl p-0 sm:p-0">
-            <IdCardGenerator />
-          </div>
-        </div>
+      </div>
     </section>
   );
 }

@@ -54,16 +54,18 @@ export default function ScheduleSection() {
         </div>
 
         {/* Timeline grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 max-w-5xl mx-auto">
-          {SCHEDULE.map((item, i) => (
-            <ScheduleCard
-              key={i}
-              item={item}
-              index={i}
-              isActive={active === i}
-              onClick={() => setActive(active === i ? null : i)}
-            />
-          ))}
+        <div className="max-w-5xl mx-auto max-h-[550px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--accent) transparent' }}>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            {SCHEDULE.map((item, i) => (
+              <ScheduleCard
+                key={i}
+                item={item}
+                index={i}
+                isActive={active === i}
+                onClick={() => setActive(active === i ? null : i)}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>

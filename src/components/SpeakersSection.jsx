@@ -44,9 +44,13 @@ function SpeakerCard({ sp }) {
       {/* Base content */}
       <div className="speaker-base p-5 sm:p-6 text-center">
         {/* Avatar */}
-        <div className={`w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] rounded-full mx-auto mb-4 flex items-center justify-center font-sora font-bold text-[16px] sm:text-[20px] text-white bg-gradient-to-br ${sp.grad} shadow-lg`}>
-          {sp.initials}
-        </div>
+        {sp.image ? (
+          <img src={sp.image} alt={sp.name} className="w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] rounded-full mx-auto mb-4 object-cover shadow-lg border-2 border-accent/20 bg-black" />
+        ) : (
+          <div className={`w-[72px] h-[72px] sm:w-[88px] sm:h-[88px] rounded-full mx-auto mb-4 flex items-center justify-center font-sora font-bold text-[16px] sm:text-[20px] text-white bg-gradient-to-br ${sp.grad} shadow-lg`}>
+            {sp.initials}
+          </div>
+        )}
 
         <h3 className="text-[13px] sm:text-[15px] font-semibold t-text mb-1 leading-tight">{sp.name}</h3>
         <p className="text-[11px] text-accent mb-0.5 font-medium">{sp.role}</p>

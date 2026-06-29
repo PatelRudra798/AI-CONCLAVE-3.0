@@ -27,24 +27,27 @@ export default function HeroSection() {
       id="hero"
       className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 sm:pt-28 pb-12 sm:pb-16"
     >
-      {/* Badge */}
+      {/* Badge
       <div className="inline-flex items-center gap-2 border border-accent/20 bg-accent/[0.04] px-4 sm:px-5 py-2 rounded-full text-accent text-[10px] sm:text-[11px] font-medium uppercase tracking-[1.5px] mb-6 sm:mb-8 text-center">
         <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse2 inline-block flex-shrink-0" />
         <span>10 July 2026 · Silver Oak University</span>
-      </div>
+      </div> */}
 
       {/* Eyebrow */}
       <p className="text-[9px] sm:text-[10px] t-muted uppercase tracking-[2px] sm:tracking-[3px] mb-3 sm:mb-4 px-2">
-        IEEE Signal Processing Society Student Branch Chapter
+         SILVER OAK UNIVERSITY IEEE Signal Processing Society Student Branch Chapter
       </p>
 
       {/* Title */}
-      <h1 className="leading-[0.93] mb-3" style={{ fontSize: 'clamp(44px, 9vw, 108px)' }}>
-        <img
-          src={group7}
-          alt="Group 7"
-          className="mx-auto h-[190px] sm:h-[196px] md:h-[210px] lg:h-[220px] w-auto select-none pointer-events-none"
-        />
+      <h1 className="leading-[1] mb-5 flex flex-col items-center gap-2 sm:gap-4 mt-6 z-10" style={{ fontSize: 'clamp(44px, 12vw, 120px)' }}>
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+          <span className="font-black text-white leading-none tracking-tight">AI</span>
+          <span className="font-black text-white leading-none">CONCLAVE</span>
+        </div>
+        <div className="flex items-center gap-3 mt-1 sm:mt-2">
+          <span className="text-accent text-[14px] sm:text-[22px] font-mono tracking-widest">// 2026 EDITION</span>
+          <span className="text-[32px] sm:text-[48px] font-black text-white drop-shadow-[0_8px_16px_rgba(59,130,246,1)]">3.0</span>
+        </div>
       </h1>
 
 
@@ -77,7 +80,7 @@ export default function HeroSection() {
       {/* CTAs */}
       <div className="flex flex-col xs:flex-row items-center justify-center gap-3 mb-10 sm:mb-14 w-full px-4">
         <button
-          onClick={() => go('registration')}
+          onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
           className="w-full xs:w-auto border border-accent/25 bg-accent/[0.03] t-text font-semibold text-[13px] sm:text-[14px] px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl hover:border-accent hover:text-accent hover:-translate-y-1 transition-all duration-200"
           onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 40px var(--glow)`; }}
           onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
