@@ -12,11 +12,17 @@ export default function IdCardGenerator() {
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
   const [showShareModal, setShowShareModal] = useState(false);
 
+  const [tierType, setTierType] = useState('IEEE Student');
+  const [tierPrice, setTierPrice] = useState('150');
+
   const cardRef = useRef(null);
   const containerRef = useRef(null);
 
-  const safeName = (name || '').trim().slice(0, 25);
-  const safeRole = role;
+  const safeName = (name || '').trim().slice(0, 40) || 'Your Name';
+  const safeRegNo = (regNo || '').trim().slice(0, 20) || 'AI-0001';
+  const safeRole = tierType || 'Participant';
+  const safePrice = String(tierPrice || '0').trim();
+
 
   // Auto-scale badge preview based on the actual container width to prevent overflow/distortion
   useEffect(() => {
@@ -185,7 +191,7 @@ export default function IdCardGenerator() {
     try {
       const { dataUrl, fileName } = await generateBadgeImage();
       const link = document.createElement('a');
-      link.download = fileName;
+      link.download = `AI-Conclave-3.0-ID-${safeRegNo}-${safeRole.replace(/\s+/g, '-').toUpperCase()}-RS-${safePrice}.png`;
       link.href = dataUrl;
       link.click();
       showToast('Badge downloaded successfully!', 'success');
@@ -197,32 +203,13 @@ export default function IdCardGenerator() {
     }
   };
 
-  const handleCopy = async () => {
-    if (!safeName) {
-      showToast('Please enter your name first.', 'error');
-      return;
-    }
-    setIsGenerating(true);
-    showToast('Generating badge for clipboard...', 'loading');
-    try {
-      const { blob } = await generateBadgeImage();
-      if (navigator.clipboard && window.ClipboardItem) {
-        await navigator.clipboard.write([
-          new ClipboardItem({
-            'image/png': blob
-          })
-        ]);
-        showToast('Badge copied to clipboard!', 'success');
-      } else {
-        throw new Error('ClipboardItem not supported');
-      }
-    } catch (e) {
-      console.error(e);
-      showToast('Copy failed. Please download the PNG instead.', 'error');
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="t-card rounded-[2.5rem] p-6 sm:p-10 relative overflow-hidden">
+
+        {/* Decorative background glow */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[400px] h-[400px] bg-accent/10 blur-[100px] rounded-full pointer-events-none" />
 
   const handleShare = async () => {
     if (!safeName) {
@@ -295,56 +282,76 @@ export default function IdCardGenerator() {
     }
   };
 
-  return (
-    <div className="w-full max-w-6xl mx-auto py-6 sm:py-10 px-4 sm:px-6 md:px-8 box-border">
-      
-      {/* 1. Event Information Header (Mobile-first responsive typography scaling with clamp) */}
-      <div className="mb-8 text-center md:text-left">
-        <h1 
-          className="font-sora font-extrabold text-white tracking-tight leading-tight"
-          style={{ fontSize: 'clamp(22px, 5.5vw, 36px)' }}
-        >
-          AI CONCLAVE <span className="text-accent">3.0</span> Badge Generator
-        </h1>
-        <p 
-          className="text-white/60 mt-2 font-medium"
-          style={{ fontSize: 'clamp(13px, 3.5vw, 16px)' }}
-        >
-          Generate, download, and share your personalized attendee badge for AI Conclave 3.0.
-        </p>
-      </div>
+            <div className="flex flex-col gap-5">
+              <label className="flex flex-col gap-2">
+                <span className="text-[13px] text-white/80 font-semibold ml-1">Full Name</span>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium placeholder:text-white/20"
+                  placeholder="e.g. John Doe"
+                />
+              </label>
 
-      {/* Container switches to two-columns at tablet (md: >= 768px) and desktop */}
-      <div className="flex flex-col md:flex-row gap-6 md:gap-8 lg:gap-12 items-start justify-center w-full">
-        
-        {/* Left Column: Form Steps (Single column on mobile) */}
-        <div className="flex-1 w-full flex flex-col gap-4 sm:gap-6">
-          
-          {/* Step 1: Name input (Event details) */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 w-full box-border">
-            <h3 className="text-white font-sora font-bold mb-4" style={{ fontSize: 'clamp(16px, 4.5vw, 18px)' }}>1. Enter Your Name</h3>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              maxLength={25}
-              className="w-full bg-[#040810] border border-white/10 text-white rounded-xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all font-medium placeholder:text-white/20 uppercase"
-              placeholder="e.g. JOHN DOE"
-            />
-          </div>
+              <label className="flex flex-col gap-2">
+                <span className="text-[13px] text-white/80 font-semibold ml-1">Registration ID</span>
+                <input
+                  value={regNo}
+                  onChange={(e) => setRegNo(e.target.value)}
+                  className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium uppercase placeholder:text-white/20"
+                  placeholder="e.g. AI-0001"
+                />
+              </label>
 
-          {/* Step 2: Template Selection */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 w-full box-border">
-            <h3 className="text-white font-sora font-bold mb-4" style={{ fontSize: 'clamp(16px, 4.5vw, 18px)' }}>2. Choose Template</h3>
-            <div className="flex flex-col gap-3">
-              {['Attendee', 'Speaker', 'Volunteer', 'Organizer'].map((r) => (
-                <button
-                  key={r}
-                  type="button"
-                  onClick={() => setRole(r)}
-                  className={`flex items-center gap-3 w-full rounded-xl px-5 py-4 border transition-all text-left font-semibold ${
-                    role === r
-                      ? 'bg-accent/20 border-accent text-white'
-                      : 'bg-[#040810] border-white/10 text-white/70 hover:border-white/30'
+              <label className="flex flex-col gap-2">
+                <span className="text-[13px] text-white/80 font-semibold ml-1">Professional Type</span>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {[
+                    { type: 'IEEE Student', price: '150' },
+                    { type: 'Non-IEEE Student', price: '200' },
+                    { type: 'Professional', price: '350' },
+                  ].map((t) => {
+                    const selected = tierType === t.type;
+                    return (
+                      <button
+                        key={t.type}
+                        type="button"
+                        onClick={() => {
+                          setTierType(t.type);
+                          setTierPrice(t.price);
+                        }}
+                        className={`rounded-2xl px-3 py-3 border text-[12px] font-bold transition-all duration-300 uppercase tracking-wide ${
+                          selected
+                            ? 'bg-red-500/15 border-red-400/40 text-red-200'
+                            : 'bg-white/5 border-white/10 text-white/70 hover:border-red-400/30 hover:text-red-200'
+                        }`}
+                      >
+                        {t.type.replace('Member', 'M').replace('Student', 'S')}<br />
+                        ₹{t.price}
+                      </button>
+                    );
+                  })}
+                </div>
+              </label>
+            </div>
+
+
+            {error && (
+              <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                </svg>
+                {error}
+              </div>
+            )}
+
+            <div className="mt-10">
+              <button
+                onClick={download}
+                disabled={isGenerating}
+                className={`w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-[#0A1325] font-bold text-[14px] px-8 py-4 rounded-xl transition-all duration-300 ${isGenerating
+                  ? 'opacity-50 cursor-not-allowed scale-[0.98]'
+                  : 'hover:scale-[1.02] hover:shadow-[0_10px_30px_rgba(255,255,255,0.2)]'
                   }`}
                 >
                   <div className={`w-4 h-4 rounded-full flex items-center justify-center ${role === r ? 'bg-accent' : 'bg-white/10 border border-white/20'}`}>
@@ -383,144 +390,97 @@ export default function IdCardGenerator() {
           
           <h2 className="text-white font-sora font-bold w-full text-center md:text-left" style={{ fontSize: 'clamp(18px, 4.5vw, 24px)' }}>Badge Preview</h2>
 
-          {/* The Badge Scaling Container - Centers badge, auto-resizes to 90-95% of container width, prevents overflow */}
-          <div ref={containerRef} className="relative flex justify-center w-full overflow-hidden" style={{ height: `${600 * scale}px` }}>
-            <div
-              ref={cardRef}
-              id="badge-preview"
-              className="relative w-[360px] h-[600px] min-h-[600px] pb-8 overflow-hidden bg-[#02050A] font-sans flex flex-col border-2 border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.8)] box-border"
-              style={{
-                backgroundImage: `url(${new URL('../assets/badge-bg.png', import.meta.url).href})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'bottom center',
-                transform: `scale(${scale})`,
-                transformOrigin: 'top center',
-                position: 'absolute',
-                top: 0
-              }}
-            >
-              {/* Subtle background overlay */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#02050A]/40 via-transparent to-[#02050A]/80 pointer-events-none z-0" />
+              {/* The Actual Badge to be downloaded */}
+              <div
+                ref={cardRef}
+                className="relative bg-gradient-to-b from-[#0a172a] to-[#080E1A] w-[320px] aspect-[1/1.45] rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+                style={{
+                  border: '1px solid var(--accent)'
+                }}
+              >
+                {/* Lanyard Hole */}
+                <div className="absolute top-5 left-1/2 -translate-x-1/2 w-16 h-3 rounded-full bg-[#040810] z-20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5" />
 
-              {/* Globe (left background decoration) */}
-              <div className="absolute left-[-40px] top-[150px] w-[200px] h-[200px] rounded-full border border-cyan-500/20 opacity-30 pointer-events-none z-0"
-                style={{ background: 'radial-gradient(circle, rgba(0,229,255,0.1) 0%, transparent 70%)' }}>
-                <div className="absolute inset-4 rounded-full border border-cyan-400/10 border-dashed" style={{ animation: 'spin 30s linear infinite' }} />
-              </div>
+                {/* Gradient overlay for subtle background flair */}
+                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-transparent to-accent2/20 opacity-30 pointer-events-none" />
+                {/* Top Colored Section */}
+                <div className="relative bg-gradient-to-r from-accent to-accent2 pt-14 pb-8 flex flex-col items-center border-b border-accent/20">
+                  <div className="absolute inset-0 bg-gradient-to-b from-accent/20 to-transparent opacity-80" />
 
-              {/* AI Head Illustration (right background decoration) */}
-              <div className="absolute right-[-60px] top-[180px] w-[220px] h-[220px] opacity-20 pointer-events-none z-0"
-                style={{ background: 'radial-gradient(circle, rgba(106,13,173,0.15) 0%, transparent 70%)' }}>
-                <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0MCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJyZ2JhKDI1NSwyNTUsMjU1LDAuMSkiIHN0cm9rZS13aWR0aD0iMiIvPjwvc3ZnPg==')] bg-contain bg-no-repeat bg-center" />
-              </div>
-
-              {/* Corner Design Accents */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#3b82f6] m-4 z-10" />
-              <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#3b82f6] m-4 z-10" />
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#3b82f6] m-4 z-10" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#3b82f6] m-4 z-10" />
-
-              {/* Matrix Grid overlay */}
-              <div className="absolute inset-0 opacity-10 pointer-events-none" style={{
-                backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
-                backgroundSize: '20px 20px'
-              }} />
-
-              {/* SUniversity & Sponsors Logos Top */}
-              <div className="pt-6 px-4 flex justify-center items-center z-10 w-full">
-                <img 
-                  src={new URL('../assets/icons/Group 16.png', import.meta.url).toString()} 
-                  alt="Sponsors Logos" 
-                  className="w-full h-auto object-contain max-h-8"
-                />
-              </div>
-
-              {/* Title Section */}
-              <div className="flex flex-col items-center mt-6 z-10">
-                <div className="flex items-center gap-2">
-                  <span className="text-[40px] font-black text-white leading-none" style={{ textShadow: '2px 0 #0ff, -2px 0 #3b82f6, 0 0 10px rgba(0,255,255,0.5)' }}>AI</span>
-                  <span className="text-[34px] font-black text-transparent leading-none mt-1" style={{ WebkitTextStroke: '1px #3b82f6', letterSpacing: '0.05em' }}>CONCLAVE</span>
+                  {/* Event Logo / Text */}
+                  <h3 className="relative z-10 font-sora font-black text-[22px] tracking-wide text-white drop-shadow-md">
+                    <span className="flex items-center gap-2">
+                      <span className="text-accent">AI CONCLAVE </span>3.0
+                    </span>
+                  </h3>
+                  <p className="text-white/70 text-[12px] mt-1 text-center">13‑14 Oct 2026 • Online</p>
                 </div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-[#0ff] text-[10px] font-mono tracking-widest">// 2026 EDITION</span>
-                  <span className="text-xl font-black text-white" style={{ textShadow: '2px 0 #0ff, -2px 0 #3b82f6' }}>3.0</span>
+
+                {/* Event Logo Placeholder */}
+                <div className="flex justify-center mt-2 mb-2">
+                  <div className="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                    LOGO
+                  </div>
                 </div>
               </div>
 
-              {/* User Portrait Area (Centers and bounds photos to prevent stretching) */}
-              <div className="relative flex-1 flex items-center justify-center z-10 mt-4 mb-2">
-                <div className="relative w-[180px] h-[180px] rounded-full flex items-center justify-center p-1" style={{ background: 'linear-gradient(45deg, #3b82f6, #0ff, #3b82f6)' }}>
-                  <div className="w-full h-full rounded-full bg-[#02050A] flex items-center justify-center overflow-hidden border-[6px] border-[#02050A]">
-                    {photo ? (
-                      <img src={photo} alt="Profile" className="w-full h-full object-cover object-center" />
-                    ) : (
-                      <span className="text-white/40 font-mono text-sm tracking-widest text-center px-4">AWAITING UPLOAD</span>
-                    )}
+
+                {/* Middle Content */}
+                <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
+                  {/* Subtle Background Elements */}
+                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute top-[20%] left-[10%] w-32 h-32 bg-accent/10 rounded-full blur-[40px]" />
+                    <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-accent2/10 rounded-full blur-[40px]" />
                   </div>
                 </div>
                 <div className="absolute w-[200px] h-[200px] rounded-full border border-[#3b82f6]/40 border-dashed" style={{ animation: 'spin 20s linear infinite' }} />
                 <div className="absolute w-[230px] h-[230px] rounded-full border border-[#0ff]/20" />
               </div>
 
-              {/* Name & Role Text */}
-              <div className="flex flex-col items-center justify-center z-10 px-4 mt-2 min-h-[50px] w-full box-border">
-                {safeName ? (
-                  <h2 
-                    className={`font-sora font-bold text-white uppercase tracking-wider text-center leading-[1.2] w-full drop-shadow-md overflow-wrap-anywhere`}
-                    style={{ fontSize: safeName.length <= 12 ? '32px' : safeName.length <= 18 ? '26px' : '22px' }}
-                  >
-                    {safeName}
-                  </h2>
-                ) : (
-                  <div className="h-[38px]"></div>
-                )}
-                
-                {safeRole ? (
-                  <div className="mt-3 px-6 py-1.5 rounded-lg border border-[#3b82f6] bg-[#3b82f6]/10 shadow-[0_0_15px_rgba(59,130,246,0.3)] backdrop-blur-sm">
-                    <span className="text-white font-mono text-sm tracking-widest uppercase font-bold">
-                      &lt; {safeRole} /&gt;
-                    </span>
+                  {/* QR Code Container */}
+                  <div className="relative z-10 mb-8 p-4 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-accent/20">
+                    <QRCode
+                      value={safeRegNo}
+                      size={120}
+                      level="H"
+                      fgColor="#080E1A"
+                      bgColor="#ffffff"
+                    />
                   </div>
                 ) : (
                   <div className="h-[34px] mt-3"></div>
                 )}
               </div>
 
-              {/* Footer Details: Date, Location, and QR Code */}
-              <div className="flex justify-between items-end mt-6 mb-8 z-10 px-8 w-full box-border">
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg border border-[#3b82f6]/50 flex items-center justify-center bg-[#3b82f6]/10">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#0ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-[#3b82f6] text-[9px] font-bold tracking-widest mb-0.5">DATE</p>
-                      <p className="text-white text-[11px] font-medium tracking-wide">21 JULY, 2026</p>
+                  {/* Name and Role */}
+                  <div className="relative z-10 flex flex-col items-center text-center w-full">
+                    <h4 className="font-sora font-bold text-[28px] text-gradient-brand leading-tight mb-3 drop-shadow-md break-words max-w-full px-2">
+                      {safeName}
+                    </h4>
+
+                    {/* Red box tier (fixed layout, always aligned) */}
+                    <div className="w-full flex justify-center">
+                      <div className="w-[92%] max-w-[260px] rounded-2xl bg-red-500/15 border border-red-400/35 px-4 py-2 flex items-center justify-center gap-2">
+                        <span className="text-red-200 font-space font-bold text-[12px] uppercase tracking-widest whitespace-nowrap">
+                          {safeRole}
+                        </span>
+                        <span className="text-white/80 font-mono font-bold text-[12px]">
+                          ₹{safePrice}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg border border-[#3b82f6]/50 flex items-center justify-center bg-[#3b82f6]/10">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#0ff]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </div>
-                    <div>
-                      <p className="text-[#3b82f6] text-[9px] font-bold tracking-widest mb-0.5">LOCATION</p>
-                      <p className="text-white text-[11px] font-medium tracking-wide">GANDHINAGAR, IN</p>
-                    </div>
-                  </div>
                 </div>
 
-                <div className="bg-white p-1.5 rounded-lg border-2 border-[#3b82f6] shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                  <QRCode 
-                    value="https://forms.gle/Ucu9KrsA27EXH1X67" 
-                    size={64} 
-                    level="Q"
-                  />
+                {/* Footer Section */}
+                <div className="bg-gradient-to-r from-accent/20 to-accent2/20 py-5 flex flex-col items-center justify-center border-t border-white/5 relative z-10">
+                  <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] mb-1">
+                    REGISTRATION ID
+                  </p>
+                  <p className="text-white font-mono font-bold text-[18px] tracking-wider">
+                    {safeRegNo}
+                  </p>
                 </div>
               </div>
 

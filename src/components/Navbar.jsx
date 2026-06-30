@@ -110,7 +110,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
 
           {/* Desktop CTA */}
           <button
-            onClick={() => handleNav('generate-badge')}
+            onClick={() => handleNav('badge-section')}
             className="hidden sm:block bg-transparent border border-accent/40 text-accent text-[12px] sm:text-[13px] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
           >
             Generate Badge
@@ -160,7 +160,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
           </div>
           <div className="mt-auto flex flex-col gap-3">
             <button
-              onClick={() => handleNav('generate-badge')}
+              onClick={() => handleNav('badge-section')}
               className="w-full bg-transparent border border-accent/40 text-accent py-3 rounded-xl hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 font-semibold text-[14px]"
             >
               Generate Badge
