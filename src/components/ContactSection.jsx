@@ -7,20 +7,19 @@ export default function ContactSection() {
       <div className="max-container text-center">
         <SectionHeader
           label="Get In Touch"
-          title="Contact Us"
-          sub="Reach out for registration, sponsorship, or speaker enquiries."
+          title="Location"
+          sub="Find us at Silver Oak University."
         />
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-5 mb-8 sm:mb-10">
-          {CONTACT_ITEMS.map((c) => (
-            <div
-              key={c.label}
-              className="t-card rounded-xl sm:rounded-2xl px-6 sm:px-8 py-5 sm:py-6 min-w-[160px] sm:min-w-[190px] text-center transition-all duration-200 hover:border-accent/30 hover:-translate-y-1 w-full xs:w-auto"
-            >
-              <div className="text-xl sm:text-2xl mb-2">{c.icon}</div>
-              <div className="text-[9px] t-muted uppercase tracking-[1.5px] mb-1">{c.label}</div>
-              <div className="text-[12px] sm:text-[13px] t-text font-medium">{c.value}</div>
-            </div>
-          ))}
+        <div className="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden border border-accent/20 h-[300px] sm:h-[400px] mb-8">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12706.870002403602!2d72.53896855217506!3d23.08870848251876!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e833af6f39347%3A0xf1db9065daea7008!2sSilver%20Oak%20University!5e0!3m2!1sen!2sin!4v1782798330098!5m2!1sen!2sin" 
+            width="100%" 
+            height="100%" 
+            style={{ border: 0, filter: 'invert(90%) hue-rotate(180deg) contrast(100%)' }} 
+            allowFullScreen="" 
+            loading="lazy" 
+            referrerPolicy="strict-origin-when-cross-origin"
+          ></iframe>
         </div>
         <p className="text-[11px] sm:text-[12px] t-muted px-4">
           Organized by IEEE Signal Processing Society Student Branch Chapter · Silver Oak University

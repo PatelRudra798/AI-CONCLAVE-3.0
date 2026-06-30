@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { NAV_LINKS } from '../data';
 import sousps from '../assets/icons/Group.png';
 import sou from '../assets/icons/Group 16.png';
@@ -41,9 +42,11 @@ const CloseIcon = () => (
   </svg>
 );
 
-export default function Navbar({ isDark, onToggle }) {
+export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled]= useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -51,7 +54,24 @@ export default function Navbar({ isDark, onToggle }) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const handleNav = (id) => { go(id); setMenuOpen(false); };
+  const handleNav = (id) => { 
+    if (id === 'generate-badge') {
+      if (onOpenBadgeModal) onOpenBadgeModal();
+    } else if (id === 'registration') {
+      window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank');
+    } else if (id === 'gallery') {
+      navigate('/gallery');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => go(id), 100);
+      } else {
+        go(id);
+      }
+    }
+    setMenuOpen(false); 
+  };
 
   return (
     <>
@@ -93,11 +113,11 @@ export default function Navbar({ isDark, onToggle }) {
             onClick={() => handleNav('badge-section')}
             className="hidden sm:block bg-transparent border border-accent/40 text-accent text-[12px] sm:text-[13px] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
           >
-            Get Badge 🎫
+            Generate Badge
           </button>
 
           <button
-            onClick={() => handleNav('registration')}
+            onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
             className="hidden sm:block bg-transparent border border-accent/40 text-accent text-[12px] sm:text-[13px] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
           >
             Register Now
@@ -143,10 +163,10 @@ export default function Navbar({ isDark, onToggle }) {
               onClick={() => handleNav('badge-section')}
               className="w-full bg-transparent border border-accent/40 text-accent py-3 rounded-xl hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 font-semibold text-[14px]"
             >
-              Get Badge 🎫
+              Generate Badge
             </button>
             <button
-              onClick={() => handleNav('registration')}
+              onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
               className="w-full bg-transparent border border-accent/40 text-accent py-3 rounded-xl hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 font-semibold text-[14px]"
             >
               Register Now

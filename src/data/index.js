@@ -1,4 +1,4 @@
-export const EVENT_DATE = new Date('2026-07-10T08:00:00+05:30');
+export const EVENT_DATE = new Date('2026-07-21T08:00:00+05:30');
 
 export const NAV_LINKS = [
   { label: 'About', id: 'about' },
@@ -33,7 +33,7 @@ export const SCHEDULE = [
     end: '08:30 AM',
     name: 'Registration & Check-In',
     desc: 'Collect your badge, welcome kit, and settle in.',
-    icon: '🎫',
+    icon: 'https://img.icons8.com/3d-fluency/94/ticket.png',
     badge: null,
     special: false,
     track: 'logistics',
@@ -43,7 +43,7 @@ export const SCHEDULE = [
     end: '09:15 AM',
     name: 'Breakfast & Networking',
     desc: 'Fuel up and connect with fellow participants before the sessions begin.',
-    icon: '☕',
+    icon: 'https://img.icons8.com/3d-fluency/94/coffee-to-go.png',
     badge: 'break',
     special: false,
     track: 'break',
@@ -53,7 +53,7 @@ export const SCHEDULE = [
     end: '09:45 AM',
     name: 'Inauguration Ceremony',
     desc: 'Official opening by faculty, IEEE chapter leads, and guest dignitaries.',
-    icon: '🎙️',
+    icon: 'https://img.icons8.com/3d-fluency/94/microphone.png',
     badge: 'opening',
     special: true,
     track: 'keynote',
@@ -63,7 +63,7 @@ export const SCHEDULE = [
     end: '10:40 AM',
     name: 'Technical Session 1',
     desc: 'Expert keynote on Agentic AI systems and autonomous workflow design.',
-    icon: '🤖',
+    icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
     badge: 'keynote',
     special: true,
     track: 'keynote',
@@ -74,7 +74,7 @@ export const SCHEDULE = [
     end: '11:40 AM',
     name: 'Technical Session 2',
     desc: 'Deep dive into High Performance Computing and GPU architectures for AI.',
-    icon: '⚡',
+    icon: 'https://img.icons8.com/3d-fluency/94/lightning-bolt.png',
     badge: 'keynote',
     special: true,
     track: 'keynote',
@@ -85,7 +85,7 @@ export const SCHEDULE = [
     end: '01:15 PM',
     name: 'Workshop 1 — AI Agents',
     desc: 'Hands-on: Build an intelligent agent that automates real-world workflows.',
-    icon: '🧠',
+    icon: 'https://img.icons8.com/3d-fluency/94/brain.png',
     badge: 'workshop',
     special: false,
     track: 'workshop',
@@ -95,7 +95,7 @@ export const SCHEDULE = [
     end: '02:30 PM',
     name: 'Lunch Break',
     desc: 'Enjoy lunch and continue networking with speakers and participants.',
-    icon: '🍽️',
+    icon: 'https://img.icons8.com/3d-fluency/94/pizza.png',
     badge: 'break',
     special: false,
     track: 'break',
@@ -105,7 +105,7 @@ export const SCHEDULE = [
     end: '03:30 PM',
     name: 'Workshop 2 — HPC Fundamentals',
     desc: 'Hands-on: GPU programming, parallel computing, and AI infrastructure.',
-    icon: '💻',
+    icon: 'https://img.icons8.com/3d-fluency/94/laptop.png',
     badge: 'workshop',
     special: false,
     track: 'workshop',
@@ -115,7 +115,7 @@ export const SCHEDULE = [
     end: '04:20 PM',
     name: 'Panel Discussion',
     desc: 'Open Q&A with experts — AI futures, ethics, careers, and entrepreneurship.',
-    icon: '🎤',
+    icon: 'https://img.icons8.com/3d-fluency/94/microphone.png',
     badge: 'panel',
     special: true,
     track: 'keynote',
@@ -125,7 +125,7 @@ export const SCHEDULE = [
     end: '04:35 PM',
     name: 'Closing Note',
     desc: 'Reflections, acknowledgements, and what comes next.',
-    icon: '🏆',
+    icon: 'https://img.icons8.com/3d-fluency/94/trophy.png',
     badge: null,
     special: true,
     track: 'logistics',
@@ -135,7 +135,7 @@ export const SCHEDULE = [
     end: '05:00 PM',
     name: 'Swag Distribution',
     desc: 'Collect your exclusive event merchandise and certificate.',
-    icon: '🎁',
+    icon: 'https://img.icons8.com/3d-fluency/94/gift.png',
     badge: null,
     special: false,
     track: 'logistics',
@@ -145,7 +145,7 @@ export const SCHEDULE = [
     end: '05:30 PM',
     name: 'Networking & Hi-Tea',
     desc: 'Wind down with hi-tea, meet speakers, exchange contacts, and celebrate.',
-    icon: '🤝',
+    icon: 'https://img.icons8.com/3d-fluency/94/handshake.png',
     badge: null,
     special: false,
     track: 'break',
@@ -169,15 +169,16 @@ export const WORKSHOPS = [
 
 export const SPEAKERS = [
   {
-    initials: 'AI',
+    initials: 'SS',
     grad: 'from-accent2 to-accent',
-    name: 'Dr. Speaker Name',
-    role: 'Sr. AI Research Scientist',
-    org: 'Research Institute',
-    topic: 'Future of Agentic AI Systems',
-    bio: 'Leading researcher with 12+ years in autonomous AI systems, published in Nature AI and NeurIPS. Formerly at DeepMind.',
-    skills: ['Agentic AI', 'LLMs', 'AutoML'],
-    linkedin: 'https://linkedin.com/in/speaker1',
+    name: 'Dr. Sachin Sharma',
+    role: 'Founder X DOT AI',
+    org: 'X DOT AI',
+    topic: 'Agentic AI',
+    bio: 'Pioneering researcher and founder at X DOT AI, specializing in autonomous AI workflows and Agentic AI systems.',
+    skills: ['Agentic AI', 'LLMs', 'AI Startups'],
+    linkedin: 'https://in.linkedin.com/in/dasachin',
+    image: '/src/assets/speakers/sachin.jpg',
   },
   {
     initials: 'HPC',
@@ -265,3 +266,16 @@ export const CONTACT_ITEMS = [
   { icon: '🗓️', label: 'Date', value: '10 July 2026' },
   { icon: '📞', label: 'Contact', value: '+91 XXXXX XXXXX' },
 ];
+
+export const PAST_EVENTS = {
+  editions: [
+    { year: '2025', title: 'AI Conclave 2.0', participants: '400+', speakers: '8+' },
+    { year: '2024', title: 'AI Conclave 1.0', participants: '250+', speakers: '5+' },
+  ],
+  photos: [
+    { src: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=800&q=80', alt: 'Event photo', caption: 'Keynote Session', featured: true, edition: '2.0' },
+    { src: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=800&q=80', alt: 'Event photo', caption: 'Workshop', wide: true },
+    { src: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=800&q=80', alt: 'Event photo', caption: 'Networking' },
+    { src: 'https://images.unsplash.com/photo-1475721025870-24641476d074?w=800&q=80', alt: 'Event photo', caption: 'Panel Discussion' }
+  ]
+};

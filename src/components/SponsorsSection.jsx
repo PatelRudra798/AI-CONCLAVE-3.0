@@ -1,5 +1,4 @@
 import SectionHeader from './SectionHeader';
-import IdCardGenerator from './IdCardGenerator';
 
 export default function SponsorsSection() {
   return (
@@ -17,7 +16,7 @@ export default function SponsorsSection() {
         />
 
         {/* Flat, equal grid — no tier hierarchy */}
-        <div className="relative py-20">
+        <div className="relative py-10 sm:py-20">
           {/* Background Glow */}
           <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-[140px]" />
 
@@ -131,12 +130,7 @@ export default function SponsorsSection() {
           </div>
         </div>
 
-
-          {/* Create Event ID Card */}
-          <div id="badge-section" className="mt-16 relative rounded-3xl p-0 sm:p-0">
-            <IdCardGenerator />
-          </div>
-        </div>
+      </div>
     </section>
   );
 }

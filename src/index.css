@@ -109,7 +109,7 @@ html.light {
     transition: background 0.35s ease;
   }
 
-  .section-pad   { @apply py-16 px-5 sm:py-20 sm:px-8 lg:py-24 lg:px-14; }
+  .section-pad   { @apply py-12 px-4 sm:py-14 sm:px-5 md:py-20 md:px-8 lg:py-24 lg:px-14; }
   .t-divider     { height:1px; background: linear-gradient(90deg,transparent,var(--card-border),transparent); }
   .max-container { @apply max-w-6xl mx-auto w-full; }
 
@@ -159,3 +159,130 @@ html.light {
     box-shadow: 0 0 0 1px var(--card-border), 0 0 30px var(--glow);
   }
 }
+
+/* Custom Cyberpunk/AI Glitch Effect (GPU accelerated, highly performant) */
+.glitch-span {
+  position: relative;
+  display: inline-block;
+  
+  /* Constant subtle RGB shadow split */
+  text-shadow: 0.8px 0 rgba(0, 229, 255, 0.2), -0.8px 0 rgba(138, 43, 226, 0.2);
+  animation: glitch-main-loop 3s steps(1) infinite;
+}
+
+.glitch-span::before,
+.glitch-span::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  pointer-events: none;
+  opacity: 0.45;
+  clip-path: inset(35% 0 55% 0);
+}
+
+.glitch-span::before {
+  left: -0.8px;
+  text-shadow: 0.8px 0 #00e5ff;
+  color: #fff;
+  transform: skewX(-0.3deg);
+  animation: glitch-anim-before-loop 3s steps(1) infinite;
+}
+
+.glitch-span::after {
+  left: 0.8px;
+  text-shadow: -0.8px 0 #8a2be2;
+  color: #fff;
+  clip-path: inset(70% 0 15% 0);
+  transform: skewX(0.3deg);
+  animation: glitch-anim-after-loop 3s steps(1) infinite;
+}
+
+/* 
+  Main text: Stable (0-93.9%), micro-jitter (94-98%), return to stable (98.1-100%).
+  Horizontal shifts are restricted to 1px max to preserve extreme subtlety and legibility.
+*/
+@keyframes glitch-main-loop {
+  0%, 93.9% {
+    transform: none;
+    text-shadow: 0.8px 0 rgba(0, 229, 255, 0.2), -0.8px 0 rgba(138, 43, 226, 0.2);
+  }
+  94% {
+    transform: translateX(1px);
+    text-shadow: 1.5px 0 rgba(0, 229, 255, 0.4), -1px 0 rgba(138, 43, 226, 0.4);
+  }
+  95.5% {
+    transform: translateX(-1px) skewX(0.2deg);
+    text-shadow: -1px 0 rgba(0, 229, 255, 0.4), 1.5px 0 rgba(138, 43, 226, 0.4);
+  }
+  97% {
+    transform: translateX(0.5px);
+    text-shadow: 1px 0 rgba(0, 229, 255, 0.3), -1px 0 rgba(138, 43, 226, 0.3);
+  }
+  98.1%, 100% {
+    transform: none;
+    text-shadow: 0.8px 0 rgba(0, 229, 255, 0.2), -0.8px 0 rgba(138, 43, 226, 0.2);
+  }
+}
+
+/* ::before (Cyan split) horizontal slice jitter */
+@keyframes glitch-anim-before-loop {
+  0%, 93.9% {
+    clip-path: inset(35% 0 55% 0);
+    transform: skewX(-0.3deg) translateX(-0.8px);
+    opacity: 0.45;
+  }
+  94% {
+    clip-path: inset(12% 0 78% 0);
+    transform: skewX(-1.5deg) translateX(-2px);
+    opacity: 0.85;
+  }
+  95.5% {
+    clip-path: inset(85% 0 5% 0);
+    transform: skewX(1deg) translateX(1px);
+    opacity: 0.75;
+  }
+  97% {
+    clip-path: inset(45% 0 45% 0);
+    transform: skewX(-0.5deg) translateX(-1px);
+    opacity: 0.8;
+  }
+  98.1%, 100% {
+    clip-path: inset(35% 0 55% 0);
+    transform: skewX(-0.3deg) translateX(-0.8px);
+    opacity: 0.45;
+  }
+}
+
+/* ::after (Purple split) horizontal slice jitter */
+@keyframes glitch-anim-after-loop {
+  0%, 93.9% {
+    clip-path: inset(70% 0 15% 0);
+    transform: skewX(0.3deg) translateX(0.8px);
+    opacity: 0.45;
+  }
+  94% {
+    clip-path: inset(58% 0 32% 0);
+    transform: skewX(1.5deg) translateX(2px);
+    opacity: 0.85;
+  }
+  95.5% {
+    clip-path: inset(5% 0 88% 0);
+    transform: skewX(-1deg) translateX(-1px);
+    opacity: 0.75;
+  }
+  97% {
+    clip-path: inset(20% 0 75% 0);
+    transform: skewX(0.5deg) translateX(1px);
+    opacity: 0.8;
+  }
+  98.1%, 100% {
+    clip-path: inset(70% 0 15% 0);
+    transform: skewX(0.3deg) translateX(0.8px);
+    opacity: 0.45;
+  }
+}
+

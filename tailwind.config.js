@@ -20,11 +20,7 @@ export default {
         card2:   '#0F1E30',
         navy:    '#0A1931',
       },
-      animation: {
-        pulse2: 'pulse2 2s ease-in-out infinite',
-        float:  'float 6s ease-in-out infinite',
-        fadeIn: 'fadeIn 0.4s ease forwards',
-      },
+
       keyframes: {
         pulse2: {
           '0%,100%': { opacity:'1', transform:'scale(1)' },
@@ -35,9 +31,19 @@ export default {
           '50%':     { transform: 'translateY(-10px)' },
         },
         fadeIn: {
-          from: { opacity: '0', transform: 'translateY(8px)' },
-          to:   { opacity: '1', transform: 'translateY(0)'   },
+          from: { opacity: '0' },
+          to:   { opacity: '1' },
         },
+        scaleUp: {
+          from: { opacity: '0', transform: 'scale(0.95)' },
+          to:   { opacity: '1', transform: 'scale(1)' },
+        },
+      },
+      animation: {
+        pulse2: 'pulse2 2s ease-in-out infinite',
+        float:  'float 6s ease-in-out infinite',
+        fadeIn: 'fadeIn 0.3s ease-out forwards',
+        scaleUp: 'scaleUp 0.3s ease-out forwards',
       },
       screens: { xs: '400px' },
     },
