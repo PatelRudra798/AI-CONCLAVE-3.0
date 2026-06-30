@@ -1,14 +1,28 @@
+import { useState, useEffect } from 'react';
 import SectionHeader from './SectionHeader';
 import { WORKSHOPS } from '../data';
 
 export default function WorkshopsSection() {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   return (
     <section id="workshops" className="relative z-10 section-pad">
       <div className="max-container">
         <SectionHeader label="Hands-On Learning" title="Workshops" sub="Two deep-dive workshops — practical, guided, and certificate-backed" />
-        <div className="flex flex-col gap-6 sm:gap-8 pb-10">
+        <div className="relative flex flex-col gap-6 sm:gap-8 pb-0 sm:pb-10">
           {WORKSHOPS.map((w, index) => (
-            <div key={w.num} className="sticky" style={{ top: `${120 + index * 30}px`, zIndex: 10 + index }}>
+            <div 
+              key={w.num} 
+              className={isMobile ? "" : "sticky"} 
+              style={isMobile ? {} : { top: `${120 + index * 30}px`, zIndex: 10 + index }}
+            >
               <WorkshopCard {...w} />
             </div>
           ))}
@@ -21,7 +35,7 @@ export default function WorkshopsSection() {
 function WorkshopCard({ num, tag, accent, title, desc, items }) {
   const isCyan = accent === 'cyan';
   return (
-    <div className={`relative rounded-[20px] sm:rounded-[22px] p-7 sm:p-10 overflow-hidden transition-transform duration-300 hover:-translate-y-1.5
+    <div className={`relative rounded-[20px] sm:rounded-[22px] p-7 sm:p-10 overflow-hidden transition-all duration-300 hover:-translate-y-1.5
       ${isCyan
         ? 'border border-accent/22 bg-gradient-to-br from-accent/7 to-accent/[0.02]'
         : 'border border-accent2-light/22 bg-gradient-to-br from-accent2/9 to-accent2-light/[0.02]'

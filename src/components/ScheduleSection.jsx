@@ -24,6 +24,8 @@ export default function ScheduleSection() {
   const [active, setActive] = useState(null);
   const containerRef = useRef(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [coords, setCoords] = useState([]);
+  const scrollContainerRef = useRef(null);
 
   // Responsive check
   useEffect(() => {
@@ -39,52 +41,106 @@ export default function ScheduleSection() {
     viewRefs.current = Array(SCHEDULE.length).fill().map((_, i) => viewRefs.current[i] || { current: null });
   }
 
-  // Draw the connecting vertical curve
+  // Measure the coordinates of timeline nodes in the DOM
+  const updateCoords = () => {
+    if (!scrollContainerRef.current) return;
+    const parentRect = scrollContainerRef.current.getBoundingClientRect();
+    const parentScrollTop = scrollContainerRef.current.scrollTop;
+
+    const newCoords = viewRefs.current
+      .map((ref) => {
+        if (!ref.current) return null;
+        const rect = ref.current.getBoundingClientRect();
+        return {
+          x: rect.left - parentRect.left + rect.width / 2,
+          y: rect.top - parentRect.top + parentScrollTop + rect.height / 2,
+        };
+      })
+      .filter(Boolean);
+
+    setCoords(newCoords);
+  };
+
+  // Recalculate node coordinates on render triggers (expanding card, resizing window)
+  useEffect(() => {
+    updateCoords();
+
+    window.addEventListener('resize', updateCoords);
+    const timer = setTimeout(updateCoords, 200);
+
+    let observer = null;
+    if (typeof ResizeObserver !== 'undefined' && scrollContainerRef.current) {
+      observer = new ResizeObserver(() => {
+        updateCoords();
+      });
+      observer.observe(scrollContainerRef.current);
+    }
+
+    return () => {
+      window.removeEventListener('resize', updateCoords);
+      clearTimeout(timer);
+      if (observer) {
+        observer.disconnect();
+      }
+    };
+  }, [active, isMobile]);
+
+  // Draw the connecting vertical curve dynamically based on measured node coordinates
   const renderTimelineCurve = () => {
-    const H = 105; // Tight height per item (reduced by ~30% from original)
-    const padding = 32; // Top offset
-    const totalH = SCHEDULE.length * H + padding;
-    
+    if (coords.length === 0) return null;
+
     if (isMobile) {
-      // Straight line on mobile at X=32px
+      const first = coords[0];
+      const last = coords[coords.length - 1];
       return (
-        <svg className="absolute left-0 top-0 w-full h-full pointer-events-none overflow-visible z-10" style={{ height: totalH }}>
-          <line x1="32" y1={padding} x2="32" y2={totalH - H/2} stroke="var(--accent)" strokeWidth="2" strokeOpacity="0.4" />
+        <svg className="absolute left-0 top-0 w-full h-full pointer-events-none overflow-visible z-10">
+          <line 
+            x1={first.x} 
+            y1={first.y} 
+            x2={last.x} 
+            y2={last.y} 
+            stroke="var(--accent)" 
+            strokeWidth="2" 
+            strokeOpacity="0.4" 
+          />
         </svg>
       );
     }
 
-    // Wavy curve on desktop (X wiggles between 44% and 56% of container width)
-    let pathD = `M 50% ${padding}`; // SVG doesn't support % inside path directly, we will use a viewbox or absolute coords.
-    // Since container is centered and has max-width of 5xl (1024px), let's use fixed width coordinate space.
-    // Center is 512. Left node at 462, right node at 562.
-    const center = 512;
-    const offset = 45; // wiggle offset
-    let d = `M ${center} ${padding}`;
-    
-    for (let i = 0; i < SCHEDULE.length; i++) {
-      const y = i * H + H/2 + padding;
-      const targetX = center + (i % 2 === 0 ? -offset : offset);
+    // Wavy curve connecting each node smoothly on desktop
+    let d = '';
+    for (let i = 0; i < coords.length; i++) {
+      const p = coords[i];
       if (i === 0) {
-        d += ` L ${targetX} ${y}`;
+        d += `M ${p.x} ${p.y}`;
       } else {
-        const prevY = (i - 1) * H + H/2 + padding;
-        const prevX = center + ((i - 1) % 2 === 0 ? -offset : offset);
-        const midY = (prevY + y) / 2;
-        // Wavy bezier curve
-        d += ` C ${prevX} ${midY}, ${targetX} ${midY}, ${targetX} ${y}`;
+        const prev = coords[i - 1];
+        const midY = (prev.y + p.y) / 2;
+        d += ` C ${prev.x} ${midY}, ${p.x} ${midY}, ${p.x} ${p.y}`;
       }
     }
 
+    const maxY = coords[coords.length - 1].y;
+
     return (
-      <svg viewBox="0 0 1024 2000" className="absolute left-0 top-0 w-full h-full pointer-events-none overflow-visible z-10" style={{ height: totalH }}>
-        <path d={d} fill="none" stroke="var(--accent)" strokeWidth="2" strokeOpacity="0.3" className="drop-shadow-[0_0_4px_rgba(57,255,143,0.2)]" />
+      <svg 
+        className="absolute left-0 top-0 w-full pointer-events-none overflow-visible z-10" 
+        style={{ height: maxY + 50 }}
+      >
+        <path 
+          d={d} 
+          fill="none" 
+          stroke="var(--accent)" 
+          strokeWidth="2" 
+          strokeOpacity="0.3" 
+          className="drop-shadow-[0_0_4px_rgba(57,255,143,0.2)]" 
+        />
       </svg>
     );
   };
 
   return (
-    <section id="schedule" ref={containerRef} className="relative z-10 section-pad overflow-hidden"
+    <section id="schedule" ref={containerRef} className="relative z-10 pt-12 pb-6 px-4 md:section-pad overflow-hidden"
       style={{ background: 'rgba(0,0,0,0.06)' }}>
 
       {/* Decorative blobs */}
@@ -101,22 +157,22 @@ export default function ScheduleSection() {
         />
 
         {/* Legend */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
+        {/* <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
           {Object.entries(BADGE_STYLES).map(([key, { label, cls }]) => (
             <span key={key} className={`text-[9px] font-semibold px-2.5 py-0.5 rounded-full border ${cls}`}>
               {label}
             </span>
           ))}
-        </div>
+        </div> */}
 
         {/* Vertical Compact Roadmap Timeline */}
-        <div className="max-w-5xl mx-auto max-h-[500px] overflow-y-auto pr-1 py-4 relative scroll-smooth" 
+        <div ref={scrollContainerRef} className="max-w-5xl mx-auto max-h-[500px] overflow-y-auto pr-1 py-4 relative scroll-smooth" 
              style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--accent) transparent' }}>
           
           {/* Connecting road curve path */}
           {renderTimelineCurve()}
 
-          <div className="flex flex-col gap-4 relative z-10 w-full px-2" style={{ minHeight: SCHEDULE.length * 105 }}>
+          <div className="flex flex-col gap-4 relative z-10 w-full px-2">
             {SCHEDULE.map((item, i) => (
               <ScheduleCard
                 key={i}

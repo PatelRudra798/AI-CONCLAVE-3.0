@@ -43,7 +43,7 @@ const ThreadsIcon = () => (
 
 export default function Footer() {
   return (
-    <footer className="relative z-10 border-t py-12 sm:py-16 px-5 sm:px-12 text-center"
+    <footer className="relative z-10 border-t py-12 sm:py-16 px-4 sm:px-12 text-center"
       style={{ background: 'var(--bg2)', borderColor: 'var(--card-border)' }}>
 
       <div className="max-w-6xl mx-auto">

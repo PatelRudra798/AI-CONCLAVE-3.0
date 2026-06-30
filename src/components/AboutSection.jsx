@@ -14,7 +14,7 @@ export default function AboutSection({ mouseRef }) {
         {/* Text */}
         <div>
           <span className="text-[11px] text-accent font-semibold uppercase tracking-[3px] block mb-3">About the Event</span>
-          <h2 className="font-sora font-bold t-text leading-tight mb-5 sm:mb-6" style={{ fontSize: 'clamp(24px,3.5vw,40px)' }}>
+          <h2 className="font-sora font-bold t-text leading-tight mb-4 sm:mb-6" style={{ fontSize: 'clamp(24px,3.5vw,40px)' }}>
             Building on a<br />Remarkable Legacy
           </h2>
           {paras.map((p, i) => (

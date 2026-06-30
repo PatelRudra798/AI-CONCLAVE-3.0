@@ -36,7 +36,6 @@ function Home({ mouseRef }) {
       <ScheduleSection />
       <Divider />
       <WorkshopsSection />
-      <Divider />
       <SpeakersSection />
       <Divider />
       <ActivitiesSection />

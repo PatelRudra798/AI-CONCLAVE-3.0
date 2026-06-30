@@ -3,7 +3,7 @@ import { EVENT_DATE, HERO_STATS } from '../data';
 import group7 from '../assets/icons/Group 7.png';
 
 const pad = (n) => String(n).padStart(2, '0');
-const go  = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
 function TimerBlock({ value, label }) {
   return (
@@ -35,19 +35,29 @@ export default function HeroSection() {
 
       {/* Eyebrow */}
       <p className="text-[9px] sm:text-[10px] t-muted uppercase tracking-[2px] sm:tracking-[3px] mb-3 sm:mb-4 px-2">
-         SILVER OAK UNIVERSITY IEEE Signal Processing Society Student Branch Chapter
+        SILVER OAK UNIVERSITY IEEE Signal Processing Society Student Branch Chapter
       </p>
 
       {/* Title */}
       <h1 className="leading-[1] mb-5 flex flex-col items-center gap-2 sm:gap-4 mt-6 z-10" style={{ fontSize: 'clamp(44px, 12vw, 120px)' }}>
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
-          <span className="font-black text-white leading-none tracking-tight">AI</span>
-          <span className="font-black text-white leading-none">CONCLAVE</span>
+        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 select-none">
+          <span
+            className="font-black text-white leading-none tracking-tight glitch-span"
+            data-text="AI"
+          >
+            AI
+          </span>
+          <span
+            className="font-black text-white leading-none glitch-span"
+            data-text="CONCLAVE"
+          >
+            CONCLAVE
+          </span>
         </div>
-        <div className="flex items-center gap-3 mt-1 sm:mt-2">
+        {/* <div className="flex items-center gap-3 mt-1 sm:mt-2">
           <span className="text-accent text-[14px] sm:text-[22px] font-mono tracking-widest">// 2026 EDITION</span>
           <span className="text-[32px] sm:text-[48px] font-black text-white drop-shadow-[0_8px_16px_rgba(59,130,246,1)]">3.0</span>
-        </div>
+        </div> */}
       </h1>
 
 
@@ -68,13 +78,13 @@ export default function HeroSection() {
 
       {/* Countdown */}
       <div className="flex items-center gap-2 sm:gap-3 mb-8 sm:mb-10 flex-wrap justify-center">
-        <TimerBlock value={d} label="Days"  />
+        <TimerBlock value={d} label="Days" />
         <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
         <TimerBlock value={h} label="Hours" />
         <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
-        <TimerBlock value={m} label="Mins"  />
+        <TimerBlock value={m} label="Mins" />
         <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
-        <TimerBlock value={s} label="Secs"  />
+        <TimerBlock value={s} label="Secs" />
       </div>
 
       {/* CTAs */}
