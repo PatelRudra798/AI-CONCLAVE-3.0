@@ -16,7 +16,6 @@ import SponsorsSection     from './components/SponsorsSection';
 import PastEventsSection   from './components/PastEventsSection';
 import RegistrationSection from './components/RegistrationSection';
 import FaqSection          from './components/FaqSection';
-import ContactSection      from './components/ContactSection';
 import Footer              from './components/Footer';
 import IdCardGenerator     from './components/IdCardGenerator';
 import BadgeGeneratorModal from './components/BadgeGeneratorModal';
@@ -47,8 +46,6 @@ function Home({ mouseRef }) {
       <RegistrationSection />
       <Divider />
       <FaqSection />
-      <Divider />
-      <ContactSection />
     </>
   );
 }

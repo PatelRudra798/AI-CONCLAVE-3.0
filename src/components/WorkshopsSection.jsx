@@ -37,8 +37,8 @@ function WorkshopCard({ num, tag, accent, title, desc, items }) {
   return (
     <div className={`relative rounded-[20px] sm:rounded-[22px] p-7 sm:p-10 overflow-hidden transition-all duration-300 hover:-translate-y-1.5
       ${isCyan
-        ? 'border border-accent/22 bg-gradient-to-br from-accent/7 to-accent/[0.02]'
-        : 'border border-accent2-light/22 bg-gradient-to-br from-accent2/9 to-accent2-light/[0.02]'
+        ? 'border border-accent/22 bg-[var(--card)] bg-gradient-to-br from-accent/7 to-accent/[0.02]'
+        : 'border border-accent2-light/22 bg-[var(--card)] bg-gradient-to-br from-accent2/9 to-accent2-light/[0.02]'
       }`}>
       <span className="absolute top-3 right-4 font-sora font-black text-[56px] sm:text-[72px] text-white/[0.04] leading-none select-none">{num}</span>
       <span className={`inline-block text-[9px] font-black uppercase tracking-[1.5px] px-3 py-1 rounded-full mb-3 sm:mb-4

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const LINKS = [
   { label: 'Home',         id: 'hero'         },
   { label: 'About',        id: 'about'        },
@@ -42,21 +44,89 @@ const ThreadsIcon = () => (
 );
 
 export default function Footer() {
+  const [copied, setCopied] = useState(false);
+
+  const copyAddress = () => {
+    navigator.clipboard.writeText("352,353 A, Nr. Bhavik Publications, Opp. Bhagwat Vidyapith, S.G.Highway, Ahmedabad, Gujarat – 382481");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
   return (
-    <footer className="relative z-10 border-t py-12 sm:py-16 px-4 sm:px-12 text-center"
+    <footer id="contact" className="relative z-10 border-t py-14 sm:py-20 px-4 sm:px-12 text-center"
       style={{ background: 'var(--bg2)', borderColor: 'var(--card-border)' }}>
 
       <div className="max-w-6xl mx-auto">
-        {/* Logo */}
+        {/* Logo and Tagline */}
         <div className="font-sora font-extrabold text-[24px] sm:text-[30px] text-gradient-brand mb-2">
           AI CONCLAVE 3.0
         </div>
         <p className="text-[12px] sm:text-[13px] t-muted mb-1 font-medium italic">
           Where Intelligence Meets Innovation
         </p>
-        <p className="text-[10px] sm:text-[11px] t-muted opacity-40 mb-8 px-4">
+        <p className="text-[10px] sm:text-[11px] t-muted opacity-40 mb-12 px-4">
           IEEE Signal Processing Society Student Branch Chapter · Silver Oak University, Ahmedabad
         </p>
+
+        {/* Location Section in Footer with Map */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-12 text-left">
+          {/* Info Card */}
+          <div className="t-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-accent/15 bg-gradient-to-br from-accent/5 to-transparent">
+            <div>
+              <span className="text-[10px] text-accent font-semibold uppercase tracking-[2px] block mb-2">Venue Location</span>
+              <h3 className="font-sora font-bold text-xl text-white mb-4">Aryabhata Auditorium</h3>
+              <p className="text-[13px] t-muted leading-relaxed mb-6">
+                Silver Oak University Campus,<br />
+                Opp. Bhagwat Vidyapith, S.G. Highway,<br />
+                Gota, Ahmedabad, Gujarat - 382481
+              </p>
+              
+              <div className="flex flex-col gap-3 text-[12px] t-muted">
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center text-accent">📞</span>
+                  <span>+91 63524 74784 (Rishi) | +91 79908 15230 (Dhruv)</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center text-accent">✉️</span>
+                  <a href="mailto:ieee.tr@socet.edu.in" className="hover:text-accent transition-colors">ieee.tr@socet.edu.in</a>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-wrap gap-3">
+              <button 
+                onClick={copyAddress}
+                className="text-[11px] sm:text-[12px] bg-accent/10 border border-accent/20 hover:border-accent/40 text-accent font-semibold px-4 py-2.5 rounded-xl transition-all duration-200"
+              >
+                {copied ? '✓ Address Copied!' : '📋 Copy Address'}
+              </button>
+              <a 
+                href="https://maps.app.goo.gl/uXpD1f4c7d6gR7hB7" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-[11px] sm:text-[12px] bg-white/5 border border-white/10 hover:border-white/20 text-white font-semibold px-4 py-2.5 rounded-xl transition-all duration-200"
+              >
+                📍 Open in Google Maps
+              </a>
+            </div>
+          </div>
+
+          {/* Map Card */}
+          <div className="t-card rounded-2xl overflow-hidden border border-accent/15 min-h-[300px] relative">
+            <iframe 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.366761066896!2d72.5303698751532!3d23.08323607914442!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e83526017b35f%3A0x6b429a3994519965!2sSilver%20Oak%20University!5e0!3m2!1sen!2sin!4v1719840000000!5m2!1sen!2sin" 
+              width="100%" 
+              height="100%" 
+              style={{ border: 0, minHeight: '300px' }} 
+              allowFullScreen="" 
+              loading="lazy" 
+              referrerPolicy="no-referrer-when-downgrade"
+              className="absolute inset-0 w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300"
+            />
+          </div>
+        </div>
+
+
 
         {/* Nav links */}
         <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-8 max-w-2xl mx-auto">
@@ -71,16 +141,9 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Contact Info */}
-        <div className="flex flex-col items-center gap-1 mb-8 text-[11px] sm:text-[12px] t-muted px-4">
-          <p><strong>Address:</strong> 352,353 A, Nr. Bhavik Publications, Opp. Bhagwat Vidyapith, S.G.Highway, Ahmedabad, Gujarat – 382481</p>
-          <p><strong>Phone:</strong> Rishi Amrutiya: +91 63524 74784 | Dhruv Chavda: +91 79908 15230</p>
-          <p><strong>Email:</strong> ieee.tr@socet.edu.in | <strong>University Website:</strong> silveroakuni.ac.in</p>
-        </div>
-
         {/* Social */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <a href="http://ieee.silveroakuni.ac.in/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent hover:border-accent/40 transition-all duration-200">
+          <a href="http://ieee.silveroakuni.ac.in/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent hover:border-accent/40 transition-all duration-200 animate-pulse2">
             <WebIcon />
           </a>
           <a href="https://twitter.com/IEEE_SilverOak" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent hover:border-accent/40 transition-all duration-200">
@@ -104,7 +167,7 @@ export default function Footer() {
         <div className="t-divider max-w-sm mx-auto mb-5" />
 
         <p className="text-[10px] t-muted opacity-35">
-          © 2026 AI Conclave 3.0. All Rights Reserved.
+          © {new Date().getFullYear()} AI Conclave 3.0. All Rights Reserved.
         </p>
       </div>
     </footer>

@@ -1,6 +1,69 @@
+import { useState, useEffect, useRef } from 'react';
 import useCountdown from '../hooks/useCountdown';
 import { EVENT_DATE, HERO_STATS } from '../data';
 import group7 from '../assets/icons/Group 7.png';
+
+function StatCounter({ num }) {
+  const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef(null);
+
+  const numericPart = parseInt(num.replace(/[^0-9]/g, ''), 10) || 0;
+  const suffix = num.replace(/[0-9]/g, '');
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+    
+    let start = 0;
+    const duration = 1500;
+    const startTime = performance.now();
+    let animationFrameId;
+
+    const animate = (currentTime) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3); // cubic out
+      setCount(Math.floor(ease * numericPart));
+
+      if (progress < 1) {
+        animationFrameId = requestAnimationFrame(animate);
+      } else {
+        setCount(numericPart);
+      }
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isVisible, numericPart]);
+
+  return (
+    <span 
+      ref={elementRef} 
+      className={`inline-block transition-all duration-[1200ms] cubic-bezier(0.34, 1.56, 0.64, 1) transform ${
+        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
+      }`}
+    >
+      {count}
+      {suffix}
+    </span>
+  );
+}
+
 
 const pad = (n) => String(n).padStart(2, '0');
 const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
@@ -52,6 +115,12 @@ export default function HeroSection() {
             data-text="CONCLAVE"
           >
             CONCLAVE
+          </span>
+          <span
+            className="font-black text-white leading-none glitch-span"
+            data-text="3.0"
+          >
+            3.0
           </span>
         </div>
         {/* <div className="flex items-center gap-3 mt-1 sm:mt-2">
@@ -109,7 +178,9 @@ export default function HeroSection() {
       <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
         {HERO_STATS.map(({ num, label }) => (
           <div key={label} className="text-center">
-            <div className="font-sora font-bold text-2xl sm:text-3xl text-gradient-num">{num}</div>
+            <div className="font-sora font-bold text-2xl sm:text-3xl text-gradient-num">
+              <StatCounter num={num} />
+            </div>
             <div className="text-[9px] sm:text-[10px] t-muted uppercase tracking-[1.5px] mt-1">{label}</div>
           </div>
         ))}

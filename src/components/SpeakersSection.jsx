@@ -16,11 +16,11 @@ export default function SpeakersSection() {
           sub="Learn directly from thought leaders across industry and academia"
         />
 
-        <div className="flex flex-col items-center justify-center py-10 sm:py-28 md:py-36 animate-fadeIn">
+        <div className="flex flex-col items-center justify-center py-10 sm:py-20 md:py-24 animate-fadeIn">
           <h2 
-            className="text-center font-sora font-extrabold text-accent text-[24px] sm:text-[32px] md:text-[40px] lg:text-[48px] tracking-tight leading-tight select-none"
+            className="text-center font-mono font-medium text-white/50 text-[14px] sm:text-[16px] md:text-[18px] tracking-[4px] uppercase select-none"
             style={{ 
-              textShadow: '0 0 20px rgba(0, 229, 255, 0.45), 0 0 40px rgba(0, 229, 255, 0.15)' 
+              textShadow: '0 2px 10px rgba(255, 255, 255, 0.05)' 
             }}
           >
             Revealing Soon
