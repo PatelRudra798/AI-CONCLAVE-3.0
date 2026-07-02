@@ -151,7 +151,6 @@ export default function ScheduleSection() {
 
       <div className="max-container relative">
         <SectionHeader
-          label="10 July 2026"
           title="Day Schedule"
           sub="08:00 AM – 05:30 PM · Silver Oak University, Ahmedabad"
         />

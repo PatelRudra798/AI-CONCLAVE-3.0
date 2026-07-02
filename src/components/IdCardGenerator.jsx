@@ -4,6 +4,7 @@ import QRCode from 'react-qr-code';
 
 export default function IdCardGenerator() {
   const [name, setName] = useState('');
+  const [regNo, setRegNo] = useState('');
   const [role, setRole] = useState('');
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState('');
@@ -203,14 +204,6 @@ export default function IdCardGenerator() {
     }
   };
 
-
-  return (
-    <div className="w-full max-w-5xl mx-auto">
-      <div className="t-card rounded-[2.5rem] p-6 sm:p-10 relative overflow-hidden">
-
-        {/* Decorative background glow */}
-        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[400px] h-[400px] bg-accent/10 blur-[100px] rounded-full pointer-events-none" />
-
   const handleShare = async () => {
     if (!safeName) {
       showToast('Please enter your name first.', 'error');
@@ -282,59 +275,73 @@ export default function IdCardGenerator() {
     }
   };
 
-            <div className="flex flex-col gap-5">
-              <label className="flex flex-col gap-2">
-                <span className="text-[13px] text-white/80 font-semibold ml-1">Full Name</span>
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium placeholder:text-white/20"
-                  placeholder="e.g. John Doe"
-                />
-              </label>
+  return (
+    <div className="w-full max-w-5xl mx-auto">
+      <div className="t-card rounded-[2.5rem] p-6 sm:p-10 relative overflow-hidden">
 
-              <label className="flex flex-col gap-2">
-                <span className="text-[13px] text-white/80 font-semibold ml-1">Registration ID</span>
-                <input
-                  value={regNo}
-                  onChange={(e) => setRegNo(e.target.value)}
-                  className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium uppercase placeholder:text-white/20"
-                  placeholder="e.g. AI-0001"
-                />
-              </label>
+        {/* Decorative background glow */}
+        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[400px] h-[400px] bg-accent/10 blur-[100px] rounded-full pointer-events-none" />
 
-              <label className="flex flex-col gap-2">
-                <span className="text-[13px] text-white/80 font-semibold ml-1">Professional Type</span>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {[
-                    { type: 'IEEE Student', price: '150' },
-                    { type: 'Non-IEEE Student', price: '200' },
-                    { type: 'Professional', price: '350' },
-                  ].map((t) => {
-                    const selected = tierType === t.type;
-                    return (
-                      <button
-                        key={t.type}
-                        type="button"
-                        onClick={() => {
-                          setTierType(t.type);
-                          setTierPrice(t.price);
-                        }}
-                        className={`rounded-2xl px-3 py-3 border text-[12px] font-bold transition-all duration-300 uppercase tracking-wide ${
-                          selected
-                            ? 'bg-red-500/15 border-red-400/40 text-red-200'
-                            : 'bg-white/5 border-white/10 text-white/70 hover:border-red-400/30 hover:text-red-200'
-                        }`}
-                      >
-                        {t.type.replace('Member', 'M').replace('Student', 'S')}<br />
-                        ₹{t.price}
-                      </button>
-                    );
-                  })}
-                </div>
-              </label>
+        <div className="flex flex-col md:flex-row gap-8 items-start relative z-10">
+          {/* Left Column: Form Controls & Photo Upload */}
+          <div className="flex-1 w-full flex flex-col gap-4 sm:gap-6">
+
+            {/* Step 1: Registration Details */}
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 w-full box-border">
+              <h3 className="text-white font-sora font-bold mb-4" style={{ fontSize: 'clamp(16px, 4.5vw, 18px)' }}>1. Registration Details</h3>
+              <div className="flex flex-col gap-5">
+                <label className="flex flex-col gap-2">
+                  <span className="text-[13px] text-white/80 font-semibold ml-1">Full Name</span>
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium placeholder:text-white/20"
+                    placeholder="e.g. John Doe"
+                  />
+                </label>
+
+                <label className="flex flex-col gap-2">
+                  <span className="text-[13px] text-white/80 font-semibold ml-1">Registration ID</span>
+                  <input
+                    value={regNo}
+                    onChange={(e) => setRegNo(e.target.value)}
+                    className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium uppercase placeholder:text-white/20"
+                    placeholder="e.g. AI-0001"
+                  />
+                </label>
+
+                <label className="flex flex-col gap-2">
+                  <span className="text-[13px] text-white/80 font-semibold ml-1">Professional Type</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {[
+                      { type: 'IEEE Student', price: '150' },
+                      { type: 'Non-IEEE Student', price: '200' },
+                      { type: 'Professional', price: '350' },
+                    ].map((t) => {
+                      const selected = tierType === t.type;
+                      return (
+                        <button
+                          key={t.type}
+                          type="button"
+                          onClick={() => {
+                            setTierType(t.type);
+                            setTierPrice(t.price);
+                          }}
+                          className={`rounded-2xl px-3 py-3 border text-[12px] font-bold transition-all duration-300 uppercase tracking-wide ${
+                            selected
+                              ? 'bg-red-500/15 border-red-400/40 text-red-200'
+                              : 'bg-white/5 border-white/10 text-white/70 hover:border-red-400/30 hover:text-red-200'
+                          }`}
+                        >
+                          {t.type.replace('Member', 'M').replace('Student', 'S')}<br />
+                          ₹{t.price}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </label>
+              </div>
             </div>
-
 
             {error && (
               <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold flex items-center gap-2">
@@ -344,24 +351,6 @@ export default function IdCardGenerator() {
                 {error}
               </div>
             )}
-
-            <div className="mt-10">
-              <button
-                onClick={download}
-                disabled={isGenerating}
-                className={`w-full sm:w-auto flex items-center justify-center gap-3 bg-white text-[#0A1325] font-bold text-[14px] px-8 py-4 rounded-xl transition-all duration-300 ${isGenerating
-                  ? 'opacity-50 cursor-not-allowed scale-[0.98]'
-                  : 'hover:scale-[1.02] hover:shadow-[0_10px_30px_rgba(255,255,255,0.2)]'
-                  }`}
-                >
-                  <div className={`w-4 h-4 rounded-full flex items-center justify-center ${role === r ? 'bg-accent' : 'bg-white/10 border border-white/20'}`}>
-                     {role === r && <div className="w-2 h-2 rounded-full bg-white" />}
-                  </div>
-                  {r}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {/* Step 3: Photo Upload */}
           <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 w-full box-border">
@@ -422,8 +411,6 @@ export default function IdCardGenerator() {
                     LOGO
                   </div>
                 </div>
-              </div>
-
 
                 {/* Middle Content */}
                 <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
@@ -432,10 +419,6 @@ export default function IdCardGenerator() {
                     <div className="absolute top-[20%] left-[10%] w-32 h-32 bg-accent/10 rounded-full blur-[40px]" />
                     <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-accent2/10 rounded-full blur-[40px]" />
                   </div>
-                </div>
-                <div className="absolute w-[200px] h-[200px] rounded-full border border-[#3b82f6]/40 border-dashed" style={{ animation: 'spin 20s linear infinite' }} />
-                <div className="absolute w-[230px] h-[230px] rounded-full border border-[#0ff]/20" />
-              </div>
 
                   {/* QR Code Container */}
                   <div className="relative z-10 mb-8 p-4 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-accent/20">
@@ -447,10 +430,6 @@ export default function IdCardGenerator() {
                       bgColor="#ffffff"
                     />
                   </div>
-                ) : (
-                  <div className="h-[34px] mt-3"></div>
-                )}
-              </div>
 
                   {/* Name and Role */}
                   <div className="relative z-10 flex flex-col items-center text-center w-full">
@@ -483,9 +462,6 @@ export default function IdCardGenerator() {
                   </p>
                 </div>
               </div>
-
-            </div>
-          </div>
 
           {/* Action Buttons: Full-width, touch-friendly, equal gaps (12px = gap-3) */}
           <div className="w-full max-w-[360px] flex flex-col gap-3 mt-2 mx-auto md:mx-0 box-border">
@@ -586,6 +562,7 @@ export default function IdCardGenerator() {
 
         </div>
       </div>
+    </div>
 
       {/* Premium Glassmorphic Toast Notification */}
       {toast.show && (

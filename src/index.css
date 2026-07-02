@@ -13,27 +13,27 @@
   --bg2:         #0A1325;
   --card:        #0C1826;
   --card2:       #0F1E30;
-  --card-border: rgba(0,229,255,0.12);
+  --card-border: rgba(0,163,255,0.12);
   --text:        #D8E8F5;
   --muted:       #6B8299;
   --nav-bg:      rgba(6,11,20,0.88);
   --scroll-bg:   #060B14;
-  --scroll-thumb:rgba(0,229,255,0.3);
+  --scroll-thumb:rgba(0,163,255,0.3);
 
   /* Theme-routed accent (used by .text-accent, .bg-accent utilities etc.) */
-  --accent:      #00E5FF;   /* cyan   */
-  --accent-dim:  #00B8D4;
-  --accent2:     #6A0DAD;   /* purple */
-  --accent2-light: #B07FFF;
-  --glow:        rgba(0,229,255,0.18);
+  --accent:      #00D2FF;   /* light neon blue format */
+  --accent-dim:  #00A3FF;
+  --accent2:     #0052FF;   /* electric/royal blue from poster */
+  --accent2-light: #60A5FA;
+  --glow:        rgba(0,163,255,0.18);
 
   /* Raw R,G,B triplets for Tailwind's rgb(var(--x) / <alpha-value>) pattern */
-  --accent-rgb:        0,229,255;
-  --accent2-rgb:       106,13,173;
-  --accent2-light-rgb: 176,127,255;
+  --accent-rgb:        0,210,255;
+  --accent2-rgb:       0,82,255;
+  --accent2-light-rgb: 96,165,250;
 
-  --particle-c1: 0,229,255;
-  --particle-c2: 106,13,173;
+  --particle-c1: 0,210,255;
+  --particle-c2: 0,82,255;
 }
 
 /* ══════════════════════════════════════════════════
