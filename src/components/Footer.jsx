@@ -1,20 +1,5 @@
 import { useState } from 'react';
 
-const LINKS = [
-  { label: 'Home',         id: 'hero'         },
-  { label: 'About',        id: 'about'        },
-  { label: 'Topics',       id: 'topics'       },
-  { label: 'Schedule',     id: 'schedule'     },
-  { label: 'Workshops',    id: 'workshops'    },
-  { label: 'Speakers',     id: 'speakers'     },
-  { label: 'Sponsors',     id: 'sponsors'     },
-  { label: 'Register',     id: 'registration' },
-  { label: 'FAQ',          id: 'faq'          },
-  { label: 'Contact',      id: 'contact'      },
-];
-
-const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-
 const LinkedInIcon = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
@@ -44,19 +29,18 @@ const ThreadsIcon = () => (
 );
 
 export default function Footer() {
-  const [copied, setCopied] = useState(false);
-
-  const copyAddress = () => {
-    navigator.clipboard.writeText("352,353 A, Nr. Bhavik Publications, Opp. Bhagwat Vidyapith, S.G.Highway, Ahmedabad, Gujarat – 382481");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
   return (
-    <footer id="contact" className="relative z-10 border-t py-14 sm:py-20 px-4 sm:px-12 text-center"
-      style={{ background: 'var(--bg2)', borderColor: 'var(--card-border)' }}>
+    <footer id="contact" className="relative z-10 border-t py-14 sm:py-20 px-4 sm:px-12 text-center overflow-hidden bg-transparent"
+      style={{ borderColor: 'var(--card-border)' }}>
 
-      <div className="max-w-6xl mx-auto">
+      {/* Giant Background Text "AI CONCLAVE 3.0" (faded watermark, unselectable) */}
+      <div 
+        className="absolute bottom-[-8%] sm:bottom-[-10%] lg:bottom-[-14%] left-1/2 -translate-x-1/2 select-none pointer-events-none z-0 text-zinc-600 font-sora font-extrabold text-[16vw] sm:text-[18vw] lg:text-[200px] tracking-wider opacity-[0.08] leading-none uppercase whitespace-nowrap"
+      >
+        AI CONCLAVE 3.0
+      </div>
+
+      <div className="max-w-6xl mx-auto relative z-10">
         {/* Logo and Tagline */}
         <div className="font-sora font-extrabold text-[24px] sm:text-[30px] text-gradient-brand mb-2">
           AI CONCLAVE 3.0
@@ -71,7 +55,7 @@ export default function Footer() {
         {/* Location Section in Footer with Map */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-12 text-left">
           {/* Info Card */}
-          <div className="t-card rounded-2xl p-6 sm:p-8 flex flex-col justify-between border border-accent/15 bg-gradient-to-br from-accent/5 to-transparent">
+          <div className="t-card rounded-2xl p-6 sm:p-8 flex flex-col justify-center border border-accent/15 bg-gradient-to-br from-accent/5 to-transparent">
             <div>
               <span className="text-[10px] text-accent font-semibold uppercase tracking-[2px] block mb-2">Venue Location</span>
               <h3 className="font-sora font-bold text-xl text-white mb-4">Aryabhata Auditorium</h3>
@@ -81,33 +65,21 @@ export default function Footer() {
                 Gota, Ahmedabad, Gujarat - 382481
               </p>
               
-              <div className="flex flex-col gap-3 text-[12px] t-muted">
-                <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center text-accent">📞</span>
-                  <span>+91 63524 74784 (Rishi) | +91 79908 15230 (Dhruv)</span>
+              <div className="flex flex-col gap-3 text-[13px] t-muted">
+                {/* 3D Phone Icon and Stacked Numbers */}
+                <div className="flex items-start gap-3">
+                  <img src="https://img.icons8.com/3d-fluency/94/phone.png" alt="Phone" className="w-6 h-6 object-contain shrink-0 mt-0.5" />
+                  <div className="flex flex-col gap-1 font-medium">
+                    <div>Rishi Amrutya — +91 63524 74784</div>
+                    <div>Dhruv Chavda — +91 79908 15230</div>
+                  </div>
                 </div>
+                {/* 3D Mail Icon and Dynamic Mail Link */}
                 <div className="flex items-center gap-3">
-                  <span className="w-6 h-6 rounded-lg bg-accent/10 flex items-center justify-center text-accent">✉️</span>
-                  <a href="mailto:ieee.tr@socet.edu.in" className="hover:text-accent transition-colors">ieee.tr@socet.edu.in</a>
+                  <img src="https://img.icons8.com/3d-fluency/94/mail.png" alt="Mail" className="w-6 h-6 object-contain shrink-0" />
+                  <a href="mailto:ieee.tr@socet.edu.in" className="hover:text-accent font-medium transition-colors">ieee.tr@socet.edu.in</a>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <button 
-                onClick={copyAddress}
-                className="text-[11px] sm:text-[12px] bg-accent/10 border border-accent/20 hover:border-accent/40 text-accent font-semibold px-4 py-2.5 rounded-xl transition-all duration-200"
-              >
-                {copied ? '✓ Address Copied!' : '📋 Copy Address'}
-              </button>
-              <a 
-                href="https://maps.app.goo.gl/uXpD1f4c7d6gR7hB7" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-[11px] sm:text-[12px] bg-white/5 border border-white/10 hover:border-white/20 text-white font-semibold px-4 py-2.5 rounded-xl transition-all duration-200"
-              >
-                📍 Open in Google Maps
-              </a>
             </div>
           </div>
 
@@ -124,21 +96,6 @@ export default function Footer() {
               className="absolute inset-0 w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300"
             />
           </div>
-        </div>
-
-
-
-        {/* Nav links */}
-        <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2 mb-8 max-w-2xl mx-auto">
-          {LINKS.map(({ label, id }) => (
-            <button
-              key={id}
-              onClick={() => go(id)}
-              className="text-[11px] sm:text-[12px] t-muted hover:text-accent transition-colors duration-200"
-            >
-              {label}
-            </button>
-          ))}
         </div>
 
         {/* Social */}
@@ -167,7 +124,7 @@ export default function Footer() {
         <div className="t-divider max-w-sm mx-auto mb-5" />
 
         <p className="text-[10px] t-muted opacity-35">
-          © {new Date().getFullYear()} AI Conclave 3.0. All Rights Reserved.
+          &copy; {new Date().getFullYear()} AI Conclave 3.0. All Rights Reserved.
         </p>
       </div>
     </footer>
