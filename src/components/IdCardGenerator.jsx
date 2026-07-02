@@ -204,6 +204,29 @@ export default function IdCardGenerator() {
     }
   };
 
+  const handleCopy = async () => {
+    if (!safeName) {
+      showToast('Please enter your name first.', 'error');
+      return;
+    }
+    setIsGenerating(true);
+    showToast('Generating badge for clipboard...', 'loading');
+    try {
+      const { blob } = await generateBadgeImage();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob
+        })
+      ]);
+      showToast('Badge copied to clipboard!', 'success');
+    } catch (e) {
+      console.error(e);
+      showToast('Failed to copy badge to clipboard.', 'error');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleShare = async () => {
     if (!safeName) {
       showToast('Please enter your name first.', 'error');

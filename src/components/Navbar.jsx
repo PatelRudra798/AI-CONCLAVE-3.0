@@ -55,7 +55,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
   }, []);
 
   const handleNav = (id) => { 
-    if (id === 'generate-badge') {
+    if (id === 'generate-badge' || id === 'badge-section') {
       if (onOpenBadgeModal) onOpenBadgeModal();
     } else if (id === 'registration') {
       window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank');

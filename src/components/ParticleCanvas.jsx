@@ -19,11 +19,11 @@ export default function ParticleCanvas({ isDark }) {
     resize();
     window.addEventListener('resize', resize, { passive: true });
 
-    const nodes = Array.from({ length: 70 }, () => ({
+    const nodes = Array.from({ length: 95 }, () => ({
       x:  Math.random() * window.innerWidth,
       y:  Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * 0.28,
-      vy: (Math.random() - 0.5) * 0.28,
+      vx: (Math.random() - 0.5) * 0.45,
+      vy: (Math.random() - 0.5) * 0.45,
       r:  Math.random() * 1.6 + 0.6,
       type: Math.random() > 0.5 ? 'a' : 'b',
     }));
@@ -38,9 +38,9 @@ export default function ParticleCanvas({ isDark }) {
       const c2 = rootStyle.getPropertyValue('--particle-c2').trim() || '106,13,173';
       const dark = isDarkRef.current;
 
-      const dotA = `rgba(${c1},0.9)`;
-      const dotB = `rgba(${c2},0.9)`;
-      const lineMaxA = dark ? 0.14 : 0.22;
+      const dotA = `rgba(${c1},0.95)`;
+      const dotB = `rgba(${c2},0.95)`;
+      const lineMaxA = dark ? 0.28 : 0.35;
 
       for (const p of nodes) {
         p.x += p.vx; p.y += p.vy;
@@ -58,8 +58,8 @@ export default function ParticleCanvas({ isDark }) {
           const dx = nodes[i].x - nodes[j].x;
           const dy = nodes[i].y - nodes[j].y;
           const d  = Math.hypot(dx, dy);
-          if (d < 130) {
-            const a = (1 - d / 130) * lineMaxA;
+          if (d < 150) {
+            const a = (1 - d / 150) * lineMaxA;
             ctx.beginPath();
             ctx.moveTo(nodes[i].x, nodes[i].y);
             ctx.lineTo(nodes[j].x, nodes[j].y);
@@ -84,7 +84,7 @@ export default function ParticleCanvas({ isDark }) {
     <canvas
       ref={ref}
       className="fixed inset-0 z-0 pointer-events-none"
-      style={{ opacity: isDark ? 0.55 : 0.75 }}
+      style={{ opacity: isDark ? 0.85 : 0.9 }}
     />
   );
 }
