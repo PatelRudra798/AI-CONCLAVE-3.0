@@ -165,7 +165,7 @@ export default function ScheduleSection() {
         </div> */}
 
         {/* Vertical Compact Roadmap Timeline */}
-        <div ref={scrollContainerRef} className="max-w-5xl mx-auto max-h-[500px] overflow-y-auto pr-1 py-4 relative scroll-smooth" 
+        <div ref={scrollContainerRef} className="max-w-5xl mx-auto py-4 relative scroll-smooth" 
              style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--accent) transparent' }}>
           
           {/* Connecting road curve path */}

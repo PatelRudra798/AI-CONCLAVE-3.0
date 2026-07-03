@@ -21,8 +21,10 @@ export default function ThreeScene({ mouseRef }) {
     const W = el.clientWidth;
     const H = el.clientHeight;
 
+    const isMobile = window.innerWidth < 768;
+
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setPixelRatio(isMobile ? 1 : Math.min(devicePixelRatio, 2));
     renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
     el.appendChild(renderer.domElement);
@@ -62,7 +64,7 @@ export default function ThreeScene({ mouseRef }) {
     });
 
     // Particle cloud — two-tone using theme accent colors
-    const N = 240;
+    const N = isMobile ? 120 : 240;
     const pos = new Float32Array(N * 3);
     const col = new Float32Array(N * 3);
     const cA = new THREE.Color(accentHex);

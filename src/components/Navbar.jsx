@@ -80,8 +80,8 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
       >
         {/* Logo */}
         <button onClick={() => handleNav('hero')} className="flex items-center gap-1.5 sm:gap-3 flex-shrink-0 min-w-0">
-          <img src={sou} alt="img" className="h-7 sm:h-10 w-auto flex-shrink-0" />
-          <img src={sousps} alt="img" className="h-7 sm:h-10 w-auto max-w-[140px] sm:max-w-none object-contain flex-shrink" />
+          <img src={sou} alt="img" className="h-5 xs:h-6 sm:h-10 w-auto flex-shrink-0" />
+          <img src={sousps} alt="img" className="h-5 xs:h-6 sm:h-10 w-auto max-w-[110px] xs:max-w-[130px] sm:max-w-none object-contain flex-shrink" />
         </button>
 
         {/* Desktop links */}

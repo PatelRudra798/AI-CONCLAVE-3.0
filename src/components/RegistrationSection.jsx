@@ -57,6 +57,7 @@ function TierCard({ type, price, symbol, note, featured, cta }) {
 
       {/* All register buttons are same height + visually consistent (same as header) */}
       <button
+        onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
         className="w-full mt-auto py-2.5 sm:py-3 rounded-xl text-[12px] sm:text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 bg-transparent border border-accent/40 text-accent hover:bg-accent/10 hover:border-accent/70 hover:scale-[1.02]"
       >
         {cta}

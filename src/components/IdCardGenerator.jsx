@@ -1,8 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import * as htmlToImage from 'html-to-image';
 import QRCode from 'react-qr-code';
+import souLogo from '../assets/icons/Group 16.png';
+import ieeeSpsLogo from '../assets/icons/Group.png';
+import ieeeLogo from '../assets/icons/Group 7.png';
+import gdgLogo from '../assets/icons/gdg white logo.png';
+import badgeBg from '../assets/badge-bg.png';
 
-export default function IdCardGenerator() {
+export default function IdCardGenerator({ onClose }) {
   const [name, setName] = useState('');
   const [regNo, setRegNo] = useState('');
   const [role, setRole] = useState('');
@@ -13,15 +18,15 @@ export default function IdCardGenerator() {
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
   const [showShareModal, setShowShareModal] = useState(false);
 
-  const [tierType, setTierType] = useState('IEEE Student');
-  const [tierPrice, setTierPrice] = useState('150');
+  const [tierType, setTierType] = useState('');
+  const [tierPrice, setTierPrice] = useState('');
 
   const cardRef = useRef(null);
   const containerRef = useRef(null);
 
   const safeName = (name || '').trim().slice(0, 40) || 'Your Name';
   const safeRegNo = (regNo || '').trim().slice(0, 20) || 'AI-0001';
-  const safeRole = tierType || 'Participant';
+  const safeRole = tierType;
   const safePrice = String(tierPrice || '0').trim();
 
 
@@ -106,10 +111,10 @@ export default function IdCardGenerator() {
     const elementsToRestore = [];
     
     try {
-      // Force high-res dimensions for a perfect 360x600 export regardless of mobile scaling
+      // Force high-res dimensions for a perfect 360x640 export regardless of mobile scaling
       originalNode.style.width = '360px';
-      originalNode.style.height = '600px';
-      originalNode.style.minHeight = '600px';
+      originalNode.style.height = '640px';
+      originalNode.style.minHeight = '640px';
       originalNode.style.boxShadow = 'none';
       originalNode.style.transform = 'none';
       originalNode.style.filter = 'none';
@@ -273,7 +278,6 @@ export default function IdCardGenerator() {
     setIsGenerating(true);
     showToast(`Preparing share for ${platform === 'twitter' ? 'Twitter/X' : platform === 'linkedin' ? 'LinkedIn' : 'Facebook'}...`, 'loading');
     try {
-      await generateBadgeImage();
       const shareUrl = encodeURIComponent('https://forms.gle/Ucu9KrsA27EXH1X67');
       const shareText = encodeURIComponent(`Excited to attend AI Conclave 3.0! Just generated my personalized badge. Check it out!`);
       
@@ -299,75 +303,72 @@ export default function IdCardGenerator() {
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <div className="t-card rounded-[2.5rem] p-6 sm:p-10 relative overflow-hidden">
+    <div className="w-full max-w-5xl mx-auto pb-8">
+      <div className="t-card rounded-[2.5rem] p-6 sm:p-10 pb-12 sm:pb-16 relative overflow-hidden">
+        {onClose && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 hover:text-white hover:bg-white/10 transition-all"
+            aria-label="Close modal"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        )}
 
         {/* Decorative background glow */}
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-[400px] h-[400px] bg-accent/10 blur-[100px] rounded-full pointer-events-none" />
 
         <div className="flex flex-col md:flex-row gap-8 items-start relative z-10">
           {/* Left Column: Form Controls & Photo Upload */}
-          <div className="flex-1 w-full flex flex-col gap-4 sm:gap-6">
+          <div className="flex-1 w-full flex flex-col gap-4">
 
-            {/* Step 1: Registration Details */}
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 w-full box-border">
-              <h3 className="text-white font-sora font-bold mb-4" style={{ fontSize: 'clamp(16px, 4.5vw, 18px)' }}>1. Registration Details</h3>
-              <div className="flex flex-col gap-5">
-                <label className="flex flex-col gap-2">
-                  <span className="text-[13px] text-white/80 font-semibold ml-1">Full Name</span>
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium placeholder:text-white/20"
-                    placeholder="e.g. John Doe"
-                  />
-                </label>
+            {/* Step 1: Enter Your Name */}
+            <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
+              <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>1. Enter Your Name</h3>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full t-card2-bg border t-border t-text rounded-lg px-4 py-3 outline-none focus:border-accent transition-all font-medium placeholder:text-white/20 text-sm uppercase"
+                placeholder="E.G. JOHN DOE"
+              />
+            </div>
 
-                <label className="flex flex-col gap-2">
-                  <span className="text-[13px] text-white/80 font-semibold ml-1">Registration ID</span>
-                  <input
-                    value={regNo}
-                    onChange={(e) => setRegNo(e.target.value)}
-                    className="bg-white/5 border border-white/10 text-white rounded-2xl px-5 py-4 outline-none focus:border-accent focus:bg-accent/5 transition-all duration-300 font-medium uppercase placeholder:text-white/20"
-                    placeholder="e.g. AI-0001"
-                  />
-                </label>
-
-                <label className="flex flex-col gap-2">
-                  <span className="text-[13px] text-white/80 font-semibold ml-1">Professional Type</span>
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {[
-                      { type: 'IEEE Student', price: '150' },
-                      { type: 'Non-IEEE Student', price: '200' },
-                      { type: 'Professional', price: '350' },
-                    ].map((t) => {
-                      const selected = tierType === t.type;
-                      return (
-                        <button
-                          key={t.type}
-                          type="button"
-                          onClick={() => {
-                            setTierType(t.type);
-                            setTierPrice(t.price);
-                          }}
-                          className={`rounded-2xl px-3 py-3 border text-[12px] font-bold transition-all duration-300 uppercase tracking-wide ${
-                            selected
-                              ? 'bg-red-500/15 border-red-400/40 text-red-200'
-                              : 'bg-white/5 border-white/10 text-white/70 hover:border-red-400/30 hover:text-red-200'
-                          }`}
-                        >
-                          {t.type.replace('Member', 'M').replace('Student', 'S')}<br />
-                          ₹{t.price}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </label>
+            {/* Step 2: Choose Template */}
+            <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
+              <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>2. Choose Template</h3>
+              <div className="flex flex-col gap-3">
+                {[
+                  { label: 'Attendee', type: 'Attendee', price: '' },
+                  { label: 'Speaker', type: 'Speaker', price: '' },
+                  { label: 'Volunteer', type: 'Volunteer', price: '' },
+                  { label: 'Organizer', type: 'Organizer', price: '' },
+                ].map((t) => {
+                  const selected = tierType === t.type;
+                  return (
+                    <button
+                      key={t.type}
+                      type="button"
+                      onClick={() => {
+                        setTierType(t.type);
+                        setTierPrice(t.price);
+                      }}
+                      className="w-full flex items-center gap-3 t-card2-bg border t-border rounded-lg px-4 py-3.5 hover:border-accent transition-all text-left"
+                    >
+                      <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selected ? 'border-accent' : 'border-white/20 bg-transparent'}`}>
+                        {selected && <div className="w-2 h-2 rounded-full bg-accent" />}
+                      </div>
+                      <span className="t-text font-semibold text-sm">{t.label}</span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {error && (
-              <div className="mt-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold flex items-center gap-2">
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold flex items-center gap-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
@@ -375,116 +376,135 @@ export default function IdCardGenerator() {
               </div>
             )}
 
-          {/* Step 3: Photo Upload */}
-          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 sm:p-6 w-full box-border">
-            <h3 className="text-white font-sora font-bold mb-4" style={{ fontSize: 'clamp(16px, 4.5vw, 18px)' }}>3. Upload and Adjust</h3>
-            <label className="flex flex-col items-center justify-center border-2 border-dashed border-white/20 rounded-xl p-6 sm:p-8 hover:bg-white/5 hover:border-accent/50 transition-all cursor-pointer w-full box-border">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white/50 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span className="text-white/70 text-sm mb-4 text-center">Upload a clear headshot or portrait photo.<br/>PNG or JPG recommended.</span>
-              <span className="bg-accent text-white font-bold py-2 px-6 rounded-lg hover:bg-accent/80 transition-all">Upload Photo</span>
-              <input
-                type="file"
-                accept="image/png, image/jpeg"
-                className="hidden"
-                onChange={handlePhotoUpload}
-              />
-            </label>
-            {error && <p className="text-red-400 text-sm mt-3 text-center">{error}</p>}
+            {/* Step 3: Upload and Adjust */}
+            <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
+              <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>3. Upload and Adjust</h3>
+              <label className="flex flex-col items-center justify-center border border-dashed t-border rounded-xl p-8 hover:border-accent transition-all cursor-pointer w-full box-border t-card2-bg">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="t-muted text-xs mb-4 text-center leading-relaxed">Upload a clear headshot or portrait photo.<br/>PNG or JPG recommended.</span>
+                <span className="t-text font-bold text-sm">Upload Photo</span>
+                <input
+                  type="file"
+                  accept="image/png, image/jpeg"
+                  className="hidden"
+                  onChange={handlePhotoUpload}
+                />
+              </label>
+            </div>
+
           </div>
 
-        </div>
-
         {/* Right Column: Preview & Action Buttons */}
-        <div className="flex-1 w-full flex flex-col gap-6 items-center">
+        <div className="flex-1 w-full flex flex-col gap-4 items-center" ref={containerRef}>
           
-          <h2 className="text-white font-sora font-bold w-full text-center md:text-left" style={{ fontSize: 'clamp(18px, 4.5vw, 24px)' }}>Badge Preview</h2>
-
+          <div style={{ position: 'relative', height: `${640 * scale * 0.85}px`, width: `${360 * scale * 0.85}px` }}>
+            <div style={{ transform: `scale(${scale * 0.85})`, transformOrigin: 'top left', position: 'absolute', top: 0, left: 0 }}>
               {/* The Actual Badge to be downloaded */}
               <div
                 ref={cardRef}
-                className="relative bg-gradient-to-b from-[#0a172a] to-[#080E1A] w-[320px] aspect-[1/1.45] rounded-3xl overflow-hidden shadow-2xl flex flex-col"
+                className="relative bg-[#020813] w-[360px] h-[640px] rounded-2xl overflow-hidden shadow-2xl flex flex-col items-center border border-white/10"
                 style={{
-                  border: '1px solid var(--accent)'
+                  backgroundImage: `url(${badgeBg})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                 }}
               >
-                {/* Lanyard Hole */}
-                <div className="absolute top-5 left-1/2 -translate-x-1/2 w-16 h-3 rounded-full bg-[#040810] z-20 shadow-[inset_0_2px_4px_rgba(0,0,0,0.5)] border border-white/5" />
+                {/* Tech Background overlay */}
+                <div className="absolute inset-0 bg-[#020813]/50 pointer-events-none" />
 
-                {/* Gradient overlay for subtle background flair */}
-                <div className="absolute inset-0 bg-gradient-to-r from-accent/20 via-transparent to-accent2/20 opacity-30 pointer-events-none" />
-                {/* Top Colored Section */}
-                <div className="relative bg-gradient-to-r from-accent to-accent2 pt-14 pb-8 flex flex-col items-center border-b border-accent/20">
-                  <div className="absolute inset-0 bg-gradient-to-b from-accent/20 to-transparent opacity-80" />
-
-                  {/* Event Logo / Text */}
-                  <h3 className="relative z-10 font-sora font-black text-[22px] tracking-wide text-white drop-shadow-md">
-                    <span className="flex items-center gap-2">
-                      <span className="text-accent">AI CONCLAVE </span>3.0
-                    </span>
-                  </h3>
-                  <p className="text-white/70 text-[12px] mt-1 text-center">13‑14 Oct 2026 • Online</p>
+                {/* Top Logos */}
+                <div className="relative z-10 w-full px-2 pt-4 pb-2 flex justify-between items-center bg-black/20 backdrop-blur-sm border-b border-white/10">
+                  <img src={souLogo} alt="SOU" className="h-4 object-contain" />
+                  <img src={ieeeLogo} alt="IEEE" className="h-4 object-contain" />
+                  <img src={ieeeSpsLogo} alt="IEEE SPS" className="h-4 object-contain" />
+                  <img src={gdgLogo} alt="GDG" className="h-3 object-contain" />
                 </div>
 
-                {/* Event Logo Placeholder */}
-                <div className="flex justify-center mt-2 mb-2">
-                  <div className="h-8 w-8 bg-white/20 rounded-full flex items-center justify-center text-white text-xs font-bold">
-                    LOGO
+                {/* Title */}
+                <div className="relative z-10 mt-6 flex flex-col items-center">
+                  <div className="flex items-center justify-center gap-2">
+                    <span className="font-black text-4xl text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">AI</span>
+                    <span className="font-black text-4xl text-white/10 tracking-widest" style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.9)' }}>CONCLAVE</span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-cyan-400 font-mono text-[10px] tracking-widest">// 2026 EDITION</span>
+                    <span className="text-cyan-400 font-black text-xl drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">3.0</span>
                   </div>
                 </div>
 
-                {/* Middle Content */}
-                <div className="flex-1 flex flex-col items-center justify-center p-6 relative">
-                  {/* Subtle Background Elements */}
-                  <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div className="absolute top-[20%] left-[10%] w-32 h-32 bg-accent/10 rounded-full blur-[40px]" />
-                    <div className="absolute bottom-[20%] right-[10%] w-32 h-32 bg-accent2/10 rounded-full blur-[40px]" />
+                {/* Photo */}
+                <div className="relative z-10 mt-8 mb-4">
+                  <div className="w-48 h-48 rounded-full border-4 border-cyan-400/80 shadow-[0_0_25px_rgba(34,211,238,0.4)] p-1 bg-black/40 overflow-hidden">
+                    {photo ? (
+                      <img src={photo} alt="Profile" className="w-full h-full object-cover rounded-full" />
+                    ) : (
+                      <div className="w-full h-full bg-blue-900/40 rounded-full flex items-center justify-center text-white/30 text-4xl font-bold">
+                        ?
+                      </div>
+                    )}
                   </div>
+                </div>
 
-                  {/* QR Code Container */}
-                  <div className="relative z-10 mb-8 p-4 bg-white rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.5)] border border-accent/20">
-                    <QRCode
-                      value={safeRegNo}
-                      size={120}
-                      level="H"
-                      fgColor="#080E1A"
-                      bgColor="#ffffff"
-                    />
+                {/* Name & Role */}
+                <div className="relative z-10 flex flex-col items-center w-full px-4 mb-auto">
+                  <h2 className="font-black text-[24px] sm:text-[26px] text-white tracking-widest text-center uppercase leading-tight drop-shadow-md break-words max-w-full">
+                    {safeName}
+                  </h2>
+                  {safeRole && (
+                    <div className="mt-3 px-6 py-1.5 rounded-lg border border-blue-400/50 bg-blue-900/40 backdrop-blur-sm">
+                      <span className="text-white font-mono text-sm tracking-[0.2em] uppercase">
+                        &lt; {safeRole} /&gt;
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* Bottom Section */}
+                <div className="relative z-10 w-full p-5 flex justify-between items-end mt-auto">
+                  {/* Curved SVG Background */}
+                  <div className="absolute bottom-0 left-0 w-full h-[150px] -z-10 pointer-events-none">
+                    <svg viewBox="0 0 360 150" className="w-full h-full" preserveAspectRatio="none">
+                      <path d="M0,40 Q180,0 360,40 L360,150 L0,150 Z" fill="#0a1325" />
+                    </svg>
                   </div>
-
-                  {/* Name and Role */}
-                  <div className="relative z-10 flex flex-col items-center text-center w-full">
-                    <h4 className="font-sora font-bold text-[28px] text-gradient-brand leading-tight mb-3 drop-shadow-md break-words max-w-full px-2">
-                      {safeName}
-                    </h4>
-
-                    {/* Red box tier (fixed layout, always aligned) */}
-                    <div className="w-full flex justify-center">
-                      <div className="w-[92%] max-w-[260px] rounded-2xl bg-red-500/15 border border-red-400/35 px-4 py-2 flex items-center justify-center gap-2">
-                        <span className="text-red-200 font-space font-bold text-[12px] uppercase tracking-widest whitespace-nowrap">
-                          {safeRole}
-                        </span>
-                        <span className="text-white/80 font-mono font-bold text-[12px]">
-                          ₹{safePrice}
-                        </span>
+                  
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded border border-blue-500/50 flex items-center justify-center bg-blue-900/20 text-cyan-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-blue-400 text-[10px] font-bold tracking-widest">DATE</span>
+                        <span className="text-white font-bold text-sm">21 JULY, 2026</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded border border-blue-500/50 flex items-center justify-center bg-blue-900/20 text-cyan-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-blue-400 text-[10px] font-bold tracking-widest">LOCATION</span>
+                        <span className="text-white font-bold text-sm">GANDHINAGAR, IN</span>
                       </div>
                     </div>
                   </div>
-
-                </div>
-
-                {/* Footer Section */}
-                <div className="bg-gradient-to-r from-accent/20 to-accent2/20 py-5 flex flex-col items-center justify-center border-t border-white/5 relative z-10">
-                  <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] mb-1">
-                    REGISTRATION ID
-                  </p>
-                  <p className="text-white font-mono font-bold text-[18px] tracking-wider">
-                    {safeRegNo}
-                  </p>
+                  
+                  <div className="p-2 bg-white rounded-xl shadow-lg border border-white/20">
+                    <QRCode
+                      value={safeRegNo}
+                      size={70}
+                      level="H"
+                      fgColor="#000000"
+                      bgColor="#ffffff"
+                    />
+                  </div>
                 </div>
               </div>
+            </div>
+          </div>
 
           {/* Action Buttons: Full-width, touch-friendly, equal gaps (12px = gap-3) */}
           <div className="w-full max-w-[360px] flex flex-col gap-3 mt-2 mx-auto md:mx-0 box-border">

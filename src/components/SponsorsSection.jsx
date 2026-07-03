@@ -10,9 +10,7 @@ export default function SponsorsSection() {
 
       <div className="max-container">
         <SectionHeader
-          label="Our Partners"
-          title="Sponsors & Partners"
-          sub="We thank our sponsors and partners for supporting AI Conclave 3.0 and helping us create impactful learning experiences."
+          title="OUR COLLABORATORS"
         />
 
         {/* Flat, equal grid — no tier hierarchy */}

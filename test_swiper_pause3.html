@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <style>
+    .swiper-wrapper { transition-timing-function: linear !important; }
+    .swiper-slide { width: 300px; height: 200px; background: red; margin-right: 20px; }
+  </style>
+</head>
+<body>
+  <div class="swiper mySwiper">
+    <div class="swiper-wrapper">
+      <div class="swiper-slide">Slide 1</div>
+      <div class="swiper-slide">Slide 2</div>
+      <div class="swiper-slide">Slide 3</div>
+    </div>
+  </div>
+  <script>
+    var swiper = new Swiper(".mySwiper", {
+      loop: true,
+      speed: 3500,
+      slidesPerView: "auto",
+      autoplay: {
+        delay: 0,
+        disableOnInteraction: false,
+      }
+    });
+
+    document.querySelector('.mySwiper').addEventListener('mouseenter', () => {
+      swiper.autoplay.pause();
+      const currentTranslate = swiper.getTranslate();
+      swiper.setTransition(0);
+      swiper.setTranslate(currentTranslate);
+    });
+
+    document.querySelector('.mySwiper').addEventListener('mouseleave', () => {
+      swiper.setTransition(swiper.params.speed);
+      swiper.autoplay.resume();
+    });
+  </script>
+</body>
+</html>
