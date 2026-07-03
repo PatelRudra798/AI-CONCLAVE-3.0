@@ -28,7 +28,7 @@ function StatCounter({ num }) {
 
   useEffect(() => {
     if (!isVisible) return;
-    
+
     let start = 0;
     const duration = 1500;
     const startTime = performance.now();
@@ -52,11 +52,10 @@ function StatCounter({ num }) {
   }, [isVisible, numericPart]);
 
   return (
-    <span 
-      ref={elementRef} 
-      className={`inline-block transition-all duration-[1200ms] cubic-bezier(0.34, 1.56, 0.64, 1) transform ${
-        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
-      }`}
+    <span
+      ref={elementRef}
+      className={`inline-block transition-all duration-[1200ms] cubic-bezier(0.34, 1.56, 0.64, 1) transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
+        }`}
     >
       {count}
       {suffix}
@@ -70,7 +69,7 @@ const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smoo
 
 function TimerBlock({ value, label }) {
   return (
-    <div className="flex flex-col items-center bg-accent/5 border border-accent/15 rounded-2xl px-3 xs:px-4 sm:px-5 py-3 sm:py-4 min-w-[68px] xs:min-w-[76px] sm:min-w-[82px]">
+    <div className="flex flex-col items-center bg-accent/5 border border-accent/15 rounded-2xl px-2 xs:px-4 sm:px-5 py-2 sm:py-4 min-w-[60px] xs:min-w-[76px] sm:min-w-[82px]">
       <span className="font-sora font-extrabold leading-none text-gradient-timer"
         style={{ fontSize: 'clamp(28px, 5vw, 42px)' }}>
         {pad(value)}
@@ -82,7 +81,7 @@ function TimerBlock({ value, label }) {
   );
 }
 
-export default function HeroSection() {
+export default function HeroSection({ onOpenBadgeModal }) {
   const { d, h, m, s } = useCountdown(EVENT_DATE);
 
   return (
@@ -146,7 +145,7 @@ export default function HeroSection() {
       </p>
 
       {/* Countdown */}
-      <div className="flex items-center gap-2 sm:gap-3 mb-8 sm:mb-10 flex-wrap justify-center">
+      <div className="flex items-center gap-1 xs:gap-2 sm:gap-3 mb-8 sm:mb-10 flex-nowrap justify-center w-full px-1">
         <TimerBlock value={d} label="Days" />
         <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
         <TimerBlock value={h} label="Hours" />
@@ -164,27 +163,17 @@ export default function HeroSection() {
           onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 40px var(--glow)`; }}
           onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
         >
-          Register Now →
+          Register Now
         </button>
         <button
-          onClick={() => go('schedule')}
+          onClick={onOpenBadgeModal}
           className="w-full xs:w-auto border border-accent/25 bg-accent/[0.03] t-text font-semibold text-[13px] sm:text-[14px] px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl hover:border-accent hover:text-accent hover:-translate-y-1 transition-all duration-200"
         >
-          View Schedule
+          Generate Badge
         </button>
       </div>
 
-      {/* Stats */}
-      <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10">
-        {HERO_STATS.map(({ num, label }) => (
-          <div key={label} className="text-center">
-            <div className="font-sora font-bold text-2xl sm:text-3xl text-gradient-num">
-              <StatCounter num={num} />
-            </div>
-            <div className="text-[9px] sm:text-[10px] t-muted uppercase tracking-[1.5px] mt-1">{label}</div>
-          </div>
-        ))}
-      </div>
+
     </section>
   );
 }

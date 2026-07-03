@@ -59,11 +59,11 @@ export default function Footer() {
             <div>
               <span className="text-[10px] text-accent font-semibold uppercase tracking-[2px] block mb-2">Venue Location</span>
               <h3 className="font-sora font-bold text-xl text-white mb-4">Aryabhata Auditorium</h3>
-              <p className="text-[13px] t-muted leading-relaxed mb-6">
+              <a href="https://maps.app.goo.gl/Fm6TAotg4mqjV6on8" target="_blank" rel="noreferrer" className="text-[13px] t-muted leading-relaxed mb-6 block hover:text-accent transition-colors">
                 Silver Oak University Campus,<br />
                 Opp. Bhagwat Vidyapith, S.G. Highway,<br />
                 Gota, Ahmedabad, Gujarat - 382481
-              </p>
+              </a>
               
               <div className="flex flex-col gap-3 text-[13px] t-muted">
                 {/* 3D Phone Icon and Stacked Numbers */}
@@ -84,23 +84,29 @@ export default function Footer() {
           </div>
 
           {/* Map Card */}
-          <div className="t-card rounded-2xl overflow-hidden border border-accent/15 min-h-[300px] relative">
+          <a 
+            href="https://maps.app.goo.gl/Fm6TAotg4mqjV6on8"
+            target="_blank"
+            rel="noreferrer"
+            className="t-card rounded-2xl overflow-hidden border border-accent/15 min-h-[300px] relative block cursor-pointer group"
+          >
+            <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors z-10 pointer-events-auto"></div>
             <iframe 
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.366761066896!2d72.5303698751532!3d23.08323607914442!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e83526017b35f%3A0x6b429a3994519965!2sSilver%20Oak%20University!5e0!3m2!1sen!2sin!4v1719840000000!5m2!1sen!2sin" 
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.1854928480457!2d72.5346378!3d23.090304600000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e833af6f39347%3A0xf1db9065daea7008!2sSilver%20Oak%20University!5e0!3m2!1sen!2sin!4v1783060491828!5m2!1sen!2sin" 
               width="100%" 
               height="100%" 
               style={{ border: 0, minHeight: '300px' }} 
               allowFullScreen="" 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"
-              className="absolute inset-0 w-full h-full opacity-80 hover:opacity-100 transition-opacity duration-300"
+              className="absolute inset-0 w-full h-full opacity-80 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
             />
-          </div>
+          </a>
         </div>
 
         {/* Social */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <a href="http://ieee.silveroakuni.ac.in/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent hover:border-accent/40 transition-all duration-200 animate-pulse2">
+          <a href="http://ieee.silveroakuni.ac.in/" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent hover:border-accent/40 transition-all duration-200">
             <WebIcon />
           </a>
           <a href="https://twitter.com/IEEE_SilverOak" target="_blank" rel="noopener noreferrer" className="w-9 h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent hover:border-accent/40 transition-all duration-200">

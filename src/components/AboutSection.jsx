@@ -22,18 +22,9 @@ export default function AboutSection({ mouseRef }) {
           ))}
         </div>
 
-        {/* 3D canvas — hidden on small screens, shown on large */}
-        <div className="hidden lg:block h-[420px]">
+        {/* 3D canvas — background on mobile, normal grid item on large screens */}
+        <div className="absolute inset-0 z-[-1] opacity-[0.45] pointer-events-none flex items-center justify-center overflow-hidden lg:static lg:opacity-100 lg:z-auto lg:h-[420px] lg:pointer-events-auto lg:overflow-visible lg:block">
           <ThreeScene mouseRef={mouseRef} />
-        </div>
-
-        {/* Simple decorative block for mobile */}
-        <div className="lg:hidden flex flex-wrap gap-3 mt-2">
-          {['🤖 AI Research','⚡ HPC','☁️ Cloud','🛰️ Space Tech'].map((tag) => (
-            <span key={tag} className="t-card px-4 py-2 rounded-full text-[12px] text-accent font-medium border border-accent/15">
-              {tag}
-            </span>
-          ))}
         </div>
 
       </div>

@@ -23,10 +23,10 @@ import GalleryPage         from './components/GalleryPage';
 
 const Divider = () => <div className="t-divider" />;
 
-function Home({ mouseRef }) {
+function Home({ mouseRef, onOpenBadgeModal }) {
   return (
     <>
-      <HeroSection />
+      <HeroSection onOpenBadgeModal={onOpenBadgeModal} />
       <Divider />
       <AboutSection mouseRef={mouseRef} />
       <Divider />
@@ -62,14 +62,14 @@ export default function App() {
       <Navbar isDark={isDark} onToggle={toggle} onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />
 
       <Routes>
-        <Route path="/" element={<Home mouseRef={mouseRef} />} />
+        <Route path="/" element={<Home mouseRef={mouseRef} onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />} />
         <Route path="/gallery" element={<GalleryPage />} />
       </Routes>
 
       <Footer />
 
       <BadgeGeneratorModal isOpen={isBadgeModalOpen} onClose={() => setIsBadgeModalOpen(false)}>
-        <IdCardGenerator />
+        <IdCardGenerator onClose={() => setIsBadgeModalOpen(false)} />
       </BadgeGeneratorModal>
     </div>
   );

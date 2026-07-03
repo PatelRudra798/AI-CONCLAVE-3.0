@@ -1,28 +1,15 @@
-import { useState, useEffect } from 'react';
+import React from 'react';
 import SectionHeader from './SectionHeader';
 import { WORKSHOPS } from '../data';
 
 export default function WorkshopsSection() {
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   return (
     <section id="workshops" className="relative z-10 section-pad">
       <div className="max-container">
         <SectionHeader label="Hands-On Learning" title="Workshops" sub="Two deep-dive workshops — practical, guided, and certificate-backed" />
         <div className="relative flex flex-col gap-6 sm:gap-8 pb-0 sm:pb-10">
-          {WORKSHOPS.map((w, index) => (
-            <div 
-              key={w.num} 
-              className={isMobile ? "" : "sticky"} 
-              style={isMobile ? {} : { top: `${120 + index * 30}px`, zIndex: 10 + index }}
-            >
+          {WORKSHOPS.map((w) => (
+            <div key={w.num}>
               <WorkshopCard {...w} />
             </div>
           ))}
