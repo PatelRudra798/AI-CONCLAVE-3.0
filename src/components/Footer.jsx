@@ -95,7 +95,7 @@ export default function Footer() {
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3670.1854928480457!2d72.5346378!3d23.090304600000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e833af6f39347%3A0xf1db9065daea7008!2sSilver%20Oak%20University!5e0!3m2!1sen!2sin!4v1783060491828!5m2!1sen!2sin" 
               width="100%" 
               height="100%" 
-              style={{ border: 0, minHeight: '300px' }} 
+              style={{ border: 0, minHeight: '300px', filter: 'invert(90%) hue-rotate(180deg) contrast(100%)' }} 
               allowFullScreen="" 
               loading="lazy" 
               referrerPolicy="no-referrer-when-downgrade"

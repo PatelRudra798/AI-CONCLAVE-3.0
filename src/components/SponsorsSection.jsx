@@ -58,10 +58,11 @@ export default function SponsorsSection() {
                   hover:scale-110
                   hover:rotate-0
                   hover:shadow-[0_0_80px_rgba(0,255,255,0.35)]
+                  rotate-0
                   ${
                     idx === 0
-                      ? "float-left rotate-[-8deg]"
-                      : "float-right rotate-[8deg]"
+                      ? "float-left lg:rotate-[-8deg]"
+                      : "float-right lg:rotate-[8deg]"
                   }
                 `}
                 style={{
