@@ -30,27 +30,19 @@ const ThreadsIcon = () => (
 
 export default function Footer() {
   return (
-    <footer id="contact" className="relative z-10 border-t py-14 sm:py-20 px-4 sm:px-12 text-center overflow-hidden bg-transparent"
+    <footer id="contact" className="relative z-10 border-t pt-10 sm:pt-14 pb-24 sm:pb-32 lg:pb-40 px-4 sm:px-12 text-center overflow-hidden bg-transparent"
       style={{ borderColor: 'var(--card-border)' }}>
 
       {/* Giant Background Text "AI CONCLAVE 3.0" (faded watermark, unselectable) */}
       <div 
-        className="absolute bottom-[-8%] sm:bottom-[-10%] lg:bottom-[-14%] left-1/2 -translate-x-1/2 select-none pointer-events-none z-0 text-zinc-600 font-sora font-extrabold text-[16vw] sm:text-[18vw] lg:text-[200px] tracking-wider opacity-[0.08] leading-none uppercase whitespace-nowrap"
+        className="absolute bottom-0 w-full left-1/2 -translate-x-1/2 translate-y-[18%] select-none pointer-events-none z-0 text-white font-sora font-extrabold tracking-wider opacity-10 leading-none uppercase text-center whitespace-nowrap"
+        style={{ fontSize: 'clamp(40px, 9.5vw, 250px)' }}
       >
         AI CONCLAVE 3.0
       </div>
 
       <div className="max-w-6xl mx-auto relative z-10">
-        {/* Logo and Tagline */}
-        <div className="font-sora font-extrabold text-[24px] sm:text-[30px] text-gradient-brand mb-2">
-          AI CONCLAVE 3.0
-        </div>
-        <p className="text-[12px] sm:text-[13px] t-muted mb-1 font-medium italic">
-          Where Intelligence Meets Innovation
-        </p>
-        <p className="text-[10px] sm:text-[11px] t-muted opacity-40 mb-12 px-4">
-          IEEE Signal Processing Society Student Branch Chapter · Silver Oak University, Ahmedabad
-        </p>
+
 
         {/* Location Section in Footer with Map */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-12 text-left">
