@@ -58,7 +58,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
     if (id === 'generate-badge' || id === 'badge-section') {
       if (onOpenBadgeModal) onOpenBadgeModal();
     } else if (id === 'registration') {
-      window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank');
+      window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2kTP8MxlFOR6Xh55Pt3uyOTZ56-zKVuqlU605yrKxv9SyHw/viewform?pli=1', '_blank');
     } else if (id === 'gallery') {
       navigate('/gallery');
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -117,7 +117,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
           </button>
 
           <button
-            onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
+            onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2kTP8MxlFOR6Xh55Pt3uyOTZ56-zKVuqlU605yrKxv9SyHw/viewform?pli=1', '_blank')}
             className="hidden sm:block bg-transparent border border-accent/40 text-accent text-[12px] sm:text-[13px] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
           >
             Register Now
@@ -166,7 +166,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
               Generate Badge
             </button>
             <button
-              onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
+              onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2kTP8MxlFOR6Xh55Pt3uyOTZ56-zKVuqlU605yrKxv9SyHw/viewform?pli=1', '_blank')}
               className="w-full bg-transparent border border-accent/40 text-accent py-3 rounded-xl hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 font-semibold text-[14px]"
             >
               Register Now

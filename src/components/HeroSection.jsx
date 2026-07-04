@@ -158,7 +158,7 @@ export default function HeroSection({ onOpenBadgeModal }) {
       {/* CTAs */}
       <div className="flex flex-col xs:flex-row items-center justify-center gap-3 mb-10 sm:mb-14 w-full px-4">
         <button
-          onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
+          onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2kTP8MxlFOR6Xh55Pt3uyOTZ56-zKVuqlU605yrKxv9SyHw/viewform?pli=1', '_blank')}
           className="w-full xs:w-auto border border-accent/25 bg-accent/[0.03] t-text font-semibold text-[13px] sm:text-[14px] px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl hover:border-accent hover:text-accent hover:-translate-y-1 transition-all duration-200"
           onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 40px var(--glow)`; }}
           onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
