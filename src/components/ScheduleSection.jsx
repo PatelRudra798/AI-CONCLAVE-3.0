@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { View, Preload } from '@react-three/drei';
+import { motion, useScroll, useSpring, useMotionValue } from 'framer-motion';
 import SectionHeader from './SectionHeader';
 import { SCHEDULE } from '../data';
 import { ModelResolver } from './ThreeTimelineModels';
@@ -27,6 +28,206 @@ export default function ScheduleSection() {
   const [coords, setCoords] = useState([]);
   const scrollContainerRef = useRef(null);
 
+  const scrollYVal = useMotionValue(0);
+
+  const scaleY = useSpring(scrollYVal, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  // Window scroll handler for robust coordinate progress mapping
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const sectionHeight = rect.height || 1;
+      const centerY = window.innerHeight / 2;
+      const p = Math.max(0, Math.min(1, (centerY - rect.top) / sectionHeight));
+      scrollYVal.set(p);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleScroll);
+    
+    // Initial trigger
+    handleScroll();
+    const timer = setTimeout(handleScroll, 100);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+      clearTimeout(timer);
+    };
+  }, []);
+
+  const pathRef = useRef(null);
+  const ballX = useMotionValue(0);
+  const ballY = useMotionValue(0);
+  const trail1X = useMotionValue(0);
+  const trail1Y = useMotionValue(0);
+  const trail2X = useMotionValue(0);
+  const trail2Y = useMotionValue(0);
+  const trail3X = useMotionValue(0);
+  const trail3Y = useMotionValue(0);
+  const pathProgressVal = useMotionValue(0);
+
+  const [nearestIndex, setNearestIndex] = useState(0);
+
+  // Helper to get sanitized URL ID
+  const getItemId = (name) => {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  };
+
+  // Helper to map scroll progress non-linearly to node positions
+  const getMappedPathProgress = (v, coordsList) => {
+    if (coordsList.length <= 1) return v;
+    
+    const N = coordsList.length;
+    const progresses = coordsList.map(c => c.ySecProgress || 0);
+
+    const firstP = progresses[0];
+    const lastP = progresses[N - 1];
+
+    if (v <= firstP) {
+      return 0;
+    }
+
+    if (v >= lastP) {
+      return 1;
+    }
+
+    // Find the segment [i, i+1] that contains v
+    let i = 0;
+    for (let j = 0; j < N - 1; j++) {
+      if (v >= progresses[j] && v <= progresses[j + 1]) {
+        i = j;
+        break;
+      }
+    }
+
+    const p0 = progresses[i];
+    const p1 = progresses[i + 1];
+    
+    const t = (v - p0) / (p1 - p0);
+
+    const pathP0 = i / (N - 1);
+    const pathP1 = (i + 1) / (N - 1);
+    return pathP0 + t * (pathP1 - pathP0);
+  };
+
+  // Track and update scroll-driven ball position and active node highlights
+  useEffect(() => {
+    const updateBall = (latest) => {
+      if (!pathRef.current || coords.length === 0) return;
+      try {
+        const length = pathRef.current.getTotalLength();
+        
+        // Apply non-linear mapping to the scroll progress
+        const mapped = getMappedPathProgress(latest, coords);
+
+        // Update path progress value to synchronize path glow perfectly
+        pathProgressVal.set(mapped);
+
+        // Lead Ball
+        const pt = pathRef.current.getPointAtLength(mapped * length);
+        
+        // Snap to node center coordinates when progress is near node positions
+        const closestIdx = Math.round(mapped * (coords.length - 1));
+        const nodePt = coords[closestIdx];
+        
+        let finalX = pt.x;
+        let finalY = pt.y;
+
+        if (nodePt) {
+          const nodeProgress = closestIdx / (coords.length - 1);
+          const diff = Math.abs(mapped - nodeProgress);
+          // 0.08 progress threshold for magnet snapping
+          if (diff < 0.08) {
+            const t = 1 - diff / 0.08;
+            const easeT = t * t * (3 - 2 * t); // smoothstep
+            finalX = pt.x + (nodePt.x - pt.x) * easeT;
+            finalY = pt.y + (nodePt.y - pt.y) * easeT;
+          }
+        }
+
+        ballX.set(finalX);
+        ballY.set(finalY);
+
+        // Trail 1
+        const pt1 = pathRef.current.getPointAtLength(Math.max(0, mapped - 0.015) * length);
+        trail1X.set(pt1.x);
+        trail1Y.set(pt1.y);
+
+        // Trail 2
+        const pt2 = pathRef.current.getPointAtLength(Math.max(0, mapped - 0.030) * length);
+        trail2X.set(pt2.x);
+        trail2Y.set(pt2.y);
+
+        // Trail 3
+        const pt3 = pathRef.current.getPointAtLength(Math.max(0, mapped - 0.045) * length);
+        trail3X.set(pt3.x);
+        trail3Y.set(pt3.y);
+
+        setNearestIndex(closestIdx);
+      } catch (e) {
+        // ignore
+      }
+    };
+
+    // Update immediately with the current scroll progress when coordinates change
+    updateBall(scaleY.get());
+
+    // Subscribe to future scroll progress changes
+    const unsubscribe = scaleY.on("change", (latest) => {
+      updateBall(latest);
+    });
+
+    return () => unsubscribe();
+  }, [scaleY, coords]);
+
+  // Listen to hash changes and initial load hash
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.substring(1);
+      if (!hash) return;
+
+      const index = SCHEDULE.findIndex(item => getItemId(item.name) === hash);
+      if (index !== -1) {
+        setActive(index);
+        const cardEl = document.getElementById(hash);
+        if (cardEl) {
+          setTimeout(() => {
+            cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 300);
+          // Adjust scroll after transition finishes
+          setTimeout(() => {
+            cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }, 650);
+        }
+      }
+    };
+
+    window.addEventListener('hashchange', handleHashChange);
+    setTimeout(handleHashChange, 600);
+
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleCardClick = (index, name) => {
+    setActive(index);
+    const id = getItemId(name);
+    window.location.hash = id;
+    const cardEl = document.getElementById(id);
+    if (cardEl) {
+      cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      // Re-trigger scroll after transition completes to adjust for card height changes
+      setTimeout(() => {
+        cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 320);
+    }
+  };
+
   // Responsive check
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -43,9 +244,11 @@ export default function ScheduleSection() {
 
   // Measure the coordinates of timeline nodes in the DOM
   const updateCoords = () => {
-    if (!scrollContainerRef.current) return;
+    if (!scrollContainerRef.current || !containerRef.current) return;
     const parentRect = scrollContainerRef.current.getBoundingClientRect();
     const parentScrollTop = scrollContainerRef.current.scrollTop;
+    const containerRect = containerRef.current.getBoundingClientRect();
+    const sectionHeight = containerRect.height || 1;
 
     const newCoords = viewRefs.current
       .map((ref) => {
@@ -54,6 +257,7 @@ export default function ScheduleSection() {
         return {
           x: rect.left - parentRect.left + rect.width / 2,
           y: rect.top - parentRect.top + parentScrollTop + rect.height / 2,
+          ySecProgress: (rect.top - containerRect.top + rect.height / 2) / sectionHeight,
         };
       })
       .filter(Boolean);
@@ -99,10 +303,40 @@ export default function ScheduleSection() {
             y1={first.y} 
             x2={last.x} 
             y2={last.y} 
+            stroke="rgba(255, 255, 255, 0.08)" 
+            strokeWidth="2" 
+          />
+          <motion.line 
+            x1={first.x} 
+            y1={first.y} 
+            x2={last.x} 
+            y2={last.y} 
             stroke="var(--accent)" 
             strokeWidth="2" 
-            strokeOpacity="0.4" 
+            strokeOpacity="0.8" 
+            style={{ pathLength: pathProgressVal }}
           />
+          {/* Dummy path for mobile scroll ball alignment */}
+          <path 
+            ref={pathRef}
+            d={`M ${first.x} ${first.y} L ${last.x} ${last.y}`}
+            fill="none"
+            stroke="transparent"
+            strokeWidth="0"
+          />
+          {/* Scroll-driven energy ball on mobile */}
+          <g>
+            <defs>
+              <filter id="ball-glow-mobile" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="4" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+            <motion.circle cx={trail3X} cy={trail3Y} r="2.5" fill="#00f0ff" opacity="0.15" />
+            <motion.circle cx={trail2X} cy={trail2Y} r="4.0" fill="#00f0ff" opacity="0.35" />
+            <motion.circle cx={trail1X} cy={trail1Y} r="5.0" fill="#00f0ff" opacity="0.6" />
+            <motion.circle cx={ballX} cy={ballY} r="6.5" fill="#ffffff" filter="url(#ball-glow-mobile)" />
+          </g>
         </svg>
       );
     }
@@ -130,11 +364,32 @@ export default function ScheduleSection() {
         <path 
           d={d} 
           fill="none" 
+          stroke="rgba(255, 255, 255, 0.08)" 
+          strokeWidth="2" 
+        />
+        <motion.path 
+          ref={pathRef}
+          d={d} 
+          fill="none" 
           stroke="var(--accent)" 
           strokeWidth="2" 
-          strokeOpacity="0.3" 
-          className="drop-shadow-[0_0_4px_rgba(57,255,143,0.2)]" 
+          strokeOpacity="0.8" 
+          className="drop-shadow-[0_0_4px_rgba(57,255,143,0.3)]" 
+          style={{ pathLength: pathProgressVal }}
         />
+        {/* Scroll-driven energy ball on desktop */}
+        <g>
+          <defs>
+            <filter id="ball-glow" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="5" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+          <motion.circle cx={trail3X} cy={trail3Y} r="3.5" fill="#00f0ff" opacity="0.15" />
+          <motion.circle cx={trail2X} cy={trail2Y} r="5.0" fill="#00f0ff" opacity="0.35" />
+          <motion.circle cx={trail1X} cy={trail1Y} r="6.5" fill="#00f0ff" opacity="0.6" />
+          <motion.circle cx={ballX} cy={ballY} r="8" fill="#ffffff" filter="url(#ball-glow)" />
+        </g>
       </svg>
     );
   };
@@ -142,6 +397,27 @@ export default function ScheduleSection() {
   return (
     <section id="schedule" ref={containerRef} className="relative z-10 pt-12 pb-6 px-4 md:section-pad overflow-hidden"
       style={{ background: 'rgba(0,0,0,0.06)' }}>
+
+      <style>{`
+        @keyframes pulseGlowEffect {
+          0%, 100% {
+            box-shadow: 0 0 8px 1px rgba(57,255,143,0.15);
+          }
+          50% {
+            box-shadow: 0 0 16px 3px rgba(57,255,143,0.4);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          * {
+            animation-delay: 0s !important;
+            animation-duration: 0s !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0s !important;
+            scroll-behavior: auto !important;
+          }
+        }
+      `}</style>
 
       {/* Decorative blobs */}
       <div className="absolute top-20 right-0 w-[400px] h-[400px] rounded-full pointer-events-none opacity-[0.03]"
@@ -154,15 +430,6 @@ export default function ScheduleSection() {
           title="Day Schedule"
           sub="08:00 AM – 05:30 PM · Silver Oak University, Ahmedabad"
         />
-
-        {/* Legend */}
-        {/* <div className="flex flex-wrap items-center justify-center gap-2 mb-6">
-          {Object.entries(BADGE_STYLES).map(([key, { label, cls }]) => (
-            <span key={key} className={`text-[9px] font-semibold px-2.5 py-0.5 rounded-full border ${cls}`}>
-              {label}
-            </span>
-          ))}
-        </div> */}
 
         {/* Vertical Compact Roadmap Timeline */}
         <div ref={scrollContainerRef} className="max-w-5xl mx-auto py-4 relative scroll-smooth" 
@@ -178,9 +445,10 @@ export default function ScheduleSection() {
                 item={item}
                 index={i}
                 isActive={active === i}
-                onClick={() => setActive(active === i ? null : i)}
+                onClick={() => handleCardClick(i, item.name)}
                 viewRef={viewRefs.current[i]}
                 isMobile={isMobile}
+                nearestIndex={nearestIndex}
               />
             ))}
           </div>
@@ -210,7 +478,8 @@ export default function ScheduleSection() {
   );
 }
 
-function ScheduleCard({ item, index, isActive, onClick, viewRef, isMobile }) {
+function ScheduleCard({ item, index, isActive, onClick, viewRef, isMobile, nearestIndex }) {
+  const isBallActive = nearestIndex === index;
   const b = item.badge ? BADGE_STYLES[item.badge] : null;
   const trackGrad = TRACK_BG[item.track] || '';
   const isLeft = index % 2 === 0;
@@ -227,14 +496,12 @@ function ScheduleCard({ item, index, isActive, onClick, viewRef, isMobile }) {
 
   const trackBorderColor = getTrackColor(item.track);
 
-  // Desktop wiggling margins to match wavy path
-  // Left nodes are at X=462 (45%), right nodes at X=562 (55%)
-  // Cards are pushed to opposite sides
+  // Desktop/mobile alignment layouts
   const cardAlignmentClass = isMobile 
     ? 'pl-12 w-full text-left' 
     : isLeft 
-      ? 'pr-[55%] pl-2 text-right justify-end ml-auto mr-0' 
-      : 'pl-[55%] pr-2 text-left justify-start mr-auto ml-0';
+      ? 'pr-[calc(50%+123px)] pl-2 text-right justify-end ml-auto mr-0' 
+      : 'pl-[calc(50%+123px)] pr-2 text-left justify-start mr-auto ml-0';
 
   const nodePositionStyle = isMobile
     ? { left: '32px', transform: 'translate(-50%, -50%)' }
@@ -242,39 +509,93 @@ function ScheduleCard({ item, index, isActive, onClick, viewRef, isMobile }) {
       ? { left: 'calc(50% - 45px)', transform: 'translate(-50%, -50%)' }
       : { left: 'calc(50% + 45px)', transform: 'translate(-50%, -50%)' };
 
+  // Card slide-in variants
+  const cardVariants = {
+    hidden: { 
+      opacity: 0, 
+      x: isMobile ? 30 : (isLeft ? -50 : 50),
+      y: 20 
+    },
+    visible: { 
+      opacity: 1, 
+      x: 0, 
+      y: 0,
+      transition: {
+        type: "spring",
+        stiffness: 70,
+        damping: 15,
+        duration: 0.6
+      }
+    }
+  };
+
+  // Helper to get sanitized URL ID
+  const getItemId = (name) => {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+  };
+
+  const itemId = getItemId(item.name);
+
   return (
-    <div className={`relative flex items-center w-full min-h-[90px] py-1.5 group`}>
+    <div id={itemId} className={`relative flex items-center w-full min-h-[90px] py-1.5 group`}>
       
       {/* 3D Model View Node (scaled down by 30-40% to w-10 h-10) */}
-      <div 
+      <motion.div 
         ref={viewRef}
-        className={`absolute top-1/2 z-20 w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center border-2 transition-transform duration-300 cursor-pointer ${isActive ? 'scale-110 shadow-[0_0_15px_rgba(57,255,143,0.4)]' : 'group-hover:scale-105'}`}
+        initial={{ scale: 0, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.05 }}
+        whileTap={{ scale: 0.95 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ type: "spring", stiffness: 100, damping: 12 }}
+        className={`absolute top-1/2 z-20 w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center border-2 cursor-pointer transition-all duration-300`}
         style={{
           ...nodePositionStyle,
+          scale: isBallActive ? 1.18 : (isActive ? 1.1 : 1.0),
           background: 'rgba(10, 10, 20, 0.65)',
-          borderColor: item.special ? 'var(--accent)' : 'var(--card-border)',
+          borderColor: isBallActive ? 'var(--accent2, #00f0ff)' : (item.special ? 'var(--accent)' : 'var(--card-border)'),
+          boxShadow: isBallActive 
+            ? '0 0 20px var(--accent2, #00f0ff), inset 0 0 10px var(--accent2, #00f0ff)' 
+            : (isActive ? '0 0 15px rgba(57,255,143,0.4)' : '0 0 6px rgba(255,255,255,0.05)'),
+          animation: isBallActive ? 'none' : 'pulseGlowEffect 3s infinite ease-in-out',
         }}
         onClick={onClick}
-      />
+      >
+        {/* Reactive ripple effect when ball is active on node */}
+        {isBallActive && (
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0.8 }}
+            animate={{ scale: 1.8, opacity: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="absolute inset-0 rounded-full border-2 pointer-events-none"
+            style={{ borderColor: 'var(--accent2, #00f0ff)' }}
+          />
+        )}
+      </motion.div>
 
       {/* Card Content (Tighter padding & margin) */}
       <div
         onClick={onClick}
         className={`flex w-full ${cardAlignmentClass}`}
       >
-        <div 
+        <motion.div 
+          variants={cardVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
           className={`
             relative rounded-xl border transition-all duration-300 overflow-hidden w-full max-w-[360px]
             ${isMobile ? 'border-l-4' : isLeft ? 'md:border-r-4 md:border-l-px' : 'border-l-4 md:border-r-px'}
-            ${isActive
+            ${isActive || isBallActive
               ? 'shadow-[0_4px_20px_rgba(57,255,143,0.08)] scale-[1.01]'
               : 'hover:shadow-[0_2px_12px_rgba(0,0,0,0.1)] hover:scale-[1.005]'
             }
           `}
           style={{
-            borderColor: 'var(--card-border)',
-            borderLeftColor: isMobile || !isLeft ? trackBorderColor : 'var(--card-border)',
-            borderRightColor: !isMobile && isLeft ? trackBorderColor : 'var(--card-border)',
+            borderTopColor: isBallActive ? 'var(--accent2, #00f0ff)' : 'var(--card-border)',
+            borderBottomColor: isBallActive ? 'var(--accent2, #00f0ff)' : 'var(--card-border)',
+            borderLeftColor: isMobile || !isLeft ? (isBallActive ? 'var(--accent2, #00f0ff)' : trackBorderColor) : 'var(--card-border)',
+            borderRightColor: !isMobile && isLeft ? (isBallActive ? 'var(--accent2, #00f0ff)' : trackBorderColor) : 'var(--card-border)',
             background: 'rgba(25, 25, 35, 0.45)',
             backdropFilter: 'blur(8px)',
           }}
@@ -300,7 +621,7 @@ function ScheduleCard({ item, index, isActive, onClick, viewRef, isMobile }) {
             </div>
 
             {/* Name */}
-            <h3 className={`text-[13px] sm:text-[14px] font-semibold t-text mb-0.5 transition-colors duration-200 ${isActive ? 'text-accent' : ''}`}>
+            <h3 className={`text-[13px] sm:text-[14px] font-semibold t-text mb-0.5 transition-colors duration-200 ${isActive || isBallActive ? 'text-accent2-light' : ''}`}>
               {item.name}
             </h3>
 
@@ -319,10 +640,10 @@ function ScheduleCard({ item, index, isActive, onClick, viewRef, isMobile }) {
 
             {/* Hint */}
             {!isActive && (
-              <p className="text-[9px] t-muted opacity-40 mt-0.5">Tap to expand</p>
+              <p className="text-[9px] t-muted opacity-40 mt-0.5">Tap to expand / scroll to highlight</p>
             )}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
