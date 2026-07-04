@@ -35,7 +35,7 @@ export default function Footer() {
 
       {/* Giant Background Text "AI CONCLAVE 3.0" (faded watermark, unselectable) */}
       <div 
-        className="absolute bottom-[-8%] sm:bottom-[-10%] lg:bottom-[-14%] left-1/2 -translate-x-1/2 select-none pointer-events-none z-0 text-zinc-600 font-sora font-extrabold text-[16vw] sm:text-[18vw] lg:text-[200px] tracking-wider opacity-[0.08] leading-none uppercase whitespace-nowrap"
+        className="absolute bottom-[-3%] sm:bottom-[-4%] lg:bottom-[-5%] left-1/2 -translate-x-1/2 select-none pointer-events-none z-0 text-zinc-600 font-sora font-extrabold text-[16vw] sm:text-[18vw] lg:text-[200px] tracking-wider opacity-[0.08] leading-none uppercase whitespace-nowrap"
       >
         AI CONCLAVE 3.0
       </div>
