@@ -72,7 +72,8 @@ export function ActivityModel({ index }) {
       camShape.quadraticCurveTo(-size/2, -size/2, -size/2 + radius, -size/2);
       camShape.closePath();
 
-      const camGeom = new THREE.ExtrudeGeometry(camShape, { depth: 0.08, bevelEnabled: false });
+      const camGeom = new THREE.ExtrudeGeometry(camShape, { depth: 0.12, bevelEnabled: false });
+      camGeom.center();
       const camMat = new THREE.MeshStandardMaterial({
         color: colors.primary,
         emissive: colors.primary,
@@ -93,17 +94,17 @@ export function ActivityModel({ index }) {
       });
       const lens = new THREE.Mesh(lensGeom, lensMat);
       lens.rotation.x = Math.PI / 2;
-      lens.position.set(0, 0, 0.045);
+      lens.position.set(0, 0, 0.06);
       group.add(lens);
 
       const innerGeom = new THREE.SphereGeometry(0.07, 16, 16);
       const inner = new THREE.Mesh(innerGeom, lensMat);
-      inner.position.set(0, 0, 0.05);
+      inner.position.set(0, 0, 0.07);
       group.add(inner);
 
       const flashGeom = new THREE.SphereGeometry(0.05, 12, 12);
       const flash = new THREE.Mesh(flashGeom, camMat);
-      flash.position.set(0.18, 0.18, 0.04);
+      flash.position.set(0.18, 0.18, 0.05);
       group.add(flash);
 
       mainObject = group;
@@ -199,8 +200,10 @@ export function ActivityModel({ index }) {
     return mainObject;
   }, [index, colors, isDark]);
 
+  const outerGroupRef = useRef(null);
+
   useFrame((state, delta) => {
-    if (mainObjectRef.current) {
+    if (outerGroupRef.current) {
       const cardEl = document.getElementById(`activity-card-${index}`);
       let isHovered = false;
       if (cardEl) {
@@ -210,7 +213,7 @@ export function ActivityModel({ index }) {
         }
       }
       const speedMultiplier = isHovered ? 3.0 : 1.0;
-      mainObjectRef.current.rotation.y += (0.015 * 60 * delta) * speedMultiplier;
+      outerGroupRef.current.rotation.y += (0.015 * 60 * delta) * speedMultiplier;
     }
   });
 
@@ -220,7 +223,9 @@ export function ActivityModel({ index }) {
       <directionalLight position={[5, 5, 5]} intensity={isDark ? 1.5 : 1.8} color={0xffffff} />
       <pointLight position={[-2, 2, 2]} intensity={3.0} distance={10} color={isDark ? colors.primary : 0xffffff} />
       
-      <primitive ref={mainObjectRef} object={group} />
+      <group ref={outerGroupRef}>
+        <primitive object={group} />
+      </group>
     </>
   );
 }

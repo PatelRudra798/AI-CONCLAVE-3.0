@@ -1,4 +1,11 @@
 import SectionHeader from '../ui/SectionHeader';
+import gdgLogo from '../../assets/icons/gdg white logo.png';
+import maskGroupLogo from '../../assets/icons/Mask group.png';
+
+const COLLABORATORS = [
+  { src: gdgLogo, alt: 'GDG', name: 'Google Developer Groups' },
+  { src: maskGroupLogo, alt: 'Mask Group', name: 'Community Partner' },
+];
 
 export default function SponsorsSection() {
   return (
@@ -13,7 +20,6 @@ export default function SponsorsSection() {
           title="OUR COLLABORATORS"
         />
 
-        {/* Flat, equal grid — no tier hierarchy */}
         <div className="relative py-10 sm:py-20">
           {/* Background Glow */}
           <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-[140px]" />
@@ -26,25 +32,10 @@ export default function SponsorsSection() {
               [perspective:1200px]
             "
           >
-            {[
-              {
-                src: new URL(
-                  "../assets/icons/gdg white logo.png",
-                  import.meta.url
-                ).toString(),
-                alt: "Group",
-              },
-              {
-                src: new URL(
-                  "../assets/icons/Mask group.png",
-                  import.meta.url
-                ).toString(),
-                alt: "Mask group",
-              },
-            ].map((img, idx) => (
+            {COLLABORATORS.map((img, idx) => (
               <div
                 key={idx}
-                className={`
+                className="
                   relative group
                   w-[280px] sm:w-[340px]
                   h-[170px] sm:h-[210px]
@@ -54,23 +45,14 @@ export default function SponsorsSection() {
                   border border-cyan-400/20
                   bg-white/5
                   shadow-[0_0_50px_rgba(0,255,255,0.15)]
-                  transition-all duration-700
-                  hover:scale-110
-                  hover:rotate-0
-                  hover:shadow-[0_0_80px_rgba(0,255,255,0.35)]
-                  rotate-0
-                  ${
-                    idx === 0
-                      ? "float-left lg:rotate-[-8deg]"
-                      : "float-right lg:rotate-[8deg]"
-                  }
-                `}
-                style={{
-                  transformStyle: "preserve-3d",
-                }}
+                  transition-all duration-500
+                  hover:scale-105
+                  hover:-translate-y-2
+                  hover:shadow-[0_20px_80px_rgba(0,255,255,0.35)]
+                "
               >
                 {/* Animated Gradient */}
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10" />
+                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
 
                 {/* Moving Shine */}
                 <div className="
@@ -95,24 +77,24 @@ export default function SponsorsSection() {
                   className="
                     relative z-10
                     flex h-full w-full
+                    flex-col
                     items-center justify-center
+                    gap-2
                   "
-                  style={{
-                    transform: "translateZ(50px)",
-                  }}
                 >
                   <img
                     src={img.src}
                     alt={img.alt}
                     className="
-                      max-w-[78%]
-                      max-h-[78%]
+                      max-w-[70%]
+                      max-h-[60%]
                       object-contain
                       transition-all
-                      duration-700
+                      duration-500
                       group-hover:scale-110
                     "
                   />
+                  <span className="text-white/50 text-xs font-medium tracking-widest uppercase">{img.name}</span>
                 </div>
 
                 {/* Bottom Glow */}
@@ -133,4 +115,3 @@ export default function SponsorsSection() {
     </section>
   );
 }
-
