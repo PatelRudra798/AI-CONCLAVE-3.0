@@ -34,10 +34,10 @@ function ActivityCard({ activity, index }) {
       id={`activity-card-${index}`}
     >
       <div 
-        className="w-16 h-16 flex items-center justify-center mb-3 sm:mb-4 relative overflow-visible"
+        className="w-28 h-28 flex items-center justify-center mb-3 sm:mb-4 relative overflow-visible"
         data-hovered={isHovered}
       >
-        <Suspense fallback={<span className="text-4xl">{activity.icon}</span>}>
+        <Suspense fallback={<span className="text-5xl">{activity.icon}</span>}>
           <Canvas
             camera={{ position: [0, 0, 4.2], fov: 45, near: 0.1, far: 100 }}
             dpr={[1, 1.5]}

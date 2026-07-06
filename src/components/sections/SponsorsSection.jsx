@@ -1,4 +1,11 @@
 import SectionHeader from '../ui/SectionHeader';
+import gdgLogo from '../../assets/icons/gdg white logo.png';
+import maskGroupLogo from '../../assets/icons/Mask group.png';
+
+const COLLABORATORS = [
+  { src: gdgLogo, alt: 'GDG', name: 'Google Developer Groups', floatClass: 'float-left', rotateCls: 'lg:rotate-[-8deg]' },
+  { src: maskGroupLogo, alt: 'Mask Group', name: 'Community Partner', floatClass: 'float-right', rotateCls: 'lg:rotate-[8deg]' },
+];
 
 export default function SponsorsSection() {
   return (
@@ -13,7 +20,6 @@ export default function SponsorsSection() {
           title="OUR COLLABORATORS"
         />
 
-        {/* Flat, equal grid — no tier hierarchy */}
         <div className="relative py-10 sm:py-20">
           {/* Background Glow */}
           <div className="absolute left-1/2 top-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-500/10 blur-[140px]" />
@@ -26,22 +32,7 @@ export default function SponsorsSection() {
               [perspective:1200px]
             "
           >
-            {[
-              {
-                src: new URL(
-                  "../assets/icons/gdg white logo.png",
-                  import.meta.url
-                ).toString(),
-                alt: "Group",
-              },
-              {
-                src: new URL(
-                  "../assets/icons/Mask group.png",
-                  import.meta.url
-                ).toString(),
-                alt: "Mask group",
-              },
-            ].map((img, idx) => (
+            {COLLABORATORS.map((img, idx) => (
               <div
                 key={idx}
                 className={`
@@ -58,16 +49,9 @@ export default function SponsorsSection() {
                   hover:scale-110
                   hover:rotate-0
                   hover:shadow-[0_0_80px_rgba(0,255,255,0.35)]
-                  rotate-0
-                  ${
-                    idx === 0
-                      ? "float-left lg:rotate-[-8deg]"
-                      : "float-right lg:rotate-[8deg]"
-                  }
+                  ${img.floatClass} ${img.rotateCls}
                 `}
-                style={{
-                  transformStyle: "preserve-3d",
-                }}
+                style={{ transformStyle: 'preserve-3d' }}
               >
                 {/* Animated Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10" />
@@ -95,24 +79,25 @@ export default function SponsorsSection() {
                   className="
                     relative z-10
                     flex h-full w-full
+                    flex-col
                     items-center justify-center
+                    gap-2
                   "
-                  style={{
-                    transform: "translateZ(50px)",
-                  }}
+                  style={{ transform: 'translateZ(50px)' }}
                 >
                   <img
                     src={img.src}
                     alt={img.alt}
                     className="
-                      max-w-[78%]
-                      max-h-[78%]
+                      max-w-[70%]
+                      max-h-[60%]
                       object-contain
                       transition-all
                       duration-700
                       group-hover:scale-110
                     "
                   />
+                  <span className="text-white/50 text-xs font-medium tracking-widest uppercase">{img.name}</span>
                 </div>
 
                 {/* Bottom Glow */}
@@ -133,4 +118,3 @@ export default function SponsorsSection() {
     </section>
   );
 }
-

@@ -1,100 +1,55 @@
 import { useState, useEffect, useRef } from 'react';
-import useCountdown from '../../hooks/useCountdown';
-import { EVENT_DATE, HERO_STATS } from '../../data';
-import group7 from '../../assets/icons/Group 7.png';
 
-function StatCounter({ num }) {
-  const [count, setCount] = useState(0);
-  const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef(null);
-
-  const numericPart = parseInt(num.replace(/[^0-9]/g, ''), 10) || 0;
-  const suffix = num.replace(/[0-9]/g, '');
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-        }
-      },
-      { threshold: 0.1 }
-    );
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!isVisible) return;
-
-    let start = 0;
-    const duration = 1500;
-    const startTime = performance.now();
-    let animationFrameId;
-
-    const animate = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3); // cubic out
-      setCount(Math.floor(ease * numericPart));
-
-      if (progress < 1) {
-        animationFrameId = requestAnimationFrame(animate);
-      } else {
-        setCount(numericPart);
-      }
-    };
-
-    animationFrameId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, [isVisible, numericPart]);
-
-  return (
-    <span
-      ref={elementRef}
-      className={`inline-block transition-all duration-[1200ms] cubic-bezier(0.34, 1.56, 0.64, 1) transform ${isVisible ? 'translate-y-0 opacity-100' : '-translate-y-6 opacity-0'
-        }`}
-    >
-      {count}
-      {suffix}
-    </span>
-  );
-}
-
-
-const pad = (n) => String(n).padStart(2, '0');
 const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
 
-function TimerBlock({ value, label }) {
-  return (
-    <div className="flex flex-col items-center bg-accent/5 border border-accent/15 rounded-2xl px-2 xs:px-4 sm:px-5 py-2 sm:py-4 min-w-[60px] xs:min-w-[76px] sm:min-w-[82px]">
-      <span className="font-sora font-extrabold leading-none text-gradient-timer"
-        style={{ fontSize: 'clamp(28px, 5vw, 42px)' }}>
-        {pad(value)}
-      </span>
-      <span className="text-[8px] xs:text-[9px] t-muted uppercase tracking-[2px] font-semibold mt-1.5">
-        {label}
-      </span>
-    </div>
-  );
-}
-
 export default function HeroSection({ onOpenBadgeModal }) {
-  const { d, h, m, s } = useCountdown(EVENT_DATE);
+  const [realTime, setRealTime] = useState('');
+  const [isOff, setIsOff] = useState(true);
+  const [glitchActive, setGlitchActive] = useState(false);
+
+  useEffect(() => {
+    // 2-second delay to turn the clock "on"
+    const timer = setTimeout(() => {
+      setIsOff(false);
+    }, 2000);
+
+    const updateClock = () => {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+      
+      const formatted = `${hours < 10 ? '0' : ''}${hours} : ${minutes < 10 ? '0' : ''}${minutes} : ${seconds < 10 ? '0' : ''}${seconds}`;
+      setRealTime(formatted);
+    };
+
+    updateClock();
+    const interval = setInterval(updateClock, 1000);
+
+    return () => {
+      clearTimeout(timer);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const toggleGlitch = (e) => {
+    e.preventDefault();
+    setGlitchActive(prev => {
+      const next = !prev;
+      if (next) {
+        document.body.classList.add('screen-glitch');
+      } else {
+        document.body.classList.remove('screen-glitch');
+      }
+      return next;
+    });
+  };
 
   return (
     <section
       id="hero"
       className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-4 sm:px-6 pt-24 sm:pt-28 pb-12 sm:pb-16"
     >
-      {/* Badge
-      <div className="inline-flex items-center gap-2 border border-accent/20 bg-accent/[0.04] px-4 sm:px-5 py-2 rounded-full text-accent text-[10px] sm:text-[11px] font-medium uppercase tracking-[1.5px] mb-6 sm:mb-8 text-center">
-        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse2 inline-block flex-shrink-0" />
-        <span>10 July 2026 · Silver Oak University</span>
-      </div> */}
-
       {/* Eyebrow */}
       <p className="text-[9px] sm:text-[10px] t-muted uppercase tracking-[2px] sm:tracking-[3px] mb-3 sm:mb-4 px-2">
         SILVER OAK UNIVERSITY IEEE Signal Processing Society Student Branch Chapter
@@ -104,28 +59,27 @@ export default function HeroSection({ onOpenBadgeModal }) {
       <h1 className="leading-[1] mb-5 flex flex-col items-center gap-2 sm:gap-4 mt-6 z-10" style={{ fontSize: 'clamp(44px, 12vw, 120px)' }}>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 select-none">
           <span
-            className="font-black text-white leading-none tracking-tight glitch-span"
+            className="font-black leading-none tracking-tight glitch-span"
             data-text="AI"
+            style={{ background: 'linear-gradient(135deg, #00D2FF 0%, #00A3FF 40%, #60A5FA 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', filter: 'drop-shadow(0 0 24px rgba(0,210,255,0.55))' }}
           >
             AI
           </span>
           <span
-            className="font-black text-white leading-none glitch-span"
+            className="font-black leading-none glitch-span"
             data-text="CONCLAVE"
+            style={{ background: 'linear-gradient(135deg, #e0f2fe 0%, #bae6fd 45%, #7dd3fc 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
           >
             CONCLAVE
           </span>
           <span
-            className="font-black text-white leading-none glitch-span"
+            className="font-black leading-none glitch-span"
             data-text="3.0"
+            style={{ background: 'linear-gradient(135deg, #00D2FF 0%, #0052FF 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text', filter: 'drop-shadow(0 0 32px rgba(0,163,255,0.7))' }}
           >
             3.0
           </span>
         </div>
-        {/* <div className="flex items-center gap-3 mt-1 sm:mt-2">
-          <span className="text-accent text-[14px] sm:text-[22px] font-mono tracking-widest">// 2026 EDITION</span>
-          <span className="text-[32px] sm:text-[48px] font-black text-white drop-shadow-[0_8px_16px_rgba(59,130,246,1)]">3.0</span>
-        </div> */}
       </h1>
 
 
@@ -144,15 +98,29 @@ export default function HeroSection({ onOpenBadgeModal }) {
         technical sessions, hands-on workshops, and future-focused discussions.
       </p>
 
-      {/* Countdown */}
-      <div className="flex items-center gap-1 xs:gap-2 sm:gap-3 mb-8 sm:mb-10 flex-nowrap justify-center w-full px-1">
-        <TimerBlock value={d} label="Days" />
-        <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
-        <TimerBlock value={h} label="Hours" />
-        <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
-        <TimerBlock value={m} label="Mins" />
-        <span className="font-sora text-2xl sm:text-3xl font-bold text-accent/30 pb-3 select-none">:</span>
-        <TimerBlock value={s} label="Secs" />
+      {/* Real-time Clock */}
+      <div className="flex flex-col items-center justify-center mb-8 sm:mb-10 w-full px-1">
+        <div className={`clock transition-all duration-1000 ${isOff ? 'is-off opacity-15 blur-[2px]' : 'opacity-100'}`}>
+          <div 
+            className="time font-mono tracking-[4px] font-bold text-gradient-timer"
+            data-time={realTime}
+            style={{ fontSize: 'clamp(32px, 7vw, 68px)' }}
+          >
+            {realTime || '00 : 00 : 00'}
+          </div>
+        </div>
+        
+        {/* Futuristic Switcher Toggle */}
+        <button
+          onClick={toggleGlitch}
+          className={`switcher mt-4 border text-[10px] uppercase tracking-[2px] font-semibold px-4 py-1.5 rounded-full transition-all duration-300 ${
+            glitchActive 
+              ? 'border-accent text-accent bg-accent/10 shadow-[0_0_15px_rgba(0,210,255,0.3)]' 
+              : 'border-white/10 text-white/40 hover:text-white/70 hover:border-white/25'
+          }`}
+        >
+          {glitchActive ? 'Glitch Mode: ON' : 'Glitch Mode: OFF'}
+        </button>
       </div>
 
       {/* CTAs */}
