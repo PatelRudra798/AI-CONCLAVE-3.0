@@ -36,34 +36,7 @@
   --particle-c2: 0,82,255;
 }
 
-/* ══════════════════════════════════════════════════
-   LIGHT MODE — green / black poster brand theme
-   ══════════════════════════════════════════════════ */
-html.light {
-  --bg:          #0B1410;
-  --bg2:         #101D16;
-  --card:        #131F18;
-  --card2:       #16241C;
-  --card-border: rgba(57,255,143,0.26);
-  --text:        #EFFFF4;
-  --muted:       #8FB3A0;
-  --nav-bg:      rgba(11,20,16,0.92);
-  --scroll-bg:   #0B1410;
-  --scroll-thumb:rgba(57,255,143,0.45);
 
-  --accent:      #39FF8F;   /* green        */
-  --accent-dim:  #22C46E;
-  --accent2:     #0F7A45;   /* deep green   */
-  --accent2-light: #7CFFB8;
-  --glow:        rgba(57,255,143,0.28);
-
-  --accent-rgb:        57,255,143;
-  --accent2-rgb:       15,122,69;
-  --accent2-light-rgb: 124,255,184;
-
-  --particle-c1: 57,255,143;
-  --particle-c2: 124,255,184;
-}
 
 @layer base {
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -286,3 +259,17 @@ html.light {
   }
 }
 
+
+/* ─── Float Animations (Sponsors Section) ────────────────────────────────── */
+@keyframes floatLeft {
+  0%, 100% { transform: translateY(0px) rotate(-8deg); }
+  50%       { transform: translateY(-20px) rotate(-4deg); }
+}
+
+@keyframes floatRight {
+  0%, 100% { transform: translateY(0px) rotate(8deg); }
+  50%       { transform: translateY(-20px) rotate(4deg); }
+}
+
+.float-left  { animation: floatLeft  5s ease-in-out infinite; }
+.float-right { animation: floatRight 5s ease-in-out infinite; }

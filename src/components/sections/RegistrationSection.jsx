@@ -1,5 +1,5 @@
-import SectionHeader from './SectionHeader';
-import { REG_TIERS, REG_INCLUDES } from '../data';
+import SectionHeader from '../ui/SectionHeader';
+import { REG_TIERS, REG_INCLUDES } from '../../data';
 
 export default function RegistrationSection() {
   return (

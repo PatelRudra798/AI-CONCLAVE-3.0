@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef, useState, Suspense, Component } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
 /** Read a CSS custom property as a THREE.Color hex number */
@@ -9,39 +10,53 @@ function cssVar(name, fallback) {
   return parseInt(v.replace('#', '0x'), 16);
 }
 
-/**
- * TopicIcon3D
- * Renders a tiny Three.js canvas whose 3D shape matches the topic emoji:
- *   robot_head    → 🤖  (box head + eyes + antenna)
- *   lightning     → ⚡  (extruded bolt)
- *   cloud         → ☁️  (sphere cluster)
- *   satellite     → 🛰️  (body + solar wings + dish)
- *   film          → 🎬  (film reel)
- *   medical_cross → 🏥  (+ cross + center orb)
- */
-export default function TopicIcon3D({ shape = 'robot_head' }) {
-  const mountRef = useRef(null);
+// Fallback Icons
+const FALLBACKS = {
+  robot_head: '🤖',
+  lightning: '⚡',
+  cloud: '☁️',
+  satellite: '🛰️',
+  film: '🎬',
+  medical_cross: '🏥'
+};
 
-  useEffect(() => {
-    const el = mountRef.current;
-    if (!el) return;
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-full flex items-center justify-center text-xl sm:text-2xl select-none">
+          {this.props.fallback}
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
-    const SIZE = el.clientWidth || 48;
+function Loader() {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center">
+      <div className="w-4 h-4 border-2 border-white/20 border-t-white/80 rounded-full animate-spin"></div>
+    </div>
+  );
+}
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-    renderer.setSize(SIZE, SIZE);
-    renderer.setClearColor(0x000000, 0);
-    el.appendChild(renderer.domElement);
+function Scene({ shape, isMobile }) {
+  const groupRef = useRef();
+  const light1Ref = useRef();
+  
+  const accent = useMemo(() => cssVar('--accent', 0x00e5ff), []);
+  const accent2 = useMemo(() => cssVar('--accent2', 0x6a0dad), []);
+  const accentL = useMemo(() => cssVar('--accent2-light', 0xb07fff), []);
 
-    const scene  = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 50);
-    camera.position.set(0, 0, 3.6);
-
-    const accent  = cssVar('--accent',        0x00e5ff);
-    const accent2 = cssVar('--accent2',       0x6a0dad);
-    const accentL = cssVar('--accent2-light', 0xb07fff);
-
+  const { group, speedY, wobble } = useMemo(() => {
     // ── material helpers ───────────────────────────────────────────────────
     const wire  = (c, op = 0.85) =>
       new THREE.MeshBasicMaterial({ color: c, wireframe: true, transparent: true, opacity: op });
@@ -51,55 +66,44 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
       new THREE.MeshStandardMaterial({ color: c, emissive: em, emissiveIntensity: emI, transparent: true, opacity: 0.95 });
 
     const group = new THREE.Group();
-    scene.add(group);
-
-    // Spin params (overridden per shape)
     let speedY = 0.013;
-    let wobble = 0.28; // amplitude of x-tilt sway
+    let wobble = 0.28;
 
     // ═══════════════════════════════════════════════════════════════════════
     // 🤖  ROBOT HEAD
     // ═══════════════════════════════════════════════════════════════════════
     if (shape === 'robot_head') {
-      // Head box
       const head = new THREE.Mesh(new THREE.BoxGeometry(1.05, 0.88, 0.72), wire(accent, 0.82));
       group.add(head);
 
-      // Solid face panel (slightly inset)
       const face = new THREE.Mesh(new THREE.BoxGeometry(0.88, 0.70, 0.05), solid(accent2, 0.22));
       face.position.z = 0.385;
       group.add(face);
 
-      // Eyes
       [-0.26, 0.26].forEach(x => {
         const eye = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 10), std(accent, accent, 0.9));
         eye.position.set(x, 0.10, 0.395);
         group.add(eye);
 
-        // Eye ring
         const ring = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.025, 6, 20), solid(accentL, 0.6));
         ring.position.set(x, 0.10, 0.375);
         group.add(ring);
       });
 
-      // Mouth grille (3 bars)
       for (let i = -1; i <= 1; i++) {
         const bar = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.055, 0.04), solid(accentL, 0.65));
         bar.position.set(0, -0.20 + i * 0.075, 0.395);
         group.add(bar);
       }
 
-      // Antenna stem
       const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.32, 7), solid(accentL, 0.80));
       stem.position.set(0, 0.60, 0);
       group.add(stem);
 
-      // Antenna orb
       const orb = new THREE.Mesh(new THREE.SphereGeometry(0.10, 10, 10), std(accent, accent, 1.0));
       orb.position.set(0, 0.81, 0);
       group.add(orb);
 
-      // Ear nubs
       [-0.56, 0.56].forEach(x => {
         const ear = new THREE.Mesh(new THREE.BoxGeometry(0.09, 0.22, 0.18), solid(accent2, 0.70));
         ear.position.set(x, 0, 0);
@@ -133,17 +137,14 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
       const boltGeo = new THREE.ExtrudeGeometry(boltShape, extCfg);
       boltGeo.center();
 
-      // Solid bolt
       const bolt = new THREE.Mesh(boltGeo, std(accent, accent, 0.55));
       bolt.scale.setScalar(0.82);
       group.add(bolt);
 
-      // Wireframe overlay
       const boltW = new THREE.Mesh(boltGeo, wire(accentL, 0.55));
       boltW.scale.setScalar(0.84);
       group.add(boltW);
 
-      // Outer glow ring
       const halo = new THREE.Mesh(new THREE.TorusGeometry(0.88, 0.022, 6, 48), solid(accent2, 0.50));
       halo.rotation.x = Math.PI / 2;
       group.add(halo);
@@ -171,7 +172,6 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
         group.add(s);
       });
 
-      // Thin wireframe outline over whole cluster
       const outline = new THREE.Mesh(new THREE.SphereGeometry(0.72, 7, 7), wire(accentL, 0.28));
       outline.position.set(0, 0.12, 0);
       group.add(outline);
@@ -184,13 +184,12 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
     // ═══════════════════════════════════════════════════════════════════════
     } else if (shape === 'satellite') {
       group.scale.setScalar(1.35); // increase size a bit more
-      // Central body box
+      
       const body = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.48, 0.48), wire(accent, 0.88));
       group.add(body);
       const bodyFill = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.44, 0.44), solid(accent2, 0.18));
       group.add(bodyFill);
 
-      // Solar wings  (left & right flat panels)
       [-1, 1].forEach(side => {
         const panel = new THREE.Mesh(new THREE.BoxGeometry(0.60, 0.26, 0.035), solid(accent2, 0.72));
         panel.position.set(side * 0.56, 0.03, 0);
@@ -200,7 +199,6 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
         panelW.position.set(side * 0.56, 0.03, 0);
         group.add(panelW);
 
-        // Grid lines on the panel (3 vertical dividers)
         for (let k = -1; k <= 1; k++) {
           const div = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.26, 0.04), solid(accentL, 0.55));
           div.position.set(side * 0.56 + k * 0.18, 0.03, 0);
@@ -208,13 +206,11 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
         }
       });
 
-      // Dish base (small cylinder stem)
       const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.22, 6), solid(accentL, 0.80));
       stem.position.set(0.10, 0.35, 0.10);
       stem.rotation.z = -Math.PI / 6;
       group.add(stem);
 
-      // Dish circle
       const dish = new THREE.Mesh(new THREE.CircleGeometry(0.18, 14), solid(accent, 0.85));
       dish.position.set(0.22, 0.50, 0.12);
       dish.rotation.x = -Math.PI / 5;
@@ -233,16 +229,13 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
     // 🎬  FILM REEL
     // ═══════════════════════════════════════════════════════════════════════
     } else if (shape === 'film') {
-      // Outer ring
       const outerRing = new THREE.Mesh(new THREE.TorusGeometry(0.72, 0.13, 10, 36), wire(accent, 0.82));
       group.add(outerRing);
 
-      // Reel face (thin disc)
       const face = new THREE.Mesh(new THREE.CylinderGeometry(0.72, 0.72, 0.06, 36), solid(accent2, 0.18));
       face.rotation.x = Math.PI / 2;
       group.add(face);
 
-      // Central hub cylinder
       const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.18, 10), solid(accent2, 0.80));
       hub.rotation.x = Math.PI / 2;
       group.add(hub);
@@ -251,15 +244,13 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
       hubW.rotation.x = Math.PI / 2;
       group.add(hubW);
 
-      // 6 spokes
       for (let i = 0; i < 6; i++) {
         const angle = (i / 6) * Math.PI * 2;
         const spoke = new THREE.Mesh(new THREE.CylinderGeometry(0.028, 0.028, 0.54, 5), solid(accentL, 0.68));
-        spoke.rotation.z = angle;          // orient spoke radially
+        spoke.rotation.z = angle;
         group.add(spoke);
       }
 
-      // 8 sprocket holes around the outer ring
       for (let i = 0; i < 8; i++) {
         const angle = (i / 8) * Math.PI * 2;
         const hole  = new THREE.Mesh(new THREE.CircleGeometry(0.055, 7), solid(accentL, 0.72));
@@ -274,28 +265,23 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
     // 🏥  MEDICAL CROSS  (Robotics in Healthcare)
     // ═══════════════════════════════════════════════════════════════════════
     } else if (shape === 'medical_cross') {
-      // Vertical arm
       const vArm = new THREE.Mesh(new THREE.BoxGeometry(0.28, 1.10, 0.22), wire(accent, 0.86));
       group.add(vArm);
       const vFill = new THREE.Mesh(new THREE.BoxGeometry(0.24, 1.06, 0.18), solid(accent2, 0.20));
       group.add(vFill);
 
-      // Horizontal arm
       const hArm = new THREE.Mesh(new THREE.BoxGeometry(1.10, 0.28, 0.22), wire(accent, 0.86));
       group.add(hArm);
       const hFill = new THREE.Mesh(new THREE.BoxGeometry(1.06, 0.24, 0.18), solid(accent2, 0.20));
       group.add(hFill);
 
-      // Center glowing orb
       const orb = new THREE.Mesh(new THREE.SphereGeometry(0.19, 12, 12), std(accent, accent, 1.0));
       group.add(orb);
 
-      // Outer pulse ring
       const ring = new THREE.Mesh(new THREE.TorusGeometry(0.80, 0.022, 7, 48), solid(accentL, 0.45));
       ring.rotation.x = Math.PI / 2;
       group.add(ring);
 
-      // Corner dots (4 small spheres at arm tips)
       [[0, 0.55], [0, -0.55], [0.55, 0], [-0.55, 0]].forEach(([x, y]) => {
         const dot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), solid(accentL, 0.80));
         dot.position.set(x, y, 0.12);
@@ -306,43 +292,70 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
       wobble = 0.24;
     }
 
-    // ── Lights ────────────────────────────────────────────────────────────
-    const l1  = new THREE.PointLight(accent,  6, 12);
-    const l2  = new THREE.PointLight(accent2, 4, 12);
-    const amb = new THREE.AmbientLight(0xffffff, 0.50);
-    l1.position.set(2, 2, 2);
-    l2.position.set(-2, -1, 1);
-    scene.add(l1, l2, amb);
+    return { group, speedY, wobble };
+  }, [shape, accent, accent2, accentL]);
 
-    // ── Animation ─────────────────────────────────────────────────────────
-    let frame = 0;
-    let rafId;
-
-    const animate = () => {
-      frame++;
-      const t = frame * 0.012;
-      group.rotation.y += speedY;
-      group.rotation.x  = Math.sin(t * 0.38) * wobble;
-      l1.position.x = Math.sin(t * 0.5) * 2.2;
-      l1.position.y = Math.cos(t * 0.4) * 2.2;
-      renderer.render(scene, camera);
-      rafId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    // ── Cleanup ───────────────────────────────────────────────────────────
-    return () => {
-      cancelAnimationFrame(rafId);
-      renderer.dispose();
-      if (el.contains(renderer.domElement)) el.removeChild(renderer.domElement);
-    };
-  }, [shape]);
+  useFrame((state, delta) => {
+    // Delta mapping: approx old behaviour where speedY was added per frame
+    const time = state.clock.elapsedTime;
+    if (groupRef.current) {
+      groupRef.current.rotation.y += speedY * (delta * 60);
+      groupRef.current.rotation.x = Math.sin(time * 60 * 0.012 * 0.38) * wobble;
+    }
+    if (light1Ref.current) {
+      const t = time * 60 * 0.012;
+      light1Ref.current.position.x = Math.sin(t * 0.5) * 2.2;
+      light1Ref.current.position.y = Math.cos(t * 0.4) * 2.2;
+    }
+  });
 
   return (
-    <div
-      ref={mountRef}
-      className="w-full h-full"
-      style={{ minWidth: 44, minHeight: 44 }}
-    />
+    <>
+      <ambientLight color={0xffffff} intensity={0.5} />
+      <pointLight ref={light1Ref} color={accent} intensity={6} distance={12} position={[2, 2, 2]} />
+      <pointLight color={accent2} intensity={4} distance={12} position={[-2, -1, 1]} />
+      
+      {/* Responsive viewport-aware scaling */}
+      <primitive ref={groupRef} object={group} scale={isMobile ? 0.9 : 1.0} />
+    </>
+  );
+}
+
+export default function TopicIcon3D({ shape = 'robot_head' }) {
+  const fallback = FALLBACKS[shape] || '✨';
+  const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return (
+    <div className="w-full h-full relative" style={{ minWidth: '44px', minHeight: '44px' }}>
+      <ErrorBoundary fallback={fallback}>
+        {!mounted && <Loader />}
+        {mounted && (
+          <Suspense fallback={<Loader />}>
+            <Canvas
+              camera={{ position: [0, 0, 3.6], fov: 50, near: 0.1, far: 50 }}
+              dpr={isMobile ? [1, 1.25] : [1, 1.5]}
+              gl={{ 
+                antialias: true,
+                alpha: true,
+                powerPreference: 'high-performance',
+                preserveDrawingBuffer: false,
+              }}
+              style={{ width: '100%', height: '100%', display: 'block' }}
+            >
+              <Scene shape={shape} isMobile={isMobile} />
+            </Canvas>
+          </Suspense>
+        )}
+      </ErrorBoundary>
+    </div>
   );
 }

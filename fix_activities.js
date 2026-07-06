@@ -1,76 +1,118 @@
-import { useEffect, useRef } from 'react';
+const fs = require('fs');
+
+const activitiesSectionContent = `import { useState, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { View, Preload } from '@react-three/drei';
+import SectionHeader from './SectionHeader';
+import { ACTIVITIES } from '../data';
+import { ActivityModel } from './ActivityCanvas';
+
+export default function ActivitiesSection() {
+  const containerRef = useRef(null);
+  
+  // Create refs for tracking DOM elements
+  const viewRefs = useRef([]);
+  if (viewRefs.current.length !== ACTIVITIES.length) {
+    viewRefs.current = Array(ACTIVITIES.length).fill().map((_, i) => viewRefs.current[i] || { current: null });
+  }
+
+  return (
+    <section id="activities" ref={containerRef} className="relative z-10 section-pad">
+      <div className="max-container">
+        <SectionHeader label="Engagement" title="Activities & Engagement" sub="More than sessions — a full day of interactive experiences" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 relative">
+          {ACTIVITIES.map((a, i) => (
+            <ActivityCard 
+              key={a.title} 
+              activity={a} 
+              index={i} 
+              viewRef={viewRefs.current[i]}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Single shared Canvas for all Activity models */}
+      <Canvas
+        eventSource={containerRef}
+        className="pointer-events-none fixed inset-0 z-20"
+        camera={{ position: [0, 0, 4.2], fov: 45, near: 0.1, far: 100 }}
+        dpr={[1, 2]}
+        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      >
+        {ACTIVITIES.map((_, i) => (
+          <View key={i} track={viewRefs.current[i]}>
+            <ActivityModel index={i} />
+          </View>
+        ))}
+        <Preload all />
+      </Canvas>
+    </section>
+  );
+}
+
+function ActivityCard({ activity, index, viewRef }) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Expose hover state using a custom event or store if necessary.
+  // Actually, for simplicity and performance, the R3F model can just use a slow constant rotation,
+  // or we can attach hover state via DOM event listeners inside the R3F component.
+
+  return (
+    <div
+      className="t-card rounded-2xl p-5 sm:p-7 t-card-purple group flex flex-col items-start"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      id={\`activity-card-\${index}\`}
+    >
+      {/* Tracker div for the 3D View */}
+      <div 
+        ref={viewRef} 
+        className="w-16 h-16 flex items-center justify-center mb-3 sm:mb-4 relative overflow-visible"
+        data-hovered={isHovered}
+      />
+      <h3 className="text-[14px] sm:text-[15px] font-semibold t-text mb-2 group-hover:text-accent2-light transition-colors">
+        {activity.title}
+      </h3>
+      <p className="text-[12px] sm:text-[13px] t-muted leading-relaxed">
+        {activity.desc}
+      </p>
+    </div>
+  );
+}
+`;
+
+fs.writeFileSync('src/components/ActivitiesSection.jsx', activitiesSectionContent);
+
+const activityCanvasContent = `import { useMemo, useRef } from 'react';
 import * as THREE from 'three';
+import { useFrame } from '@react-three/fiber';
 import useTheme from '../hooks/useTheme';
 
-export function ActivityCanvas({ index, isHovered }) {
-  const mountRef = useRef(null);
-  const isHoveredRef = useRef(isHovered);
-  const animationFrameRef = useRef(null);
+export function ActivityModel({ index }) {
+  const { isDark } = useTheme();
   const mainObjectRef = useRef(null);
 
-  const { isDark } = useTheme();
-
-  // Sync hover state ref
-  useEffect(() => {
-    isHoveredRef.current = isHovered;
-  }, [isHovered]);
-
-  useEffect(() => {
-    const width = 80;
-    const height = 80;
-
-    // Define colors dynamically:
-    // Dark Mode -> Cyber Cyan/Purple
-    // Light Mode (White Theme) -> Minimalist White/Chrome
-    const colors = isDark
-      ? {
-        primary: 0x00e5ff, // Cyan
-        secondary: 0x6a0dad, // Purple
-        light: 0xb07fff, // Light Purple
-        emissiveIntensity1: 0.6,
-        emissiveIntensity2: 0.7,
-      }
-      : {
-        primary: 0xffffff, // White
-        secondary: 0xcccccc, // Silver / Chrome
-        light: 0xffffff, // White
-        emissiveIntensity1: 0.4,
-        emissiveIntensity2: 0.5,
-      };
-
-    // Create scene, camera, renderer
-    const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
-    camera.position.z = 4.2;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-    const container = mountRef.current;
-    if (container) {
-      container.innerHTML = '';
-      container.appendChild(renderer.domElement);
+  const colors = useMemo(() => isDark
+    ? {
+      primary: 0x00e5ff,
+      secondary: 0x6a0dad,
+      light: 0xb07fff,
+      emissiveIntensity1: 0.6,
+      emissiveIntensity2: 0.7,
     }
+    : {
+      primary: 0xffffff,
+      secondary: 0xcccccc,
+      light: 0xffffff,
+      emissiveIntensity1: 0.4,
+      emissiveIntensity2: 0.5,
+    }, [isDark]);
 
-    // Add lights
-    const ambientLight = new THREE.AmbientLight(0xffffff, isDark ? 0.7 : 0.8);
-    scene.add(ambientLight);
-
-    const dirLight = new THREE.DirectionalLight(0xffffff, isDark ? 1.5 : 1.8);
-    dirLight.position.set(5, 5, 5);
-    scene.add(dirLight);
-
-    const pointLightColor = isDark ? colors.primary : 0xffffff;
-    const pointLight = new THREE.PointLight(pointLightColor, 3.0, 10);
-    pointLight.position.set(-2, 2, 2);
-    scene.add(pointLight);
-
+  const group = useMemo(() => {
     let mainObject;
 
     if (index === 0) {
-      // 1. Rapid Fire - Cyber Lightning Bolt
       const shape = new THREE.Shape();
       shape.moveTo(0, 0.95);
       shape.lineTo(0.35, 0.1);
@@ -101,13 +143,10 @@ export function ActivityCanvas({ index, isHovered }) {
 
       mainObject = new THREE.Mesh(geometry, material);
     } else if (index === 1) {
-      // 2. Social Media — 3D Instagram‑like camera icon (single primary color)
       const group = new THREE.Group();
-
-      // Camera body – rounded square extruded
       const camShape = new THREE.Shape();
-      const size = 0.6; // overall size
-      const radius = 0.12; // corner radius
+      const size = 0.6;
+      const radius = 0.12;
       camShape.moveTo(-size/2 + radius, -size/2);
       camShape.lineTo(size/2 - radius, -size/2);
       camShape.quadraticCurveTo(size/2, -size/2, size/2, -size/2 + radius);
@@ -119,8 +158,7 @@ export function ActivityCanvas({ index, isHovered }) {
       camShape.quadraticCurveTo(-size/2, -size/2, -size/2 + radius, -size/2);
       camShape.closePath();
 
-      const camExtrudeSettings = { depth: 0.08, bevelEnabled: false };
-      const camGeom = new THREE.ExtrudeGeometry(camShape, camExtrudeSettings);
+      const camGeom = new THREE.ExtrudeGeometry(camShape, { depth: 0.08, bevelEnabled: false });
       const camMat = new THREE.MeshStandardMaterial({
         color: colors.primary,
         emissive: colors.primary,
@@ -131,7 +169,6 @@ export function ActivityCanvas({ index, isHovered }) {
       const camBody = new THREE.Mesh(camGeom, camMat);
       group.add(camBody);
 
-      // Lens – thin cylinder
       const lensGeom = new THREE.CylinderGeometry(0.15, 0.15, 0.02, 32);
       const lensMat = new THREE.MeshStandardMaterial({
         color: colors.primary,
@@ -141,24 +178,15 @@ export function ActivityCanvas({ index, isHovered }) {
         metalness: 0.9,
       });
       const lens = new THREE.Mesh(lensGeom, lensMat);
-      lens.rotation.x = Math.PI / 2; // face forward
+      lens.rotation.x = Math.PI / 2;
       lens.position.set(0, 0, 0.045);
       group.add(lens);
 
-      // Inner circle – small sphere at the centre of the lens
       const innerGeom = new THREE.SphereGeometry(0.07, 16, 16);
-      const innerMat = new THREE.MeshStandardMaterial({
-        color: colors.primary,
-        emissive: colors.primary,
-        emissiveIntensity: 1.2,
-        roughness: 0.05,
-        metalness: 0.9,
-      });
-      const inner = new THREE.Mesh(innerGeom, innerMat);
+      const inner = new THREE.Mesh(innerGeom, lensMat);
       inner.position.set(0, 0, 0.05);
       group.add(inner);
 
-      // Flash dot – small sphere at top‑right corner
       const flashGeom = new THREE.SphereGeometry(0.05, 12, 12);
       const flash = new THREE.Mesh(flashGeom, camMat);
       flash.position.set(0.18, 0.18, 0.04);
@@ -166,10 +194,7 @@ export function ActivityCanvas({ index, isHovered }) {
 
       mainObject = group;
     } else if (index === 2) {
-      // 3. Networking — Globe with orbit rings (theme-colored)
       const group = new THREE.Group();
-
-      // Globe sphere (wireframe, primary)
       const globeGeom = new THREE.SphereGeometry(0.32, 16, 12);
       const globeMat = new THREE.MeshStandardMaterial({
         color: colors.primary,
@@ -182,9 +207,7 @@ export function ActivityCanvas({ index, isHovered }) {
       const globe = new THREE.Mesh(globeGeom, globeMat);
       group.add(globe);
 
-      // Equatorial ring (secondary)
       const ring1Geom = new THREE.TorusGeometry(0.44, 0.045, 12, 80);
-      // Use primary color for equatorial ring to avoid mixing secondary
       const ring1Mat = new THREE.MeshStandardMaterial({
         color: colors.primary,
         emissive: colors.primary,
@@ -195,25 +218,14 @@ export function ActivityCanvas({ index, isHovered }) {
       const ring1 = new THREE.Mesh(ring1Geom, ring1Mat);
       group.add(ring1);
 
-      // Tilted orbit ring (primary)
       const ring2Geom = new THREE.TorusGeometry(0.44, 0.045, 12, 80);
-      const ring2Mat = new THREE.MeshStandardMaterial({
-        color: colors.primary,
-        emissive: colors.primary,
-        emissiveIntensity: colors.emissiveIntensity1,
-        roughness: 0.1,
-        metalness: 0.9,
-      });
-      const ring2 = new THREE.Mesh(ring2Geom, ring2Mat);
+      const ring2 = new THREE.Mesh(ring2Geom, ring1Mat);
       ring2.rotation.x = Math.PI / 2.5;
       group.add(ring2);
 
       mainObject = group;
     } else {
-      // 4. Panel Discussion — Chat Bubbles (theme-colored)
       const group = new THREE.Group();
-
-      // Bubble 1 (Large — primary)
       const bubble1 = new THREE.Group();
       const disk1Geom = new THREE.CylinderGeometry(0.32, 0.32, 0.08, 32);
       disk1Geom.rotateX(Math.PI / 2);
@@ -234,15 +246,12 @@ export function ActivityCanvas({ index, isHovered }) {
       const t1 = new THREE.Mesh(tail1Geom, mat1);
       t1.position.set(-0.2, -0.25, 0);
       bubble1.add(t1);
-
       bubble1.position.set(-0.15, 0.15, 0.1);
       group.add(bubble1);
 
-      // Bubble 2 (Small — secondary)
       const bubble2 = new THREE.Group();
       const disk2Geom = new THREE.CylinderGeometry(0.22, 0.22, 0.08, 32);
       disk2Geom.rotateX(Math.PI / 2);
-      // Use primary color for small bubble to keep single color per model
       const mat2 = new THREE.MeshStandardMaterial({
         color: colors.primary,
         emissive: colors.primary,
@@ -260,55 +269,48 @@ export function ActivityCanvas({ index, isHovered }) {
       const t2 = new THREE.Mesh(tail2Geom, mat2);
       t2.position.set(0.12, -0.18, 0);
       bubble2.add(t2);
-
       bubble2.position.set(0.2, -0.15, -0.1);
       group.add(bubble2);
 
       mainObject = group;
     }
 
-    // Scale up other models (except Rapid Fire lightning at index 0)
     if (index !== 0 && mainObject) {
       mainObject.scale.set(1.25, 1.25, 1.25);
     }
 
-    // Add to scene
-    mainObjectRef.current = mainObject;
-    scene.add(mainObject);
-
-    // Initial slight tilts
     mainObject.rotation.x = 0.3;
     mainObject.rotation.z = 0.15;
 
-    // Animation Loop
-    const animate = () => {
-      animationFrameRef.current = requestAnimationFrame(animate);
+    return mainObject;
+  }, [index, colors, isDark]);
 
-      if (mainObjectRef.current) {
-        const speedMultiplier = isHoveredRef.current ? 3.0 : 1.0;
-        const targetSpeed = 0.015 * speedMultiplier;
-        mainObjectRef.current.rotation.y += targetSpeed;
+  useFrame((state, delta) => {
+    if (mainObjectRef.current) {
+      // Access hover state from the DOM via data attribute
+      const cardEl = document.getElementById(\`activity-card-\${index}\`);
+      let isHovered = false;
+      if (cardEl) {
+        const tracker = cardEl.querySelector('[data-hovered]');
+        if (tracker && tracker.getAttribute('data-hovered') === 'true') {
+          isHovered = true;
+        }
       }
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
-    // Clean up WebGL resources
-    return () => {
-      cancelAnimationFrame(animationFrameRef.current);
-      if (renderer.domElement && container) {
-        container.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
-    };
-  }, [index, isDark]);
+      const speedMultiplier = isHovered ? 3.0 : 1.0;
+      mainObjectRef.current.rotation.y += (0.015 * 60 * delta) * speedMultiplier;
+    }
+  });
 
   return (
-    <div
-      ref={mountRef}
-      className="w-16 h-16 flex items-center justify-center mb-3 sm:mb-4 relative overflow-visible pointer-events-none"
-    />
+    <>
+      <ambientLight intensity={isDark ? 0.7 : 0.8} color={0xffffff} />
+      <directionalLight position={[5, 5, 5]} intensity={isDark ? 1.5 : 1.8} color={0xffffff} />
+      <pointLight position={[-2, 2, 2]} intensity={3.0} distance={10} color={isDark ? colors.primary : 0xffffff} />
+      
+      <primitive ref={mainObjectRef} object={group} />
+    </>
   );
 }
+`;
+
+fs.writeFileSync('src/components/ActivityCanvas.jsx', activityCanvasContent);
