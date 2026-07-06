@@ -6,12 +6,24 @@ import { PAST_EVENTS } from '../../data';
 export default function PastEventsSection() {
   const { editions, photos } = PAST_EVENTS;
   const [isPaused, setIsPaused] = useState(false);
+  const [activeEdition, setActiveEdition] = useState('All');
+
+  const filteredPhotos = activeEdition === 'All' 
+    ? photos 
+    : photos.filter(p => p.edition === activeEdition);
+
+  // To ensure the marquee is always wider than the screen, we duplicate the filtered set
+  const originalSet = [...filteredPhotos, ...filteredPhotos, ...filteredPhotos];
+  
+  // Adjust animation duration so the scroll speed remains constant regardless of array length.
+  // Base speed: 4 seconds per photo for a balanced scroll speed.
+  const animationDuration = `${originalSet.length * 4}s`;
 
   return (
     <section id="past-events" className="relative z-10 section-pad overflow-hidden">
       <style>{`
         .carousel-track {
-          animation: scroll 35s linear infinite;
+          animation: scroll var(--anim-duration) linear infinite;
           animation-play-state: running;
         }
         .carousel-track.paused {
@@ -19,7 +31,7 @@ export default function PastEventsSection() {
         }
         @keyframes scroll {
           0% { transform: translateX(0); }
-          100% { transform: translateX(calc(-50% - 12px)); } /* -50% plus half the gap to loop seamlessly */
+          100% { transform: translateX(-100%); }
         }
       `}</style>
       <div
@@ -36,38 +48,62 @@ export default function PastEventsSection() {
 
         {/* Edition highlights */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-10 sm:mb-12">
-          {editions.map((edition) => (
-            <div
-              key={edition.title}
-              className="relative overflow-hidden rounded-2xl p-6 sm:p-8 flex flex-col justify-center min-h-[140px]"
-              style={{
-                background: 'var(--card)',
-                border: '1px solid var(--card-border)',
-              }}
-            >
-              <div
-                className="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-20 pointer-events-none"
-                style={{ background: 'linear-gradient(135deg, var(--accent), transparent)' }}
-              />
-              <span className="text-[11px] text-accent font-semibold uppercase tracking-[2px] block mb-2">
-                {edition.year}
-              </span>
-              <h3 className="font-sora font-bold text-[18px] sm:text-[20px] md:text-[22px] t-text">
-                {edition.title}
-              </h3>
-            </div>
-          ))}
+          {editions.map((edition) => {
+            const version = edition.title.split(' ').pop(); // '2.0' or '1.0'
+            const isActive = activeEdition === version;
+            const isFaded = activeEdition !== 'All' && !isActive;
+
+            return (
+              <button
+                key={edition.title}
+                onClick={() => setActiveEdition(isActive ? 'All' : version)}
+                className={`relative overflow-hidden rounded-2xl p-6 sm:p-8 flex flex-col items-start min-h-[140px] text-left transition-all duration-300 ${
+                  isFaded ? 'opacity-40 grayscale-[0.5]' : 'opacity-100'
+                } hover:opacity-100 hover:grayscale-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-accent/50`}
+                style={{
+                  background: isActive ? 'var(--card-hover)' : 'var(--card)',
+                  border: `1px solid ${isActive ? 'var(--accent)' : 'var(--card-border)'}`,
+                  transform: isActive ? 'translateY(-4px)' : 'translateY(0)',
+                  boxShadow: isActive ? '0 10px 30px -10px rgba(0,229,255,0.2)' : 'none'
+                }}
+              >
+                <div
+                  className="absolute top-0 right-0 w-24 h-24 rounded-bl-full opacity-20 pointer-events-none transition-opacity duration-300"
+                  style={{ background: 'linear-gradient(135deg, var(--accent), transparent)' }}
+                />
+                <span className="text-[11px] text-accent font-semibold uppercase tracking-[2px] block mb-2 transition-colors">
+                  {edition.year}
+                </span>
+                <h3 className="font-sora font-bold text-[18px] sm:text-[20px] md:text-[22px] t-text mb-2">
+                  {edition.title}
+                </h3>
+                {isActive && (
+                  <div className="absolute bottom-0 left-0 h-1 bg-accent w-full animate-pulse" />
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Carousel Photo gallery */}
         <div 
-          className="relative mt-8 overflow-hidden"
+          className="relative mt-8 overflow-hidden flex pb-14 pt-4"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
+          style={{ '--anim-duration': animationDuration }}
         >
-          <div className={`carousel-track flex w-max gap-4 sm:gap-5 lg:gap-6 pb-14 pt-4 ${isPaused ? 'paused' : ''}`}>
-            {[...photos, ...photos].map((photo, i) => (
-              <div key={i} className="w-[85vw] sm:w-[320px] lg:w-[360px] shrink-0">
+          {/* First block */}
+          <div className={`carousel-track flex w-max shrink-0 ${isPaused ? 'paused' : ''}`}>
+            {originalSet.map((photo, i) => (
+              <div key={`a-${i}`} className="w-[85vw] sm:w-[320px] lg:w-[360px] shrink-0 pr-4 sm:pr-5 lg:pr-6">
+                <PhotoCard photo={photo} index={i} />
+              </div>
+            ))}
+          </div>
+          {/* Second identical block for seamless loop */}
+          <div className={`carousel-track flex w-max shrink-0 ${isPaused ? 'paused' : ''}`} aria-hidden="true">
+            {originalSet.map((photo, i) => (
+              <div key={`b-${i}`} className="w-[85vw] sm:w-[320px] lg:w-[360px] shrink-0 pr-4 sm:pr-5 lg:pr-6">
                 <PhotoCard photo={photo} index={i} />
               </div>
             ))}
