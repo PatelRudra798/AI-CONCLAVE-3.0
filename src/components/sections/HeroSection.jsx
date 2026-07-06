@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import useCountdown from '../hooks/useCountdown';
-import { EVENT_DATE, HERO_STATS } from '../data';
-import group7 from '../assets/icons/Group 7.png';
+import useCountdown from '../../hooks/useCountdown';
+import { EVENT_DATE, HERO_STATS } from '../../data';
+import group7 from '../../assets/icons/Group 7.png';
 
 function StatCounter({ num }) {
   const [count, setCount] = useState(0);

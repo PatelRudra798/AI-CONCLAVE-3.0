@@ -1,0 +1,17 @@
+export const SPONSORS = [
+  { name: 'TechCorp AI', initials: 'TC', url: '#' },
+  { name: 'CloudNova', initials: 'CN', url: '#' },
+  { name: 'NeuralSys', initials: 'NS', url: '#' },
+  { name: 'DataBridge', initials: 'DB', url: '#' },
+  { name: 'AeroAI', initials: 'AA', url: '#' },
+  { name: 'QuantumEdge', initials: 'QE', url: '#' },
+  { name: 'ByteForge', initials: 'BF', url: '#' },
+  { name: 'IntelliPath', initials: 'IP', url: '#' },
+  { name: 'CoreMatrix', initials: 'CM', url: '#' },
+  { name: 'GridMind', initials: 'GM', url: '#' },
+  { name: 'IEEE Gujarat', initials: 'IG', url: '#' },
+  { name: 'Google DSC', initials: 'GD', url: '#' },
+  { name: 'MLH', initials: 'MH', url: '#' },
+  { name: 'ACM Student', initials: 'AC', url: '#' },
+  { name: 'TechMahindra', initials: 'TM', url: '#' },
+];

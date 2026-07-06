@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import SectionHeader from './SectionHeader';
+import SectionHeader from '../ui/SectionHeader';
 
 export default function FaqSection() {
   const [isSubmitting, setIsSubmitting] = useState(false);

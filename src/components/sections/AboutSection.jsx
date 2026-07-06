@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import ThreeScene from './ThreeScene';
+import ThreeScene from '../three/ThreeScene';
 
 export default function AboutSection({ mouseRef }) {
   const [isMobile, setIsMobile] = useState(false);

@@ -1,5 +1,5 @@
-import SectionHeader from './SectionHeader';
-import { CONTACT_ITEMS } from '../data';
+import SectionHeader from '../ui/SectionHeader';
+import { CONTACT_ITEMS } from '../../data';
 
 export default function ContactSection() {
   return (

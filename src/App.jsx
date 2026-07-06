@@ -2,24 +2,30 @@ import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import useTheme from './hooks/useTheme';
 import useMouse from './hooks/useMouse';
-import CursorGlow          from './components/CursorGlow';
-import ParticleCanvas      from './components/ParticleCanvas';
-import Navbar              from './components/Navbar';
-import HeroSection         from './components/HeroSection';
-import AboutSection        from './components/AboutSection';
-import TopicsSection       from './components/TopicsSection';
-import ScheduleSection     from './components/ScheduleSection';
-import WorkshopsSection    from './components/WorkshopsSection';
-import SpeakersSection     from './components/SpeakersSection';
-import ActivitiesSection   from './components/ActivitiesSection';
-import SponsorsSection     from './components/SponsorsSection';
-import PastEventsSection   from './components/PastEventsSection';
-import RegistrationSection from './components/RegistrationSection';
-import FaqSection          from './components/FaqSection';
-import Footer              from './components/Footer';
-import IdCardGenerator     from './components/IdCardGenerator';
-import BadgeGeneratorModal from './components/BadgeGeneratorModal';
-import GalleryPage         from './components/GalleryPage';
+
+// Layout
+import CursorGlow          from './components/layout/CursorGlow';
+import ParticleCanvas      from './components/layout/ParticleCanvas';
+import Navbar              from './components/layout/Navbar';
+import Footer              from './components/layout/Footer';
+
+// Sections
+import HeroSection         from './components/sections/HeroSection';
+import AboutSection        from './components/sections/AboutSection';
+import TopicsSection       from './components/sections/TopicsSection';
+import ScheduleSection     from './components/sections/ScheduleSection';
+import WorkshopsSection    from './components/sections/WorkshopsSection';
+import SpeakersSection     from './components/sections/SpeakersSection';
+import ActivitiesSection   from './components/sections/ActivitiesSection';
+import SponsorsSection     from './components/sections/SponsorsSection';
+import PastEventsSection   from './components/sections/PastEventsSection';
+import RegistrationSection from './components/sections/RegistrationSection';
+import FaqSection          from './components/sections/FaqSection';
+import GalleryPage         from './components/sections/GalleryPage';
+
+// Badge Feature
+import IdCardGenerator     from './components/badge/IdCardGenerator';
+import BadgeGeneratorModal from './components/badge/BadgeGeneratorModal';
 
 const Divider = () => <div className="t-divider" />;
 
@@ -51,7 +57,7 @@ function Home({ mouseRef, onOpenBadgeModal }) {
 }
 
 export default function App() {
-  const { isDark, toggle } = useTheme();
+  const { isDark } = useTheme();
   const mouseRef = useMouse();
   const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
 
@@ -59,7 +65,7 @@ export default function App() {
     <div className="t-bg min-h-screen">
       <CursorGlow />
       <ParticleCanvas isDark={isDark} />
-      <Navbar isDark={isDark} onToggle={toggle} onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />
+      <Navbar onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />
 
       <Routes>
         <Route path="/" element={<Home mouseRef={mouseRef} onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />} />

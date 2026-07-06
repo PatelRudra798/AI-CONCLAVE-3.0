@@ -1,11 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import * as htmlToImage from 'html-to-image';
 import QRCode from 'react-qr-code';
-import souLogo from '../assets/icons/Group 16.png';
-import ieeeSpsLogo from '../assets/icons/Group.png';
-import ieeeLogo from '../assets/icons/Group 7.png';
-import gdgLogo from '../assets/icons/gdg white logo.png';
-import badgeBg from '../assets/badge-bg.png';
+import souLogo from '../../assets/icons/Group 16.png';
+import ieeeSpsLogo from '../../assets/icons/Group.png';
+import ieeeLogo from '../../assets/icons/Group 7.png';
+import gdgLogo from '../../assets/icons/gdg white logo.png';
+import badgeBg from '../../assets/badge-bg.png';
+import Cropper from 'react-easy-crop';
+import getCroppedImg from '../../utils/cropImage';
 
 export default function IdCardGenerator({ onClose }) {
   const [name, setName] = useState('');
@@ -17,6 +19,14 @@ export default function IdCardGenerator({ onClose }) {
   const [scale, setScale] = useState(1);
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
   const [showShareModal, setShowShareModal] = useState(false);
+
+  // Cropper states
+  const [imageSrc, setImageSrc] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [isCropping, setIsCropping] = useState(false);
 
   const [tierType, setTierType] = useState('');
   const [tierPrice, setTierPrice] = useState('');
@@ -64,9 +74,34 @@ export default function IdCardGenerator({ onClose }) {
       setError('');
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPhoto(reader.result);
+        setImageSrc(reader.result);
+        setIsCropping(true);
+        setZoom(1);
+        setRotation(0);
+        setCrop({ x: 0, y: 0 });
       };
       reader.readAsDataURL(file);
+    }
+    // reset input value so the same file can be uploaded again if needed
+    e.target.value = '';
+  };
+
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  const showCroppedImage = async () => {
+    try {
+      const croppedImage = await getCroppedImg(
+        imageSrc,
+        croppedAreaPixels,
+        rotation
+      );
+      setPhoto(croppedImage);
+      setIsCropping(false);
+    } catch (e) {
+      console.error(e);
+      setError('Failed to crop image');
     }
   };
 
@@ -379,20 +414,106 @@ export default function IdCardGenerator({ onClose }) {
             {/* Step 3: Upload and Adjust */}
             <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
               <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>3. Upload and Adjust</h3>
-              <label className="flex flex-col items-center justify-center border border-dashed t-border rounded-xl p-8 hover:border-accent transition-all cursor-pointer w-full box-border t-card2-bg">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span className="t-muted text-xs mb-4 text-center leading-relaxed">Upload a clear headshot or portrait photo.<br/>PNG or JPG recommended.</span>
-                <span className="t-text font-bold text-sm">Upload Photo</span>
-                <input
-                  type="file"
-                  accept="image/png, image/jpeg"
-                  className="hidden"
-                  onChange={handlePhotoUpload}
-                />
-              </label>
+              
+              {isCropping && imageSrc ? (
+                <div className="w-full flex flex-col gap-4">
+                  <div className="relative w-full h-[300px] bg-black/20 rounded-lg overflow-hidden border border-white/10">
+                    <Cropper
+                      image={imageSrc}
+                      crop={crop}
+                      zoom={zoom}
+                      rotation={rotation}
+                      aspect={1}
+                      cropShape="round"
+                      showGrid={true}
+                      onCropChange={setCrop}
+                      onCropComplete={onCropComplete}
+                      onZoomChange={setZoom}
+                      onRotationChange={setRotation}
+                    />
+                  </div>
+                  
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs t-muted flex justify-between">
+                        <span>Zoom</span>
+                        <span>{Math.round(zoom * 100)}%</span>
+                      </label>
+                      <input
+                        type="range"
+                        value={zoom}
+                        min={1}
+                        max={3}
+                        step={0.1}
+                        aria-labelledby="Zoom"
+                        onChange={(e) => setZoom(Number(e.target.value))}
+                        className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-accent"
+                      />
+                    </div>
+                    
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs t-muted flex justify-between">
+                        <span>Rotation</span>
+                        <span>{rotation}°</span>
+                      </label>
+                      <input
+                        type="range"
+                        value={rotation}
+                        min={0}
+                        max={360}
+                        step={1}
+                        aria-labelledby="Rotation"
+                        onChange={(e) => setRotation(Number(e.target.value))}
+                        className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-accent"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 mt-2">
+                    <button
+                      onClick={() => setIsCropping(false)}
+                      className="flex-1 py-2.5 rounded-lg border border-white/20 text-white/70 text-sm font-semibold hover:bg-white/5 transition-all"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={showCroppedImage}
+                      className="flex-1 py-2.5 rounded-lg bg-blue-500 text-white text-sm font-bold hover:bg-blue-600 transition-all"
+                    >
+                      Apply Crop
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-3">
+                  <label className="flex flex-col items-center justify-center border border-dashed t-border rounded-xl p-8 hover:border-accent transition-all cursor-pointer w-full box-border t-card2-bg">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-white/40 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span className="t-muted text-xs mb-4 text-center leading-relaxed">Upload a clear headshot or portrait photo.<br/>PNG or JPG recommended.</span>
+                    <span className="t-text font-bold text-sm">Upload Photo</span>
+                    <input
+                      type="file"
+                      accept="image/png, image/jpeg"
+                      className="hidden"
+                      onChange={handlePhotoUpload}
+                    />
+                  </label>
+                  
+                  {imageSrc && !isCropping && (
+                    <button
+                      onClick={() => setIsCropping(true)}
+                      className="w-full py-2.5 rounded-lg border border-accent/40 text-accent text-sm font-semibold hover:bg-accent/10 transition-all flex items-center justify-center gap-2"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                      </svg>
+                      Edit Crop
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
           </div>
@@ -487,7 +608,7 @@ export default function IdCardGenerator({ onClose }) {
                       </div>
                       <div className="flex flex-col">
                         <span className="text-blue-400 text-[10px] font-bold tracking-widest">LOCATION</span>
-                        <span className="text-white font-bold text-sm">GANDHINAGAR, IN</span>
+                        <span className="text-white font-bold text-[9px] sm:text-[10px] max-w-[140px] leading-tight">Silver Oak University , Ahmedabad, Gujarat, IN</span>
                       </div>
                     </div>
                   </div>

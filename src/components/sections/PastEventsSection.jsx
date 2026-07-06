@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import SectionHeader from './SectionHeader';
-import { PAST_EVENTS } from '../data';
+import SectionHeader from '../ui/SectionHeader';
+import { PAST_EVENTS } from '../../data';
 
 export default function PastEventsSection() {
   const { editions, photos } = PAST_EVENTS;
@@ -39,7 +39,7 @@ export default function PastEventsSection() {
           {editions.map((edition) => (
             <div
               key={edition.title}
-              className="relative overflow-hidden rounded-2xl p-5 sm:p-6"
+              className="relative overflow-hidden rounded-2xl p-6 sm:p-8 flex flex-col justify-center min-h-[140px]"
               style={{
                 background: 'var(--card)',
                 border: '1px solid var(--card-border)',
@@ -52,13 +52,9 @@ export default function PastEventsSection() {
               <span className="text-[11px] text-accent font-semibold uppercase tracking-[2px] block mb-2">
                 {edition.year}
               </span>
-              <h3 className="font-sora font-bold text-[18px] sm:text-[20px] t-text mb-3">
+              <h3 className="font-sora font-bold text-[18px] sm:text-[20px] md:text-[22px] t-text">
                 {edition.title}
               </h3>
-              <div className="flex flex-wrap gap-4">
-                <Stat label="Participants" value={edition.participants} />
-                <Stat label="Speakers" value={edition.speakers} />
-              </div>
             </div>
           ))}
         </div>
@@ -82,16 +78,7 @@ export default function PastEventsSection() {
   );
 }
 
-function Stat({ label, value }) {
-  return (
-    <div>
-      <p className="text-[18px] sm:text-[20px] font-sora font-bold text-accent leading-none mb-1">
-        {value}
-      </p>
-      <p className="text-[11px] sm:text-[12px] t-muted">{label}</p>
-    </div>
-  );
-}
+
 
 function PhotoCard({ photo, index }) {
   return (

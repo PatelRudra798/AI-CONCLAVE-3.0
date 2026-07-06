@@ -259,3 +259,17 @@
   }
 }
 
+
+/* ─── Float Animations (Sponsors Section) ────────────────────────────────── */
+@keyframes floatLeft {
+  0%, 100% { transform: translateY(0px) rotate(-8deg); }
+  50%       { transform: translateY(-20px) rotate(-4deg); }
+}
+
+@keyframes floatRight {
+  0%, 100% { transform: translateY(0px) rotate(8deg); }
+  50%       { transform: translateY(-20px) rotate(4deg); }
+}
+
+.float-left  { animation: floatLeft  5s ease-in-out infinite; }
+.float-right { animation: floatRight 5s ease-in-out infinite; }

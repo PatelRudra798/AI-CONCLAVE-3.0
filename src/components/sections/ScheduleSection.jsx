@@ -2,9 +2,9 @@ import { useState, useRef, useEffect, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { View, Preload } from '@react-three/drei';
 import { motion, useSpring, useMotionValue, useAnimationFrame, useTransform, useScroll } from 'framer-motion';
-import SectionHeader from './SectionHeader';
-import { SCHEDULE } from '../data';
-import { ModelResolver } from './ThreeTimelineModels';
+import SectionHeader from '../ui/SectionHeader';
+import { SCHEDULE } from '../../data';
+import { ModelResolver } from '../three/ThreeTimelineModels';
 
 const BADGE_STYLES = {
   keynote: { label: 'Keynote', cls: 'bg-accent/15 text-accent border-accent/35' },
@@ -426,9 +426,6 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
   // Description and Hint transitions
   const descHeight = useTransform(ballY, distRange, ['0px', '80px', '0px']);
   const descOpacity = useTransform(ballY, distRange, [0, 1, 0]);
-  const hintOpacity = useTransform(ballY, distRange, [0.4, 0, 0.4]);
-  const hintHeight = useTransform(ballY, distRange, ['16px', '0px', '16px']);
-  const hintMargin = useTransform(ballY, distRange, ['2px', '0px', '2px']);
 
   // Define identical shadow structures so Framer Motion can interpolate them smoothly
   const DEFAULT_SHADOW = '0px 0px 6px 0px rgba(255, 255, 255, 0.05), inset 0px 0px 0px 0px rgba(0, 240, 255, 0)';
@@ -505,9 +502,8 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
       x: 0, 
       y: 0,
       transition: {
-        type: "spring",
-        stiffness: 70,
-        damping: 15,
+        type: "tween",
+        ease: "easeOut",
         duration: 0.6
       }
     }
@@ -530,7 +526,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         viewport={{ once: true, margin: "-100px" }}
-        transition={{ type: "spring", stiffness: 100, damping: 12 }}
+        transition={{ type: "tween", ease: "easeOut", duration: 0.5 }}
         className={`absolute top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-[40px] h-[40px] md:w-11 md:h-11 rounded-full flex items-center justify-center border-2 cursor-pointer ${nodeAlignClass}`}
         style={{
           scale: nodeScale,
@@ -610,13 +606,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
               <p className="text-[11px] text-white/60 drop-shadow-[0_0_3px_rgba(255,255,255,0.3)] leading-relaxed pt-1 pb-0.5">{item.desc}</p>
             </motion.div>
 
-            {/* Hint (Fades and shrinks on hover) */}
-            <motion.p 
-              className="text-[9px] text-white/60 drop-shadow-[0_0_3px_rgba(255,255,255,0.3)] overflow-hidden flex items-center"
-              style={{ opacity: hintOpacity, height: hintHeight, marginTop: hintMargin }}
-            >
-              Scroll to highlight
-            </motion.p>
+
           </div>
         </motion.div>
       </div>

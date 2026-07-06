@@ -1,6 +1,6 @@
 import React from 'react';
-import SectionHeader from './SectionHeader';
-import { WORKSHOPS } from '../data';
+import SectionHeader from '../ui/SectionHeader';
+import { WORKSHOPS } from '../../data';
 
 export default function WorkshopsSection() {
   return (

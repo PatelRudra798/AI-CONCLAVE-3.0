@@ -1,6 +1,6 @@
-import SectionHeader from './SectionHeader';
-import TopicIcon3D from './TopicIcon3D';
-import { TOPICS } from '../data';
+import SectionHeader from '../ui/SectionHeader';
+import TopicIcon3D from '../three/TopicIcon3D';
+import { TOPICS } from '../../data';
 
 export default function TopicsSection() {
   return (
