@@ -116,7 +116,10 @@ export default function PastEventsSection() {
 
 
 
-function PhotoCard({ photo, index }) {
+const PhotoCard = React.memo(function PhotoCard({ photo, index }) {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const isEager = index < 3; // Eager load the first 3 images to prevent visible pop-in
+
   return (
     <motion.figure
       whileHover={{ 
@@ -133,12 +136,28 @@ function PhotoCard({ photo, index }) {
         transformOrigin: 'center bottom',
       }}
     >
-      <img
-        src={photo.src}
-        alt={photo.alt}
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+      {/* Extremely low-res blur placeholder that loads instantly */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center filter blur-md scale-110 transition-opacity duration-700"
+        style={{ 
+          backgroundImage: `url("${photo.src.blur}")`, 
+          opacity: isLoaded ? 0 : 1 
+        }}
       />
+
+      {/* Responsive, modern WebP image loading */}
+      <picture>
+        <source media="(max-width: 640px)" srcSet={photo.src.sm} type="image/webp" />
+        <source media="(max-width: 1024px)" srcSet={photo.src.md} type="image/webp" />
+        <img
+          src={photo.src.lg}
+          alt={photo.alt}
+          loading={isEager ? 'eager' : 'lazy'}
+          decoding="async"
+          onLoad={() => setIsLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-105 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}
+        />
+      </picture>
 
       <div
         className="absolute inset-0 opacity-80 group-hover:opacity-90 transition-opacity duration-300 pointer-events-none"
@@ -159,4 +178,4 @@ function PhotoCard({ photo, index }) {
       </figcaption>
     </motion.figure>
   );
-}
+});
