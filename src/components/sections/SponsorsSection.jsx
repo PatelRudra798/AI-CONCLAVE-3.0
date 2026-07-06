@@ -1,13 +1,23 @@
+import { useState, useEffect } from 'react';
 import SectionHeader from '../ui/SectionHeader';
 import gdgLogo from '../../assets/icons/gdg white logo.png';
 import maskGroupLogo from '../../assets/icons/Mask group.png';
 
 const COLLABORATORS = [
-  { src: gdgLogo, alt: 'GDG', name: 'Google Developer Groups' },
-  { src: maskGroupLogo, alt: 'Mask Group', name: 'Community Partner' },
+  { src: gdgLogo, alt: 'GDG' },
+  { src: maskGroupLogo, alt: 'Mask Group' },
 ];
 
 export default function SponsorsSection() {
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsDesktop(window.innerWidth >= 1024);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
   return (
     <section id="sponsors" className="relative z-10 section-pad overflow-hidden">
 
@@ -44,12 +54,21 @@ export default function SponsorsSection() {
                   backdrop-blur-2xl
                   border border-cyan-400/20
                   bg-white/5
-                  shadow-[0_0_50px_rgba(0,255,255,0.15)]
-                  transition-all duration-500
-                  hover:scale-105
-                  hover:-translate-y-2
-                  hover:shadow-[0_20px_80px_rgba(0,255,255,0.35)]
+                  cursor-pointer
                 "
+                style={{
+                  transform: isDesktop ? (idx === 0 ? 'rotate(-6deg)' : 'rotate(6deg)') : 'none',
+                  boxShadow: '0 0 50px rgba(0,255,255,0.15)',
+                  transition: 'transform 0.5s ease, box-shadow 0.5s ease',
+                }}
+                onMouseEnter={e => {
+                  e.currentTarget.style.transform = 'rotate(0deg) scale(1.06) translateY(-10px)';
+                  e.currentTarget.style.boxShadow = '0 20px 80px rgba(0,255,255,0.4)';
+                }}
+                onMouseLeave={e => {
+                  e.currentTarget.style.transform = isDesktop ? (idx === 0 ? 'rotate(-6deg)' : 'rotate(6deg)') : 'none';
+                  e.currentTarget.style.boxShadow = '0 0 50px rgba(0,255,255,0.15)';
+                }}
               >
                 {/* Animated Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-transparent to-purple-500/10 opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
@@ -94,7 +113,7 @@ export default function SponsorsSection() {
                       group-hover:scale-110
                     "
                   />
-                  <span className="text-white/50 text-xs font-medium tracking-widest uppercase">{img.name}</span>
+
                 </div>
 
                 {/* Bottom Glow */}

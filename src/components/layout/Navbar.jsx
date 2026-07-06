@@ -68,7 +68,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
         </button>
 
         {/* Desktop links */}
-        <div className="hidden lg:flex items-center gap-6 xl:gap-7">
+        <div className="hidden xl:flex items-center gap-6 xl:gap-7">
           {NAV_LINKS.map(({ label, id }) => (
             <button
               key={id}
@@ -86,14 +86,14 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
           {/* Desktop CTA */}
           <button
             onClick={() => handleNav('badge-section')}
-            className="hidden sm:block bg-transparent border border-accent/40 text-accent text-[12px] sm:text-[13px] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
+            className="hidden xl:block bg-transparent border border-accent/40 text-accent text-[13px] px-5 py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
           >
             Generate Badge
           </button>
 
           <button
             onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2kTP8MxlFOR6Xh55Pt3uyOTZ56-zKVuqlU605yrKxv9SyHw/viewform?pli=1', '_blank')}
-            className="hidden sm:block bg-transparent border border-accent/40 text-accent text-[12px] sm:text-[13px] px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
+            className="hidden xl:block bg-transparent border border-accent/40 text-accent text-[13px] px-5 py-2.5 rounded-lg hover:bg-accent/10 hover:border-accent/70 transition-all duration-200 whitespace-nowrap"
           >
             Register Now
           </button>
@@ -101,7 +101,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
           {/* Mobile hamburger */}
           <button
             onClick={() => setMenuOpen((v) => !v)}
-            className="lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent transition-colors"
+            className="xl:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center t-card t-muted hover:text-accent transition-colors"
             aria-label="Toggle menu"
           >
             {menuOpen ? <CloseIcon /> : <MenuIcon />}
@@ -111,7 +111,7 @@ export default function Navbar({ isDark, onToggle, onOpenBadgeModal }) {
 
       {/* Mobile drawer */}
       <div
-        className={`fixed inset-0 z-40 lg:hidden transition-all duration-300 ${menuOpen ? 'visible' : 'invisible'}`}
+        className={`fixed inset-0 z-40 xl:hidden transition-all duration-300 ${menuOpen ? 'visible' : 'invisible'}`}
       >
         {/* Backdrop */}
         <div

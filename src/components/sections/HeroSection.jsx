@@ -103,29 +103,16 @@ export default function HeroSection({ onOpenBadgeModal }) {
       {/* Title */}
       <h1 className="leading-[1] mb-5 flex flex-col items-center gap-2 sm:gap-4 mt-6 z-10" style={{ fontSize: 'clamp(44px, 12vw, 120px)' }}>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 select-none">
-          <span
-            className="font-black text-white leading-none tracking-tight glitch-span"
-            data-text="AI"
-          >
-            AI
-          </span>
-          <span
-            className="font-black text-white leading-none glitch-span"
-            data-text="CONCLAVE"
-          >
-            CONCLAVE
-          </span>
-          <span
-            className="font-black text-white leading-none glitch-span"
-            data-text="3.0"
-          >
-            3.0
-          </span>
+          {['AI', 'CONCLAVE', '3.0'].map((word) => (
+            <span
+              key={word}
+              className="font-black leading-none tracking-tight hero-glitch"
+              data-glitch={word}
+            >
+              {word}
+            </span>
+          ))}
         </div>
-        {/* <div className="flex items-center gap-3 mt-1 sm:mt-2">
-          <span className="text-accent text-[14px] sm:text-[22px] font-mono tracking-widest">// 2026 EDITION</span>
-          <span className="text-[32px] sm:text-[48px] font-black text-white drop-shadow-[0_8px_16px_rgba(59,130,246,1)]">3.0</span>
-        </div> */}
       </h1>
 
 
