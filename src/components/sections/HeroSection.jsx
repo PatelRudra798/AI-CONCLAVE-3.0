@@ -103,29 +103,16 @@ export default function HeroSection({ onOpenBadgeModal }) {
       {/* Title */}
       <h1 className="leading-[1] mb-5 flex flex-col items-center gap-2 sm:gap-4 mt-6 z-10" style={{ fontSize: 'clamp(44px, 12vw, 120px)' }}>
         <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4 select-none">
-          <span
-            className="font-black text-white leading-none tracking-tight glitch-span"
-            data-text="AI"
-          >
-            AI
-          </span>
-          <span
-            className="font-black text-white leading-none glitch-span"
-            data-text="CONCLAVE"
-          >
-            CONCLAVE
-          </span>
-          <span
-            className="font-black text-white leading-none glitch-span"
-            data-text="3.0"
-          >
-            3.0
-          </span>
+          {['AI', 'CONCLAVE', '3.0'].map((word) => (
+            <span
+              key={word}
+              className="font-black leading-none tracking-tight hero-glitch"
+              data-glitch={word}
+            >
+              {word}
+            </span>
+          ))}
         </div>
-        {/* <div className="flex items-center gap-3 mt-1 sm:mt-2">
-          <span className="text-accent text-[14px] sm:text-[22px] font-mono tracking-widest">// 2026 EDITION</span>
-          <span className="text-[32px] sm:text-[48px] font-black text-white drop-shadow-[0_8px_16px_rgba(59,130,246,1)]">3.0</span>
-        </div> */}
       </h1>
 
 
@@ -158,7 +145,7 @@ export default function HeroSection({ onOpenBadgeModal }) {
       {/* CTAs */}
       <div className="flex flex-col xs:flex-row items-center justify-center gap-3 mb-10 sm:mb-14 w-full px-4">
         <button
-          onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
+          onClick={() => window.open('https://docs.google.com/forms/d/e/1FAIpQLSf2kTP8MxlFOR6Xh55Pt3uyOTZ56-zKVuqlU605yrKxv9SyHw/viewform?pli=1', '_blank')}
           className="w-full xs:w-auto border border-accent/25 bg-accent/[0.03] t-text font-semibold text-[13px] sm:text-[14px] px-7 sm:px-9 py-3.5 sm:py-4 rounded-xl hover:border-accent hover:text-accent hover:-translate-y-1 transition-all duration-200"
           onMouseEnter={(e) => { e.currentTarget.style.boxShadow = `0 12px 40px var(--glow)`; }}
           onMouseLeave={(e) => { e.currentTarget.style.boxShadow = 'none'; }}
