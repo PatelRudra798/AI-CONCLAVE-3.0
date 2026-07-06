@@ -1,6 +1,16 @@
+import { useState, useEffect } from 'react';
 import ThreeScene from './ThreeScene';
 
 export default function AboutSection({ mouseRef }) {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024); // lg breakpoint
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const paras = [
     'AI Conclave 3.0 continues its tradition of bringing together bright minds from academia and industry to explore the rapidly evolving world of Artificial Intelligence.',
     'The conclave serves as a platform for intellectual discussions, innovation, collaboration, and practical learning through keynote sessions, expert talks, and networking.',
@@ -22,10 +32,12 @@ export default function AboutSection({ mouseRef }) {
           ))}
         </div>
 
-        {/* 3D canvas — background on mobile, normal grid item on large screens */}
-        <div className="absolute inset-0 z-[-1] opacity-[0.45] pointer-events-none flex items-center justify-center overflow-hidden lg:static lg:opacity-100 lg:z-auto lg:h-[420px] lg:pointer-events-auto lg:overflow-visible lg:block">
-          <ThreeScene mouseRef={mouseRef} />
-        </div>
+        {/* 3D canvas — normal grid item on large screens. Disabled on mobile for performance/visibility. */}
+        {!isMobile && (
+          <div className="hidden lg:flex lg:static lg:opacity-100 lg:z-auto lg:h-[420px] lg:pointer-events-auto lg:overflow-visible">
+            <ThreeScene mouseRef={mouseRef} />
+          </div>
+        )}
 
       </div>
     </section>

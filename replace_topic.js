@@ -1,4 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState, Suspense, Component } from 'react';
+const fs = require('fs');
+const content = `import React, { useEffect, useMemo, useRef, useState, Suspense, Component } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 
@@ -359,3 +360,5 @@ export default function TopicIcon3D({ shape = 'robot_head' }) {
     </div>
   );
 }
+`;
+fs.writeFileSync('src/components/TopicIcon3D.jsx', content);
