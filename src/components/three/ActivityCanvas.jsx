@@ -43,6 +43,7 @@ export function ActivityModel({ index }) {
         steps: 1,
         bevelSize: 0.04,
         bevelThickness: 0.04,
+        curveSegments: 12,
       };
 
       const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
@@ -72,7 +73,7 @@ export function ActivityModel({ index }) {
       camShape.quadraticCurveTo(-size/2, -size/2, -size/2 + radius, -size/2);
       camShape.closePath();
 
-      const camGeom = new THREE.ExtrudeGeometry(camShape, { depth: 0.12, bevelEnabled: false });
+      const camGeom = new THREE.ExtrudeGeometry(camShape, { depth: 0.12, bevelEnabled: false, curveSegments: 12 });
       camGeom.center();
       const camMat = new THREE.MeshStandardMaterial({
         color: colors.primary,
