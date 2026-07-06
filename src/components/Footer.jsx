@@ -34,7 +34,7 @@ export default function Footer() {
       style={{ borderColor: 'var(--card-border)' }}>
 
       {/* Giant Background Text "AI CONCLAVE 3.0" (faded watermark, unselectable) */}
-      <div 
+      <div
         className="absolute bottom-0 w-full left-1/2 -translate-x-1/2 translate-y-[18%] select-none pointer-events-none z-0 text-white font-sora font-extrabold tracking-wider opacity-10 leading-none uppercase text-center whitespace-nowrap"
         style={{ fontSize: 'clamp(40px, 9.5vw, 250px)' }}
       >
@@ -62,8 +62,8 @@ export default function Footer() {
                 <div className="flex items-start gap-3">
                   <img src="https://img.icons8.com/3d-fluency/94/phone.png" alt="Phone" className="w-6 h-6 object-contain shrink-0 mt-0.5" />
                   <div className="flex flex-col gap-1 font-medium">
-                    <div>Rishi Amrutya — +91 63524 74784</div>
-                    <div>Dhruv Chavda — +91 79908 15230</div>
+                    <a href="tel:+916352474784" className="block hover:text-cyan-400 transition-colors">Rishi Amrutya — +91 63524 74784</a>
+                    <a href="tel:+917990815230" className="block hover:text-cyan-400 transition-colors">Dhruv Chavda — +91 79908 15230</a>
                   </div>
                 </div>
                 {/* 3D Mail Icon and Dynamic Mail Link */}

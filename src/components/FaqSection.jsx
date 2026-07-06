@@ -88,16 +88,16 @@ export default function FaqSection() {
       )}
       <div className="max-container">
         <SectionHeader label="PANEL DISCUSSION" title="Drop Your Questions" />
-        
+
         <div className="max-w-[720px] mx-auto text-center mb-8 sm:mb-10">
           <p className="t-muted text-[14px] sm:text-[15px] leading-relaxed">
-            Have a question you'd like our panelists to answer?<br/>
+            Have a question you'd like our panelists to answer?<br />
             Submit it below and we'll consider it during the live panel discussion.
           </p>
         </div>
 
         <div className="max-w-[600px] mx-auto">
-          <form 
+          <form
             onSubmit={handleSubmit}
             noValidate
             className="t-card-bg p-6 sm:p-8 rounded-[16px] sm:rounded-[20px] flex flex-col gap-5 border border-[rgba(255,255,255,0.08)] shadow-lg backdrop-blur-sm"
@@ -117,9 +117,7 @@ export default function FaqSection() {
                 <input
                   type="email"
                   name="email"
-                  placeholder="Email (optional)"
-                  pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$"
-                  title="Please enter a valid email address"
+                  placeholder="Email (branch)"
                   className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm t-text focus:outline-none focus:border-[var(--accent)] transition-colors"
                 />
               </div>
