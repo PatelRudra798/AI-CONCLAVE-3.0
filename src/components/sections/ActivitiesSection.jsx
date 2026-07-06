@@ -1,8 +1,36 @@
-import { useState, Suspense } from 'react';
+import { useState, Suspense, Component } from 'react';
 import { Canvas } from '@react-three/fiber';
 import SectionHeader from '../ui/SectionHeader';
 import { ACTIVITIES } from '../../data';
 import { ActivityModel } from '../three/ActivityCanvas';
+
+class CanvasErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.warn('WebGL/Canvas failed to load model:', error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="w-full h-full flex items-center justify-center bg-accent/5 rounded-full border border-accent/10 shadow-[0_0_15px_rgba(34,211,238,0.1)]">
+          <span className="text-5xl drop-shadow-md filter grayscale-[0.2] opacity-80" style={{ textShadow: '0 0 20px rgba(255,255,255,0.2)' }}>
+            {this.props.fallbackIcon}
+          </span>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export default function ActivitiesSection() {
   return (
@@ -34,19 +62,21 @@ function ActivityCard({ activity, index }) {
       id={`activity-card-${index}`}
     >
       <div 
-        className="w-28 h-28 flex items-center justify-center mb-3 sm:mb-4 relative overflow-visible"
+        className="w-28 h-28 flex items-center justify-center mb-3 sm:mb-4 relative overflow-visible shrink-0"
         data-hovered={isHovered}
       >
-        <Suspense fallback={<span className="text-5xl">{activity.icon}</span>}>
-          <Canvas
-            camera={{ position: [0, 0, 4.2], fov: 45, near: 0.1, far: 100 }}
-            dpr={[1, 1.5]}
-            gl={{ antialias: true, alpha: true, powerPreference: 'low-power' }}
-            className="pointer-events-none"
-          >
-            <ActivityModel index={index} />
-          </Canvas>
-        </Suspense>
+        <CanvasErrorBoundary fallbackIcon={activity.icon}>
+          <Suspense fallback={<span className="text-5xl animate-pulse opacity-50">{activity.icon}</span>}>
+            <Canvas
+              camera={{ position: [0, 0, 4.2], fov: 45, near: 0.1, far: 100 }}
+              dpr={[1, 1.5]}
+              gl={{ antialias: false, alpha: true, powerPreference: 'high-performance' }}
+              className="pointer-events-none"
+            >
+              <ActivityModel index={index} />
+            </Canvas>
+          </Suspense>
+        </CanvasErrorBoundary>
       </div>
       <h3 className="text-[14px] sm:text-[15px] font-semibold t-text mb-2 group-hover:text-accent2-light transition-colors">
         {activity.title}

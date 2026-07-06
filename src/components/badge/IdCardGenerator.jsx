@@ -28,7 +28,7 @@ export default function IdCardGenerator({ onClose }) {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [isCropping, setIsCropping] = useState(false);
 
-  const [tierType, setTierType] = useState('');
+  const [tierType, setTierType] = useState('Attendee');
   const [tierPrice, setTierPrice] = useState('');
 
   const cardRef = useRef(null);
@@ -379,7 +379,6 @@ export default function IdCardGenerator({ onClose }) {
                   { label: 'Attendee', type: 'Attendee', price: '' },
                   { label: 'Speaker', type: 'Speaker', price: '' },
                   { label: 'Volunteer', type: 'Volunteer', price: '' },
-                  { label: 'Organizer', type: 'Organizer', price: '' },
                 ].map((t) => {
                   const selected = tierType === t.type;
                   return (

@@ -69,12 +69,12 @@ const go = (id) => document.getElementById(id)?.scrollIntoView({ behavior: 'smoo
 
 function TimerBlock({ value, label }) {
   return (
-    <div className="flex flex-col items-center bg-accent/5 border border-accent/15 rounded-2xl px-2 xs:px-4 sm:px-5 py-2 sm:py-4 min-w-[60px] xs:min-w-[76px] sm:min-w-[82px]">
+    <div className="flex flex-col items-center justify-center bg-accent/5 border border-accent/15 rounded-2xl aspect-square w-[64px] xs:w-[80px] sm:w-[96px] shrink-0">
       <span className="font-sora font-extrabold leading-none text-gradient-timer"
         style={{ fontSize: 'clamp(28px, 5vw, 42px)' }}>
         {pad(value)}
       </span>
-      <span className="text-[8px] xs:text-[9px] t-muted uppercase tracking-[2px] font-semibold mt-1.5">
+      <span className="text-[8px] xs:text-[9px] t-muted uppercase tracking-[2px] font-semibold mt-1.5 text-center">
         {label}
       </span>
     </div>
