@@ -19,36 +19,73 @@ export default function FaqSection() {
     const fullName = formData.get('fullName');
     const email = formData.get('email');
     const question = formData.get('question');
+    const honeypot = formData.get('botCheck');
+
+    // Spam protection: Honeypot (silent success if caught)
+    if (honeypot) {
+      console.warn("Spam detected.");
+      setSubmitStatus('success');
+      return;
+    }
+
+    // Rate Limiting (1 minute per submission)
+    const lastSubmitTime = localStorage.getItem('lastQuestionSubmit');
+    if (lastSubmitTime && Date.now() - parseInt(lastSubmitTime) < 60000) {
+      showToast("Please wait a minute before submitting another question.");
+      return;
+    }
 
     // Custom Validation
     const errors = [];
 
+    if (!fullName || fullName.trim() === "") {
+      errors.push("Full Name is required.");
+    } else {
+      const nameRegex = /^[A-Za-z\s\-']+$/;
+      if (!nameRegex.test(fullName)) {
+        errors.push("Invalid Name.");
+      }
+    }
+
+    if (!email || email.trim() === "") {
+      errors.push("Email is required.");
+    } else {
+      const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
+      if (!emailRegex.test(email)) {
+        errors.push("Invalid Email.");
+      } else {
+        const domain = email.split('@')[1]?.toLowerCase();
+        if (domain !== 'gmail.com' && domain !== 'silveroakuni.ac.in') {
+          errors.push("Only gmail.com or silveroakuni.ac.in domains are allowed.");
+        }
+      }
+    }
+
     if (!question || question.trim() === "") {
       errors.push("Please enter your question.");
-    }
-
-    const nameRegex = /^[A-Za-z\s\-']+$/;
-    if (fullName && !nameRegex.test(fullName)) {
-      errors.push("Invalid Name.");
-    }
-
-    const emailRegex = /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
-    if (email && !emailRegex.test(email)) {
-      errors.push("Invalid Email.");
     }
 
     if (errors.length > 0) {
       if (errors.length > 1) {
         showToast("Please correct the invalid fields before submitting.");
       } else {
-        showToast(errors[0] === "Invalid Name." ? "Invalid Name. Only letters, spaces, hyphens, and apostrophes are allowed." :
-          errors[0] === "Invalid Email." ? "Please enter a valid email address." : errors[0]);
+        const firstError = errors[0];
+        showToast(
+          firstError === "Invalid Name." 
+            ? "Invalid Name. Only letters, spaces, hyphens, and apostrophes are allowed." 
+            : firstError === "Invalid Email." 
+            ? "Please enter a valid email address." 
+            : firstError
+        );
       }
       return;
     }
 
     setIsSubmitting(true);
+    
+    // Do not send honeypot field
     const data = Object.fromEntries(formData.entries());
+    delete data.botCheck;
 
     try {
       const scriptUrl = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL;
@@ -69,6 +106,7 @@ export default function FaqSection() {
         }
       });
 
+      localStorage.setItem('lastQuestionSubmit', Date.now().toString());
       setSubmitStatus('success');
       e.target.reset(); // Clear the form
     } catch (error) {
@@ -103,11 +141,15 @@ export default function FaqSection() {
             className="t-card-bg p-6 sm:p-8 rounded-[16px] sm:rounded-[20px] flex flex-col gap-5 border border-[rgba(255,255,255,0.08)] shadow-lg backdrop-blur-sm"
           >
             <div className="flex flex-col sm:flex-row gap-5">
+              <div style={{ display: 'none', visibility: 'hidden' }} aria-hidden="true">
+                <input type="text" name="botCheck" tabIndex="-1" autoComplete="off" />
+              </div>
               <div className="flex-1">
                 <input
                   type="text"
                   name="fullName"
-                  placeholder="Full Name (optional)"
+                  required
+                  placeholder="Full Name"
                   pattern="[A-Za-z\s\-']+"
                   title="Only letters, spaces, hyphens, and apostrophes are allowed"
                   className="w-full bg-[rgba(0,0,0,0.2)] border border-[rgba(255,255,255,0.08)] rounded-xl px-4 py-3 text-sm t-text focus:outline-none focus:border-[var(--accent)] transition-colors"
