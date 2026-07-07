@@ -36,7 +36,7 @@ export default function Footer() {
       {/* Giant Background Text "AI CONCLAVE 3.0" (faded watermark, unselectable) */}
       <div
         className="absolute bottom-0 w-full left-1/2 -translate-x-1/2 translate-y-[18%] select-none pointer-events-none z-0 text-white font-sora font-extrabold tracking-wider opacity-10 leading-none uppercase text-center whitespace-nowrap"
-        style={{ fontSize: 'clamp(40px, 9.5vw, 250px)' }}
+        style={{ fontSize: 'clamp(24px, 8.5vw, 250px)' }}
       >
         AI CONCLAVE 3.0
       </div>

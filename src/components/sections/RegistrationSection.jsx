@@ -13,9 +13,9 @@ export default function RegistrationSection() {
           <h4 className="text-[10px] sm:text-[11px] text-accent font-semibold uppercase tracking-[1.5px] text-center mb-4 sm:mb-5">
             All registrations include
           </h4>
-          <div className="grid grid-cols-1 xs:grid-cols-2 gap-2.5 sm:gap-3">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-8 gap-y-2.5 sm:gap-y-3 w-fit mx-auto">
             {REG_INCLUDES.map((item) => (
-              <div key={item} className="flex items-center gap-2 text-[12px] sm:text-[13px] t-muted">
+              <div key={item} className="flex items-center gap-2 text-[12px] sm:text-[13px] t-muted text-left">
                 <span className="text-accent font-bold flex-shrink-0">✓</span>{item}
               </div>
             ))}
@@ -46,14 +46,10 @@ function TierCard({ type, price, symbol, note, featured, cta }) {
         {type}
       </p>
 
-      <div className="font-sora font-extrabold t-text leading-none mb-1" style={{ fontSize: isFree ? 28 : 42 }}>
-        {!isFree && <sup className="text-[18px] align-super">{symbol}</sup>}
+      <div className="font-sora font-extrabold t-text leading-none mb-6 sm:mb-8" style={{ fontSize: isFree ? 28 : 42 }}>
+        {!isFree && <span className="text-[28px]">{symbol}</span>}
         {price}
       </div>
-
-      <p className="text-[10px] sm:text-[11px] text-accent mb-6 sm:mb-8 min-h-[16px]">
-        {note}
-      </p>
 
       {/* All register buttons are same height + visually consistent (same as header) */}
       <button

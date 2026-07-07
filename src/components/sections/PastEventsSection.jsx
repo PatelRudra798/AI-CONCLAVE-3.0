@@ -49,7 +49,7 @@ export default function PastEventsSection() {
         {/* Edition highlights */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 mb-10 sm:mb-12">
           {editions.map((edition) => {
-            const version = edition.title.split(' ').pop(); // '2.0' or '1.0'
+            const version = edition.version || edition.title.split(' ').pop(); // '2.0' or '1.0'
             const isActive = activeEdition === version;
             const isFaded = activeEdition !== 'All' && !isActive;
 
@@ -169,7 +169,7 @@ const PhotoCard = React.memo(function PhotoCard({ photo, index }) {
       <figcaption className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 translate-y-2 group-hover:translate-y-0 transition-transform duration-400 pointer-events-none">
         {photo.edition && (
           <span className="inline-block text-[10px] font-semibold uppercase tracking-[2px] text-accent mb-2">
-            AI Conclave {photo.edition}
+            {photo.edition === '1.0' ? 'AI Conclave' : `AI Conclave ${photo.edition}`}
           </span>
         )}
         <p className="text-[15px] sm:text-[17px] font-medium text-white/95 leading-snug font-sora">
