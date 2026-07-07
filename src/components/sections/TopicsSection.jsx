@@ -6,7 +6,7 @@ export default function TopicsSection() {
   return (
     <section id="topics" className="relative z-10 section-pad">
       <div className="max-container">
-        <SectionHeader label="What We Cover" title="Topics Covered" sub="Six cutting-edge domains shaping tomorrow's technology landscape" />
+        <SectionHeader label="Focus Areas" title="Topics at AI Conclave 3.0" sub="Six cutting-edge domains shaping tomorrow's technology landscape" />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {TOPICS.map((t) => (
             <div key={t.title} className="t-card rounded-2xl p-5 sm:p-6 group cursor-default">

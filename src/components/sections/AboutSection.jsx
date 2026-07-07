@@ -12,9 +12,9 @@ export default function AboutSection({ mouseRef }) {
   }, []);
 
   const paras = [
-    'AI Conclave 3.0 continues its tradition of bringing together bright minds from academia and industry to explore the rapidly evolving world of Artificial Intelligence.',
-    'The conclave serves as a platform for intellectual discussions, innovation, collaboration, and practical learning through keynote sessions, expert talks, and networking.',
-    'Whether you are a student, researcher, developer, entrepreneur, or technology enthusiast — AI Conclave 3.0 is your gateway into the AI ecosystem.',
+    'Every edition of AI Conclave has added a new chapter to a journey defined by innovation, curiosity, and the pursuit of knowledge. It has evolved into a platform that celebrates ideas, connects disciplines, and highlights the transformative power of Artificial Intelligence.',
+    'AI Conclave 3.0 continues this legacy through expert sessions, thought provoking discussions, and immersive workshops that will bridge emerging concepts with practical application.',
+    'As AI Conclave evolves, it remains committed to inspiring innovation, fostering collaboration, and advancing the conversation around Artificial Intelligence.',
   ];
 
   return (

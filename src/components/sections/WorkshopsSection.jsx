@@ -6,7 +6,7 @@ export default function WorkshopsSection() {
   return (
     <section id="workshops" className="relative z-10 section-pad">
       <div className="max-container">
-        <SectionHeader label="Hands-On Learning" title="Workshops" sub="Two deep-dive workshops — practical, guided, and certificate-backed" />
+        <SectionHeader label="Hands-On Learning" title="Workshops" sub="Two deep-dive workshops — practical, guided and certificate-backed" />
         <div className="relative flex flex-col gap-6 sm:gap-8 pb-0 sm:pb-10">
           {WORKSHOPS.map((w) => (
             <div key={w.num}>

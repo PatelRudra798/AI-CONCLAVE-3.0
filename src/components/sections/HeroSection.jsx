@@ -127,8 +127,10 @@ export default function HeroSection({ onOpenBadgeModal }) {
 
       {/* Subtitle */}
       <p className="text-[13px] sm:text-[14px] t-muted max-w-[480px] sm:max-w-[520px] mx-auto leading-relaxed mb-6 sm:mb-8 px-2">
-        Join industry experts, researchers, innovators, and students for a day filled with
-        technical sessions, hands-on workshops, and future-focused discussions.
+        Where leading researchers, industry practitioners<br />
+        and emerging scholars convene to advance the field,<br />
+        through expert-led sessions, applied workshops and<br />
+        rigorous discourse on the frontier ahead.
       </p>
 
       {/* Countdown */}

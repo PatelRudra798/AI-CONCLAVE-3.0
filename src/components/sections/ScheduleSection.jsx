@@ -11,7 +11,8 @@ const BADGE_STYLES = {
   opening: { label: 'Opening', cls: 'bg-accent/10 text-accent2-light border-accent/25' },
   workshop: { label: 'Workshop', cls: 'bg-accent2/20 text-accent2-light border-accent2/40' },
   panel: { label: 'Panel', cls: 'bg-accent/20 text-accent border-accent/45' },
-  break: { label: 'Break', cls: 'bg-accent/10 text-accent border-accent/25' },
+  break: { label: 'Refreshment', cls: 'bg-accent/10 text-accent border-accent/25' },
+  Arrival: { label: 'Arrival', cls: 'bg-accent/10 text-accent border-accent/25' },
 };
 
 const TRACK_BG = {
@@ -38,7 +39,7 @@ export default function ScheduleSection() {
   const trail3Y = useMotionValue(0);
   // Use a dedicated motion value for the breathing glow pulse
   const glowPulseVal = useMotionValue(0);
-  
+
   // Create transforms at the top level to strictly obey the Rules of Hooks
   const ballOpacity = useTransform(glowPulseVal, [0, 1], [0.75, 1]);
   const ballScale = useTransform(glowPulseVal, [0, 1], [1, 1.08]);
@@ -48,7 +49,7 @@ export default function ScheduleSection() {
     target: containerRef,
     offset: ["start center", "end center"]
   });
-  
+
   const smoothProgress = useSpring(scrollYProgress, { stiffness: 50, damping: 20 });
 
   // Use a dedicated motion value for the path progress (for SVG stroke)
@@ -67,7 +68,7 @@ export default function ScheduleSection() {
     if (!pathRef.current || coords.length === 0) return;
     try {
       const length = pathRef.current.getTotalLength();
-      
+
       // Calculate continuous position along path
       const pt = pathRef.current.getPointAtLength(currentProgress * length);
       ballX.set(pt.x);
@@ -206,26 +207,26 @@ export default function ScheduleSection() {
       const last = coords[coords.length - 1];
       return (
         <svg className="absolute left-0 top-0 w-full h-full pointer-events-none overflow-visible z-10">
-          <line 
-            x1={first.x} 
-            y1={first.y} 
-            x2={last.x} 
-            y2={last.y} 
-            stroke="rgba(255, 255, 255, 0.08)" 
-            strokeWidth="2" 
+          <line
+            x1={first.x}
+            y1={first.y}
+            x2={last.x}
+            y2={last.y}
+            stroke="rgba(255, 255, 255, 0.08)"
+            strokeWidth="2"
           />
-          <motion.line 
-            x1={first.x} 
-            y1={first.y} 
-            x2={last.x} 
-            y2={last.y} 
-            stroke="var(--accent)" 
-            strokeWidth="2" 
-            strokeOpacity="0.8" 
+          <motion.line
+            x1={first.x}
+            y1={first.y}
+            x2={last.x}
+            y2={last.y}
+            stroke="var(--accent)"
+            strokeWidth="2"
+            strokeOpacity="0.8"
             style={{ pathLength: pathProgressVal }}
           />
           {/* Dummy path for mobile scroll ball alignment */}
-          <path 
+          <path
             ref={pathRef}
             d={`M ${first.x} ${first.y} L ${last.x} ${last.y}`}
             fill="none"
@@ -243,9 +244,9 @@ export default function ScheduleSection() {
             <motion.circle cx={trail3X} cy={trail3Y} r="2.5" fill="#00f0ff" opacity="0.15" />
             <motion.circle cx={trail2X} cy={trail2Y} r="4.0" fill="#00f0ff" opacity="0.35" />
             <motion.circle cx={trail1X} cy={trail1Y} r="5.0" fill="#00f0ff" opacity="0.6" />
-            
-            <motion.circle 
-              cx={ballX} cy={ballY} r="6.5" fill="#ffffff" filter="url(#ball-glow-mobile)" 
+
+            <motion.circle
+              cx={ballX} cy={ballY} r="6.5" fill="#ffffff" filter="url(#ball-glow-mobile)"
               style={{
                 opacity: ballOpacity,
                 scale: ballScale
@@ -272,24 +273,24 @@ export default function ScheduleSection() {
     const maxY = coords[coords.length - 1].y;
 
     return (
-      <svg 
-        className="absolute left-0 top-0 w-full pointer-events-none overflow-visible z-10" 
+      <svg
+        className="absolute left-0 top-0 w-full pointer-events-none overflow-visible z-10"
         style={{ height: maxY + 50 }}
       >
-        <path 
-          d={d} 
-          fill="none" 
-          stroke="rgba(255, 255, 255, 0.08)" 
-          strokeWidth="2" 
+        <path
+          d={d}
+          fill="none"
+          stroke="rgba(255, 255, 255, 0.08)"
+          strokeWidth="2"
         />
-        <motion.path 
+        <motion.path
           ref={pathRef}
-          d={d} 
-          fill="none" 
-          stroke="var(--accent)" 
-          strokeWidth="2" 
-          strokeOpacity="0.8" 
-          className="drop-shadow-[0_0_4px_rgba(57,255,143,0.3)]" 
+          d={d}
+          fill="none"
+          stroke="var(--accent)"
+          strokeWidth="2"
+          strokeOpacity="0.8"
+          className="drop-shadow-[0_0_4px_rgba(57,255,143,0.3)]"
           style={{ pathLength: pathProgressVal }}
         />
         {/* Scroll-driven energy ball on desktop */}
@@ -303,9 +304,9 @@ export default function ScheduleSection() {
           <motion.circle cx={trail3X} cy={trail3Y} r="3.5" fill="#00f0ff" opacity="0.15" />
           <motion.circle cx={trail2X} cy={trail2Y} r="5.0" fill="#00f0ff" opacity="0.35" />
           <motion.circle cx={trail1X} cy={trail1Y} r="6.5" fill="#00f0ff" opacity="0.6" />
-          
-          <motion.circle 
-            cx={ballX} cy={ballY} r="8" fill="#ffffff" filter="url(#ball-glow)" 
+
+          <motion.circle
+            cx={ballX} cy={ballY} r="8" fill="#ffffff" filter="url(#ball-glow)"
             style={{
               opacity: ballOpacity,
               scale: ballScale
@@ -354,9 +355,9 @@ export default function ScheduleSection() {
         />
 
         {/* Vertical Compact Roadmap Timeline */}
-        <div ref={scrollContainerRef} className="max-w-5xl mx-auto py-4 relative scroll-smooth" 
-             style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--accent) transparent' }}>
-          
+        <div ref={scrollContainerRef} className="max-w-5xl mx-auto py-4 relative scroll-smooth"
+          style={{ scrollbarWidth: 'thin', scrollbarColor: 'var(--accent) transparent' }}>
+
           {/* Connecting road curve path */}
           {renderTimelineCurve()}
 
@@ -391,9 +392,9 @@ export default function ScheduleSection() {
                 <pointLight position={[5, 5, 5]} intensity={1.5} color="#39ff8f" />
                 <pointLight position={[-5, -5, 5]} intensity={1} color="#8a2be2" />
                 <directionalLight position={[0, 10, 0]} intensity={0.5} />
-                
+
                 <ModelResolver iconUrl={item.icon} track={item.track} />
-                
+
                 <Preload all />
               </View>
             ))}
@@ -410,11 +411,11 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
   const isLeft = index % 2 === 0;
 
   const nodeY = nodeCoord?.y || 0;
-  
+
   // Transform values based on ball's Y distance to node (70px radius threshold)
   const distRange = [nodeY - 70, nodeY, nodeY + 70];
   const nodeScale = useTransform(ballY, distRange, [1.0, 1.15, 1.0]);
-  
+
   // Card-specific transforms based on distance to ball (replaces isActive React state)
   const cardScale = useTransform(ballY, distRange, [1.0, 1.01, 1.0]);
   const cardShadow = useTransform(ballY, distRange, [
@@ -429,9 +430,9 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
   // Define identical shadow structures so Framer Motion can interpolate them smoothly
   const DEFAULT_SHADOW = '0px 0px 6px 0px rgba(255, 255, 255, 0.05), inset 0px 0px 0px 0px rgba(0, 240, 255, 0)';
-  const ACTIVE_SHADOW  = '0px 0px 20px 0px rgba(0, 240, 255, 0.6), inset 0px 0px 10px 0px rgba(0, 240, 255, 0.4)';
-  const HL_SHADOW      = '0px 0px 15px 0px rgba(57, 255, 143, 0.4), inset 0px 0px 0px 0px rgba(0, 240, 255, 0)';
-  
+  const ACTIVE_SHADOW = '0px 0px 20px 0px rgba(0, 240, 255, 0.6), inset 0px 0px 10px 0px rgba(0, 240, 255, 0.4)';
+  const HL_SHADOW = '0px 0px 15px 0px rgba(57, 255, 143, 0.4), inset 0px 0px 0px 0px rgba(0, 240, 255, 0)';
+
   // Smoothly brighten node
   const nodeShadow = useTransform(ballY, distRange, [
     DEFAULT_SHADOW,
@@ -441,9 +442,9 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
   // Map exact RGBA colors for smooth framer-motion interpolation without CSS var snapping
   const BORDER_DEFAULT = 'rgba(255, 255, 255, 0.15)';
-  const BORDER_ACTIVE  = 'rgba(0, 240, 255, 1)';
+  const BORDER_ACTIVE = 'rgba(0, 240, 255, 1)';
   const BORDER_SPECIAL = 'rgba(57, 255, 143, 1)';
-  
+
   const nodeBorderColor = useTransform(ballY, distRange, [
     item.special ? BORDER_SPECIAL : BORDER_DEFAULT,
     BORDER_ACTIVE,
@@ -454,7 +455,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
   const cardBorderBottomColor = useTransform(ballY, distRange, [BORDER_DEFAULT, BORDER_ACTIVE, BORDER_DEFAULT]);
 
   const getTrackColor = (track) => {
-    switch(track) {
+    switch (track) {
       case 'keynote': return 'rgba(57, 255, 143, 1)';
       case 'workshop': return 'rgba(15, 122, 69, 1)';
       case 'break': return 'rgba(57, 255, 143, 0.4)';
@@ -464,17 +465,17 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
   };
 
   const trackBorderColor = getTrackColor(item.track);
-  
+
   // Conditionally color side borders based on layout
   const sideBorderColorBase = isMobile || !isLeft ? trackBorderColor : BORDER_DEFAULT;
   const rightSideBorderColorBase = !isMobile && isLeft ? trackBorderColor : BORDER_DEFAULT;
-  
+
   const cardBorderLeftColor = useTransform(ballY, distRange, [sideBorderColorBase, BORDER_ACTIVE, sideBorderColorBase]);
   const cardBorderRightColor = useTransform(ballY, distRange, [rightSideBorderColorBase, BORDER_ACTIVE, rightSideBorderColorBase]);
 
   const TEXT_DEFAULT = 'rgba(255, 255, 255, 0.8)';
   const TEXT_ACTIVE = 'rgba(124, 255, 184, 1)';
-  
+
   const textTitleColor = useTransform(ballY, distRange, [
     TEXT_DEFAULT,
     BORDER_ACTIVE,
@@ -482,8 +483,8 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
   ]);
 
   // Desktop/mobile alignment layouts via Tailwind classes
-  const cardAlignmentClass = isLeft 
-    ? 'pl-[72px] pr-4 md:pr-[calc(50%+123px)] md:pl-2 text-left md:text-right justify-start md:justify-end ml-0 md:ml-auto mr-auto md:mr-0' 
+  const cardAlignmentClass = isLeft
+    ? 'pl-[72px] pr-4 md:pr-[calc(50%+123px)] md:pl-2 text-left md:text-right justify-start md:justify-end ml-0 md:ml-auto mr-auto md:mr-0'
     : 'pl-[72px] pr-4 md:pl-[calc(50%+123px)] md:pr-2 text-left justify-start mr-auto md:ml-0';
 
   const nodeAlignClass = isLeft
@@ -492,14 +493,14 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
   // Card slide-in variants
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       x: isMobile ? 30 : (isLeft ? -50 : 50),
-      y: 20 
+      y: 20
     },
-    visible: { 
-      opacity: 1, 
-      x: 0, 
+    visible: {
+      opacity: 1,
+      x: 0,
       y: 0,
       transition: {
         type: "tween",
@@ -517,9 +518,9 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
   return (
     <div id={itemId} className={`relative flex items-center w-full min-h-[90px] py-1.5 group`}>
-      
+
       {/* 3D Model View Node (or Image Fallback on Mobile) */}
-      <motion.div 
+      <motion.div
         ref={viewRef}
         initial={{ scale: 0, opacity: 0 }}
         whileInView={{ scale: 1, opacity: 1 }}
@@ -544,7 +545,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
         onClick={onClick}
         className={`flex w-full ${cardAlignmentClass}`}
       >
-        <motion.div 
+        <motion.div
           variants={cardVariants}
           initial="hidden"
           whileInView="visible"
@@ -586,7 +587,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
             </div>
 
             {/* Name */}
-            <motion.h3 
+            <motion.h3
               className={`text-[15px] sm:text-[16px] md:text-[14px] font-semibold leading-tight`}
               style={{ color: textTitleColor }}
             >
@@ -595,7 +596,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
             {/* Speaker tag */}
             {item.speaker && (
-              <p className="text-[10px] text-accent2-light font-medium mb-1">🎤 {item.speaker}</p>
+              <p className="text-[10px] text-accent2-light font-medium mb-1"> {item.speaker}</p>
             )}
 
             {/* Expandable description (Scroll-driven) */}

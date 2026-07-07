@@ -14,7 +14,7 @@ export default function FaqSection() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitStatus(null);
-    
+
     const formData = new FormData(e.target);
     const fullName = formData.get('fullName');
     const email = formData.get('email');
@@ -22,11 +22,11 @@ export default function FaqSection() {
 
     // Custom Validation
     const errors = [];
-    
+
     if (!question || question.trim() === "") {
       errors.push("Please enter your question.");
     }
-    
+
     const nameRegex = /^[A-Za-z\s\-']+$/;
     if (fullName && !nameRegex.test(fullName)) {
       errors.push("Invalid Name.");
@@ -41,18 +41,18 @@ export default function FaqSection() {
       if (errors.length > 1) {
         showToast("Please correct the invalid fields before submitting.");
       } else {
-        showToast(errors[0] === "Invalid Name." ? "Invalid Name. Only letters, spaces, hyphens, and apostrophes are allowed." : 
-                  errors[0] === "Invalid Email." ? "Please enter a valid email address." : errors[0]);
+        showToast(errors[0] === "Invalid Name." ? "Invalid Name. Only letters, spaces, hyphens, and apostrophes are allowed." :
+          errors[0] === "Invalid Email." ? "Please enter a valid email address." : errors[0]);
       }
       return;
     }
 
     setIsSubmitting(true);
     const data = Object.fromEntries(formData.entries());
-    
+
     try {
       const scriptUrl = import.meta.env.VITE_GOOGLE_SHEETS_WEBAPP_URL;
-      
+
       if (!scriptUrl || scriptUrl === 'paste_your_google_apps_script_url_here') {
         console.warn("Google Apps Script URL is not configured.");
         setSubmitStatus('error');
@@ -68,7 +68,7 @@ export default function FaqSection() {
           'Content-Type': 'text/plain;charset=utf-8',
         }
       });
-      
+
       setSubmitStatus('success');
       e.target.reset(); // Clear the form
     } catch (error) {
@@ -91,8 +91,8 @@ export default function FaqSection() {
 
         <div className="max-w-[720px] mx-auto text-center mb-8 sm:mb-10">
           <p className="t-muted text-[14px] sm:text-[15px] leading-relaxed">
-            Have a question you'd like our panelists to answer?<br />
-            Submit it below and we'll consider it during the live panel discussion.
+            Have a question for our panelists?<br />
+            Submit it below and we'll bring it into the live discussion.
           </p>
         </div>
 
@@ -141,7 +141,7 @@ export default function FaqSection() {
               >
                 {isSubmitting ? "Submitting..." : "Submit Question"}
               </button>
-              
+
               {submitStatus === 'success' && (
                 <p className="text-green-400 text-sm">Your question has been submitted successfully!</p>
               )}
