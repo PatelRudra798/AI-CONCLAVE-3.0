@@ -21,6 +21,18 @@ export default function RegistrationSection() {
             ))}
           </div>
         </div>
+        <div className="mt-8 sm:mt-10 flex justify-center">
+          <button
+            onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
+            className="px-10 py-3.5 sm:px-12 sm:py-4 rounded-xl text-[14px] sm:text-[15px] font-bold transition-all duration-300 flex items-center justify-center gap-2 bg-accent text-white hover:scale-[1.02]"
+            style={{ 
+              boxShadow: '0 4px 20px rgba(var(--accent-rgb), 0.3)',
+              textShadow: '0 0 8px rgba(255,255,255,0.6)'
+            }}
+          >
+            Register Now →
+          </button>
+        </div>
       </div>
     </section>
   );
@@ -32,7 +44,7 @@ function TierCard({ type, price, symbol, note, featured, cta }) {
     <div
       className={`relative w-full max-w-md mx-auto md:max-w-none rounded-[18px] sm:rounded-[20px] p-6 sm:p-8 text-center transition-transform duration-300 hover:-translate-y-1.5 overflow-hidden flex flex-col ${
         featured
-          ? 'border border-accent/40 bg-gradient-to-br from-accent/5 to-accent2/[0.03] shadow-[0_0_36px_rgba(57,255,143,0.07)]'
+          ? 'border border-accent/40 bg-[#08101A] shadow-[0_0_36px_rgba(0,163,255,0.07)]'
           : 't-card2-bg border border-accent/10'
       }`}
     >
@@ -50,14 +62,6 @@ function TierCard({ type, price, symbol, note, featured, cta }) {
         {!isFree && <span className="text-[28px]">{symbol}</span>}
         {price}
       </div>
-
-      {/* All register buttons are same height + visually consistent (same as header) */}
-      <button
-        onClick={() => window.open('https://forms.gle/Ucu9KrsA27EXH1X67', '_blank')}
-        className="w-full mt-auto py-2.5 sm:py-3 rounded-xl text-[12px] sm:text-[13px] font-bold transition-all duration-200 flex items-center justify-center gap-2 bg-transparent border border-accent/40 text-accent hover:bg-accent/10 hover:border-accent/70 hover:scale-[1.02]"
-      >
-        {cta}
-      </button>
     </div>
   );
 }
