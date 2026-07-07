@@ -12,7 +12,10 @@ const BADGE_STYLES = {
   workshop: { label: 'Workshop', cls: 'bg-accent2/20 text-accent2-light border-accent2/40' },
   panel: { label: 'Panel', cls: 'bg-accent/20 text-accent border-accent/45' },
   break: { label: 'Refreshment', cls: 'bg-accent/10 text-accent border-accent/25' },
-  Arrival: { label: 'Arrival', cls: 'bg-accent/10 text-accent border-accent/25' },
+  arrival: { label: 'Entry', cls: 'bg-accent/10 text-accent border-accent/25' },
+  closing: { label: 'Closing', cls: 'bg-accent/10 text-accent2-light border-accent/25' },
+  swag: { label: 'Merch', cls: 'bg-accent2/20 text-accent2-light border-accent2/40' },
+  networking: { label: 'Social', cls: 'bg-accent/20 text-accent border-accent/45' },
 };
 
 const TRACK_BG = {
@@ -351,7 +354,14 @@ export default function ScheduleSection() {
       <div className="max-container relative">
         <SectionHeader
           title="Day Schedule"
-          sub="08:00 AM – 05:30 PM · Silver Oak University, Ahmedabad"
+          sub={
+            <span className="flex flex-col gap-1 mt-1">
+              <span>08:00 AM – 05:30 PM</span>
+              <span className="text-[15px] sm:text-[16px] text-white font-semibold tracking-wide drop-shadow-sm">
+                Aryabhata Auditorium, Silver Oak University, Ahmedabad
+              </span>
+            </span>
+          }
         />
 
         {/* Vertical Compact Roadmap Timeline */}
@@ -571,7 +581,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
           <div className="relative p-4 md:p-3.5 flex flex-col justify-center gap-1">
             {/* Time range */}
-            <div className={`flex items-center gap-1.5 flex-wrap ${!isMobile && isLeft ? 'md:justify-end' : 'justify-start'}`}>
+            <div className={`flex items-center gap-1.5 flex-wrap justify-start`}>
               <span className="text-[11px] md:text-[10px] font-mono font-semibold text-accent">
                 {item.time}
               </span>
@@ -580,7 +590,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
                 {item.end}
               </span>
               {b && (
-                <span className={`text-[9px] md:text-[8px] font-bold px-1.5 py-0.5 rounded-full border ${b.cls} ${!isMobile && isLeft ? 'md:ml-0 md:mr-auto' : 'ml-auto'}`}>
+                <span className={`text-[9px] md:text-[8px] font-bold px-1.5 py-0.5 rounded-full border ${b.cls} ml-auto`}>
                   {b.label}
                 </span>
               )}
@@ -588,7 +598,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
             {/* Name */}
             <motion.h3
-              className={`text-[15px] sm:text-[16px] md:text-[14px] font-semibold leading-tight`}
+              className={`text-[15px] sm:text-[16px] md:text-[14px] font-semibold leading-tight text-left`}
               style={{ color: textTitleColor }}
             >
               {item.name}
@@ -596,7 +606,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
 
             {/* Speaker tag */}
             {item.speaker && (
-              <p className="text-[10px] text-accent2-light font-medium mb-1"> {item.speaker}</p>
+              <p className="text-[10px] text-accent2-light font-medium mb-1 text-left"> {item.speaker}</p>
             )}
 
             {/* Expandable description (Scroll-driven) */}
@@ -604,7 +614,7 @@ function ScheduleCard({ item, index, onClick, viewRef, isMobile, ballY, nodeCoor
               className="overflow-hidden"
               style={{ maxHeight: descHeight, opacity: descOpacity }}
             >
-              <p className="text-[11px] text-white/60 drop-shadow-[0_0_3px_rgba(255,255,255,0.3)] leading-relaxed pt-1 pb-0.5">{item.desc}</p>
+              <p className="text-[11px] text-white/60 drop-shadow-[0_0_3px_rgba(255,255,255,0.3)] leading-relaxed pt-1 pb-0.5 text-left">{item.desc}</p>
             </motion.div>
 
 
