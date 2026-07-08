@@ -29,7 +29,7 @@ export default function ContactSection() {
           ></iframe>
         </a>
         <p className="text-[11px] sm:text-[12px] t-muted px-4">
-          Organized by IEEE Signal Processing Society Student Branch Chapter · Silver Oak University
+          Organised by IEEE Signal Processing Society Student Branch Chapter · Silver Oak University
         </p>
       </div>
     </section>
