@@ -1,14 +1,14 @@
 export const WORKSHOPS = [
- {
- num: '01', tag: 'Agentic AI', accent: 'cyan',
- title: 'Building Intelligent AI Agents',
- desc: 'Learn how modern AI agents work and how they can automate real-world workflows. Build autonomous pipelines from scratch with expert guidance.',
- items: ['Practical Learning', 'Guided Exercises', 'Expert Mentorship', 'Certificate Included'],
- },
- {
- num: '02', tag: 'HPC', accent: 'purple',
- title: 'Intro to High Performance Computing',
- desc: 'Explore parallel computing, GPUs and large-scale AI infrastructure. Understand how modern AI systems are built and scaled at production level.',
- items: ['GPU Programming Basics', 'Parallel Architecture', 'Hands-On Labs', 'Certificate Included'],
- },
+    {
+        num: '01', tag: 'Healthcare', accent: 'cyan',
+        title: 'Deep Learning for Medical Imaging',
+        desc: 'Learn how to apply deep learning techniques to medical imaging tasks. Understand the role of AI in healthcare automation and diagnostics.',
+        items: ['Practical Learning', 'Guided Exercises', 'Expert Mentorship', 'Certificate Included'],
+    },
+    {
+        num: '02', tag: 'Cyber Warfare', accent: 'purple',
+        title: 'AI in Cyber Warfare',
+        desc: 'Explore the future of cybersecurity and how artificial intelligence is being used both defensively and offensively in cyber warfare.',
+        items: ['Security Basics', 'AI Defense Tactics', 'Hands-On Labs', 'Certificate Included'],
+    },
 ];

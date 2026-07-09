@@ -118,7 +118,7 @@ export default function HeroSection({ onOpenBadgeModal }) {
 
  {/* Tags */}
  <div className="flex flex-wrap items-center justify-center gap-2 my-4 sm:my-5 px-2">
- {['High Performance Computing', 'Agentic AI', 'Future Technologies'].map((t) => (
+ {['Next-gen AI', 'Space Tech', 'Healthcare AI'].map((t) => (
  <span key={t} className="border border-accent2/35 bg-accent2/[0.08] text-accent2-light text-[10px] sm:text-[11px] font-medium px-3 sm:px-4 py-1.5 rounded-full">
  {t}
  </span>

@@ -1,8 +1,6 @@
 export const TOPICS = [
- { shape: 'robot_head', title: 'Agentic AI', desc: 'Autonomous agents, AI workflows, multi-agent systems and intelligent automation at scale.', color: 'rgba(57,255,143,0.10)' },
- { shape: 'lightning', title: 'High Performance Computing', desc: 'GPU acceleration, parallel processing, computational infrastructure and AI scaling.', color: 'rgba(57,255,143,0.14)' },
- { shape: 'cloud', title: 'Distributed Computing', desc: 'Cloud systems, distributed architectures, edge computing and modern scalability.', color: 'rgba(15,122,69,0.18)' },
- { shape: 'satellite', title: 'AI in Space Applications', desc: 'Satellite analytics, autonomous missions and intelligent space systems.', color: 'rgba(124,255,184,0.10)' },
- { shape: 'film', title: 'Multimedia Data Processing', desc: 'Computer vision, speech processing, image analytics and content understanding.', color: 'rgba(34,196,110,0.14)' },
- { shape: 'medical_cross', title: 'Robotics in Healthcare', desc: 'Medical robotics, AI-assisted diagnosis, healthcare automation and smart systems.', color: 'rgba(57,255,143,0.08)' },
+    { shape: 'robot_head', title: 'Next-gen Ai : Your First Rag with Gemma', desc: 'Discover the power of Retrieval-Augmented Generation with Gemma models.', color: 'rgba(57,255,143,0.10)' },
+    { shape: 'satellite', title: 'Ai in space application', desc: 'Satellite analytics, autonomous missions and intelligent space systems.', color: 'rgba(124,255,184,0.10)' },
+    { shape: 'medical_cross', title: 'Ai ini Healthcare: Deep Learnin For Medical Imaging', desc: 'AI-assisted diagnosis, healthcare automation and smart medical imaging systems.', color: 'rgba(57,255,143,0.08)' },
+    { shape: 'lightning', title: 'AI vs Ai: The future of cyber Warfare', desc: 'Exploring the role of artificial intelligence in modern cybersecurity and cyber warfare.', color: 'rgba(15,122,69,0.18)' },
 ];

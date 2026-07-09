@@ -23,7 +23,7 @@ export const SCHEDULE = [
  {
  time: '09:50 AM', end: '10:40 AM',
  name: 'Technical Session 1',
- desc: 'Expert keynote on Agentic AI systems and autonomous workflow design.',
+ desc: 'Next-gen Ai : Your First Rag with Gemma',
  icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
  badge: 'keynote', special: false, track: 'keynote',
  speaker: 'Dr. Speaker Name',
@@ -31,15 +31,15 @@ export const SCHEDULE = [
  {
  time: '10:50 AM', end: '11:40 AM',
  name: 'Technical Session 2',
- desc: 'Deep dive into High Performance Computing and GPU architectures for AI.',
+ desc: 'Ai in space application',
  icon: 'https://img.icons8.com/3d-fluency/94/lightning-bolt.png',
  badge: 'keynote', special: false, track: 'keynote',
  speaker: 'Speaker Name',
  },
  {
  time: '11:50 AM', end: '01:15 PM',
- name: 'Workshop 1 AI Agents',
- desc: 'Hands-on: Build an intelligent agent that automates real-world workflows.',
+ name: 'Workshop 1: Healthcare',
+ desc: 'Ai ini Healthcare: Deep Learnin For Medical Imaging',
  icon: 'https://img.icons8.com/3d-fluency/94/brain.png',
  badge: 'workshop', special: false, track: 'workshop',
  },
@@ -52,8 +52,8 @@ export const SCHEDULE = [
  },
  {
  time: '02:40 PM', end: '03:30 PM',
- name: 'Workshop 2 HPC Fundamentals',
- desc: 'Hands-on: GPU programming, parallel computing and AI infrastructure.',
+ name: 'Workshop 2: Cyber Warfare',
+ desc: 'AI vs Ai: The future of cyber Warfare',
  icon: 'https://img.icons8.com/3d-fluency/94/laptop.png',
  badge: 'workshop', special: false, track: 'workshop',
  },
