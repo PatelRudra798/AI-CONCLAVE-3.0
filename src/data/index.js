@@ -1,4 +1,4 @@
-// Barrel file — re-exports all data from domain-specific modules.
+// Barrel file re-exports all data from domain-specific modules.
 // Import from here to avoid specifying deep paths: import { SCHEDULE } from '../data'
 
 export * from './event';
