@@ -19,7 +19,6 @@ import SpeakersSection from './components/sections/SpeakersSection';
 import ActivitiesSection from './components/sections/ActivitiesSection';
 import SponsorsSection from './components/sections/SponsorsSection';
 import PastEventsSection from './components/sections/PastEventsSection';
-import RegistrationSection from './components/sections/RegistrationSection';
 import FaqSection from './components/sections/FaqSection';
 import GalleryPage from './components/sections/GalleryPage';
 
@@ -30,53 +29,51 @@ import BadgeGeneratorModal from './components/badge/BadgeGeneratorModal';
 const Divider = () => <div className="t-divider" />;
 
 function Home({ mouseRef, onOpenBadgeModal }) {
- return (
- <>
- <HeroSection onOpenBadgeModal={onOpenBadgeModal} />
- <Divider />
- <AboutSection mouseRef={mouseRef} />
- <Divider />
- <TopicsSection />
- <Divider />
- <ScheduleSection />
- <Divider />
- <WorkshopsSection />
- <SpeakersSection />
- <Divider />
- <ActivitiesSection />
- <Divider />
- <SponsorsSection />
- <Divider />
- <PastEventsSection />
- <Divider />
- <RegistrationSection />
- <Divider />
- <FaqSection />
- </>
- );
+    return (
+        <>
+            <HeroSection onOpenBadgeModal={onOpenBadgeModal} />
+            <Divider />
+            <AboutSection mouseRef={mouseRef} />
+            <Divider />
+            <TopicsSection />
+            <Divider />
+            <ScheduleSection />
+            <Divider />
+            <WorkshopsSection />
+            <SpeakersSection />
+            <Divider />
+            <ActivitiesSection />
+            <Divider />
+            <SponsorsSection />
+            <Divider />
+            <PastEventsSection />
+            <Divider />
+            <FaqSection />
+        </>
+    );
 }
 
 export default function App() {
- const { isDark } = useTheme();
- const mouseRef = useMouse();
- const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
+    const { isDark } = useTheme();
+    const mouseRef = useMouse();
+    const [isBadgeModalOpen, setIsBadgeModalOpen] = useState(false);
 
- return (
- <div className="t-bg min-h-screen">
- <CursorGlow />
- <ParticleCanvas isDark={isDark} />
- <Navbar onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />
+    return (
+        <div className="t-bg min-h-screen">
+            <CursorGlow />
+            <ParticleCanvas isDark={isDark} />
+            <Navbar onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />
 
- <Routes>
- <Route path="/" element={<Home mouseRef={mouseRef} onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />} />
- <Route path="/gallery" element={<GalleryPage />} />
- </Routes>
+            <Routes>
+                <Route path="/" element={<Home mouseRef={mouseRef} onOpenBadgeModal={() => setIsBadgeModalOpen(true)} />} />
+                <Route path="/gallery" element={<GalleryPage />} />
+            </Routes>
 
- <Footer />
+            <Footer />
 
- <BadgeGeneratorModal isOpen={isBadgeModalOpen} onClose={() => setIsBadgeModalOpen(false)}>
- <IdCardGenerator onClose={() => setIsBadgeModalOpen(false)} />
- </BadgeGeneratorModal>
- </div>
- );
+            <BadgeGeneratorModal isOpen={isBadgeModalOpen} onClose={() => setIsBadgeModalOpen(false)}>
+                <IdCardGenerator onClose={() => setIsBadgeModalOpen(false)} />
+            </BadgeGeneratorModal>
+        </div>
+    );
 }
