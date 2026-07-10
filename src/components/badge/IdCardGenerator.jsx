@@ -5,6 +5,7 @@ import Cropper from 'react-easy-crop';
 import getCroppedImg from '../../utils/cropImage';
 
 export default function IdCardGenerator({ onClose }) {
+    const [name, setName] = useState('');
     const [role, setRole] = useState('');
     const [photo, setPhoto] = useState(null);
     const [error, setError] = useState('');
@@ -135,10 +136,10 @@ export default function IdCardGenerator({ onClose }) {
         const elementsToRestore = [];
 
         try {
-            // Force high-res dimensions for a perfect 360x640 export regardless of mobile scaling
+            // Force high-res dimensions for a perfect 360x690 export regardless of mobile scaling
             originalNode.style.width = '360px';
-            originalNode.style.height = '640px';
-            originalNode.style.minHeight = '640px';
+            originalNode.style.height = '690px';
+            originalNode.style.minHeight = '690px';
             originalNode.style.boxShadow = 'none';
             originalNode.style.transform = 'none';
             originalNode.style.filter = 'none';
@@ -348,7 +349,18 @@ export default function IdCardGenerator({ onClose }) {
                     {/* Left Column: Form Controls & Photo Upload */}
                     <div className="flex-1 w-full flex flex-col gap-4">
 
-                        {/* Removed Name Step */}
+                        {/* Step 1: Your Name */}
+                        <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
+                            <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>1. Your Name</h3>
+                            <input
+                                type="text"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                                placeholder="Enter your full name"
+                                maxLength={24}
+                                className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-accent transition-all"
+                            />
+                        </div>
 
                         {/* Step 2: Choose Template */}
                         <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
@@ -524,10 +536,15 @@ export default function IdCardGenerator({ onClose }) {
                                         </>
                                     )}
 
-                                    {/* Role Overlay */}
-                                    <div className="absolute left-0 bottom-[140px] w-full flex flex-col items-center px-6 z-20">
+                                    {/* Name & Role Overlay */}
+                                    <div className="absolute left-0 bottom-[130px] w-full flex flex-col items-center px-4 z-20 gap-1 text-center">
+                                        {name && (
+                                            <span className="text-white font-sora font-black text-[30px] uppercase leading-[1.1] drop-shadow-xl" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.7)' }}>
+                                                {name}
+                                            </span>
+                                        )}
                                         {safeRole && (
-                                            <span className="text-[#50e3c2] font-black text-[24px] tracking-widest uppercase drop-shadow-lg">
+                                            <span className="text-[#50e3c2] font-black text-[20px] tracking-[0.25em] uppercase drop-shadow-md" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
                                                 {safeRole}
                                             </span>
                                         )}

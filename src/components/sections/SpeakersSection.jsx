@@ -19,24 +19,32 @@ export default function SpeakersSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mt-12">
                     {SPEAKERS.map((s, i) => (
-                        <div key={i} className="bg-[#0b1221] border border-white/5 rounded-[24px] p-6 flex flex-col items-center relative overflow-hidden group transition-all duration-500 hover:border-white/5 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] h-[370px]">
+                        <div key={i} className="bg-[#0b1221] border border-white/5 rounded-[24px] p-6 flex flex-col items-center relative overflow-hidden group transition-all duration-500 hover:border-white/5 hover:shadow-[0_0_30px_rgba(255,255,255,0.1)] h-[400px]">
                             
                             {/* Hover Ambient Glow */}
                             <div className="absolute inset-0 bg-gradient-to-b from-white/0 to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
-                            {/* Initials / Image */}
-                            <div className="mt-8 mb-6 transform group-hover:-translate-y-6 group-hover:scale-90 transition-all duration-500 z-20 relative">
-                                <div className="w-[100px] h-[100px] rounded-full bg-white/[0.02] flex items-center justify-center border border-white/[0.04] overflow-hidden">
+                            {/* Image */}
+                            <div className="mt-4 mb-2 transform group-hover:-translate-y-4 group-hover:scale-95 transition-all duration-500 z-20 relative w-full flex justify-center">
+                                <div className="w-[140px] h-[170px] rounded-2xl flex items-center justify-center relative">
                                     {s.img ? (
-                                        <img src={s.img} alt={s.name} className="w-full h-full object-cover" />
+                                        <img 
+                                            src={s.img} 
+                                            alt={s.name} 
+                                            className="w-full h-full object-cover rounded-2xl" 
+                                            style={{ 
+                                                WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
+                                                maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)' 
+                                            }} 
+                                        />
                                     ) : (
-                                        <span className="font-bold text-[34px] text-white tracking-widest">{s.initials}</span>
+                                        <span className="font-bold text-[44px] text-white tracking-widest">{s.initials}</span>
                                     )}
                                 </div>
                             </div>
 
                             {/* Default State Container */}
-                            <div className="absolute inset-x-6 top-[175px] bottom-8 flex flex-col items-center transition-all duration-500 opacity-100 group-hover:opacity-0 group-hover:translate-y-8 pointer-events-auto group-hover:pointer-events-none z-10">
+                            <div className="absolute inset-x-6 top-[215px] bottom-8 flex flex-col items-center transition-all duration-700 opacity-100 group-hover:opacity-0 group-hover:translate-y-8 group-hover:blur-sm pointer-events-auto group-hover:pointer-events-none z-10">
                                 <h3 className="text-[18px] font-bold text-white mb-2 text-center">{s.name}</h3>
                                 <p className="text-[13px] font-medium text-white/80 text-center mb-1">{s.role}</p>
                                 {s.org && <p className="text-[12px] text-white/40 text-center mb-auto">{s.org}</p>}
@@ -47,10 +55,10 @@ export default function SpeakersSection() {
                             </div>
 
                             {/* Hover State Container */}
-                            <div className="absolute inset-x-6 top-[145px] bottom-8 flex flex-col items-center transition-all duration-500 opacity-0 translate-y-8 group-hover:opacity-100 group-hover:translate-y-0 pointer-events-none group-hover:pointer-events-auto z-10">
+                            <div className="absolute inset-x-6 top-[185px] bottom-8 flex flex-col items-center transition-all duration-700 opacity-0 translate-y-8 blur-sm group-hover:opacity-100 group-hover:translate-y-0 group-hover:blur-0 pointer-events-none group-hover:pointer-events-auto z-10">
                                 
                                 {/* Tags */}
-                                <div className="flex flex-nowrap justify-center gap-1.5 mb-5 w-full">
+                                <div className="flex flex-wrap justify-center gap-1.5 mb-5 w-full">
                                     {s.skills.map(skill => (
                                         <span key={skill} className="px-2 py-1 bg-white/[0.03] border border-white/20 rounded-full text-[9px] font-semibold text-white/90 whitespace-nowrap">
                                             {skill}
