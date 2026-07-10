@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import useCountdown from '../../hooks/useCountdown';
 import { EVENT_DATE, HERO_STATS } from '../../data';
-import group7 from '../../assets/icons/Group 7.png';
+
 
 function StatCounter({ num }) {
     const [count, setCount] = useState(0);
@@ -83,6 +83,15 @@ function TimerBlock({ value, label }) {
 
 export default function HeroSection({ onOpenBadgeModal }) {
     const { d, h, m, s } = useCountdown(EVENT_DATE);
+    const [isGlitching, setIsGlitching] = useState(false);
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsGlitching(true);
+            setTimeout(() => setIsGlitching(false), 1500);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <section
@@ -106,7 +115,7 @@ export default function HeroSection({ onOpenBadgeModal }) {
                     {['AI', 'CONCLAVE', '3.0'].map((word) => (
                         <span
                             key={word}
-                            className="font-black leading-none tracking-tight hero-glitch"
+                            className={`font-black leading-none tracking-tight hero-glitch ${isGlitching ? 'is-glitching' : ''}`}
                             data-glitch={word}
                         >
                             {word}

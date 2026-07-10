@@ -1,17 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import * as htmlToImage from 'html-to-image';
-import QRCode from 'react-qr-code';
-import souLogo from '../../assets/icons/Group 16.png';
-import ieeeSpsLogo from '../../assets/icons/Group.png';
-import ieeeLogo from '../../assets/icons/Group 7.png';
-import gdgLogo from '../../assets/icons/gdg white logo.png';
-import badgeBg from '../../assets/badge-bg.png';
+import socialBadgeBg from '../../assets/Social_Media_Badge.png';
 import Cropper from 'react-easy-crop';
 import getCroppedImg from '../../utils/cropImage';
 
 export default function IdCardGenerator({ onClose }) {
- const [name, setName] = useState('');
- const [regNo, setRegNo] = useState('');
  const [role, setRole] = useState('');
  const [photo, setPhoto] = useState(null);
  const [error, setError] = useState('');
@@ -29,15 +22,11 @@ export default function IdCardGenerator({ onClose }) {
  const [isCropping, setIsCropping] = useState(false);
 
  const [tierType, setTierType] = useState('Attendee');
- const [tierPrice, setTierPrice] = useState('');
 
  const cardRef = useRef(null);
  const containerRef = useRef(null);
 
- const safeName = (name || '').trim().slice(0, 40) || 'Your Name';
- const safeRegNo = (regNo || '').trim().slice(0, 20) || 'AI-0001';
  const safeRole = tierType;
- const safePrice = String(tierPrice || '0').trim();
 
 
  // Auto-scale badge preview based on the actual container width to prevent overflow/distortion
@@ -195,8 +184,7 @@ export default function IdCardGenerator({ onClose }) {
  });
  
  const blob = dataUrlToBlob(dataUrl);
- const nameSlug = safeName.replace(/\s+/g, '-').toUpperCase() || 'BADGE';
- const fileName = `AI-Conclave-3.0-${nameSlug}.png`;
+ const fileName = `AI-Conclave-3.0-SocialBadge-${Date.now()}.png`;
  const file = new File([blob], fileName, { type: 'image/png' });
 
  return { dataUrl, blob, file, fileName };
@@ -223,8 +211,8 @@ export default function IdCardGenerator({ onClose }) {
  };
 
  const handleDownload = async () => {
- if (!safeName) {
- showToast('Please enter your name first.', 'error');
+ if (!photo) {
+ showToast('Please upload a photo first.', 'error');
  return;
  }
  setIsGenerating(true);
@@ -232,7 +220,7 @@ export default function IdCardGenerator({ onClose }) {
  try {
  const { dataUrl, fileName } = await generateBadgeImage();
  const link = document.createElement('a');
- link.download = `AI-Conclave-3.0-ID-${safeRegNo}-${safeRole.replace(/\s+/g, '-').toUpperCase()}-RS-${safePrice}.png`;
+ link.download = fileName;
  link.href = dataUrl;
  link.click();
  showToast('Badge downloaded successfully!', 'success');
@@ -245,8 +233,8 @@ export default function IdCardGenerator({ onClose }) {
  };
 
  const handleCopy = async () => {
- if (!safeName) {
- showToast('Please enter your name first.', 'error');
+ if (!photo) {
+ showToast('Please upload a photo first.', 'error');
  return;
  }
  setIsGenerating(true);
@@ -268,8 +256,8 @@ export default function IdCardGenerator({ onClose }) {
  };
 
  const handleShare = async () => {
- if (!safeName) {
- showToast('Please enter your name first.', 'error');
+ if (!photo) {
+ showToast('Please upload a photo first.', 'error');
  return;
  }
  setIsGenerating(true);
@@ -306,8 +294,8 @@ export default function IdCardGenerator({ onClose }) {
  };
 
  const handleSocialShare = async (platform) => {
- if (!safeName) {
- showToast('Please enter your name first.', 'error');
+ if (!photo) {
+ showToast('Please upload a photo first.', 'error');
  return;
  }
  setIsGenerating(true);
@@ -360,25 +348,16 @@ export default function IdCardGenerator({ onClose }) {
  {/* Left Column: Form Controls & Photo Upload */}
  <div className="flex-1 w-full flex flex-col gap-4">
 
- {/* Step 1: Enter Your Name */}
- <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
- <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>1. Enter Your Name</h3>
- <input
- value={name}
- onChange={(e) => setName(e.target.value)}
- className="w-full t-card2-bg border t-border t-text rounded-lg px-4 py-3 outline-none focus:border-accent transition-all font-medium placeholder:text-white/20 text-sm uppercase"
- placeholder="E.G. JOHN DOE"
- />
- </div>
+ {/* Removed Name Step */}
 
  {/* Step 2: Choose Template */}
  <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
  <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>2. Choose Template</h3>
  <div className="flex flex-col gap-3">
  {[
- { label: 'Attendee', type: 'Attendee', price: '' },
- { label: 'Speaker', type: 'Speaker', price: '' },
- { label: 'Volunteer', type: 'Volunteer', price: '' },
+ { label: 'Attendee', type: 'Attendee' },
+ { label: 'Speaker', type: 'Speaker' },
+ { label: 'Volunteer', type: 'Volunteer' },
  ].map((t) => {
  const selected = tierType === t.type;
  return (
@@ -387,7 +366,6 @@ export default function IdCardGenerator({ onClose }) {
  type="button"
  onClick={() => {
  setTierType(t.type);
- setTierPrice(t.price);
  }}
  className="w-full flex items-center gap-3 t-card2-bg border t-border rounded-lg px-4 py-3.5 hover:border-accent transition-all text-left"
  >
@@ -519,110 +497,36 @@ export default function IdCardGenerator({ onClose }) {
 
  {/* Right Column: Preview & Action Buttons */}
  <div className="flex-1 w-full flex flex-col gap-4 items-center" ref={containerRef}>
- 
- <div style={{ position: 'relative', height: `${640 * scale * 0.85}px`, width: `${360 * scale * 0.85}px` }}>
+  <div style={{ position: 'relative', height: `${690 * scale * 0.85}px`, width: `${360 * scale * 0.85}px` }}>
  <div style={{ transform: `scale(${scale * 0.85})`, transformOrigin: 'top left', position: 'absolute', top: 0, left: 0 }}>
- {/* The Actual Badge to be downloaded */}
- <div
- ref={cardRef}
- className="relative bg-[#020813] w-[360px] h-[640px] rounded-2xl overflow-hidden shadow-2xl flex flex-col items-center border border-white/10"
- style={{
- backgroundImage: `url(${badgeBg})`,
- backgroundSize: 'cover',
- backgroundPosition: 'center',
- }}
- >
- {/* Tech Background overlay */}
- <div className="absolute inset-0 bg-[#020813]/50 pointer-events-none" />
+                                    {/* The Actual Badge to be downloaded */}
+                                    <div
+                                        ref={cardRef}
+                                        className="relative bg-[#020813] w-[360px] h-[690px] rounded-2xl overflow-hidden shadow-2xl flex flex-col items-center border border-white/10"
+                                        style={{
+                                            backgroundImage: `url(${socialBadgeBg})`,
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'center',
+                                        }}
+                                    >
+                                        
+                                        {/* Photo Overlay */}
+                                        {photo && (
+                                            <div className="absolute left-1/2 top-[240px] -translate-x-1/2 w-[220px] h-[220px] rounded-full overflow-hidden flex items-center justify-center z-10 shadow-lg">
+                                                <img src={photo} alt="Profile" className="w-full h-full object-cover rounded-full" />
+                                            </div>
+                                        )}
 
- {/* Top Logos */}
- <div className="relative z-10 w-full px-2 pt-4 pb-2 flex justify-between items-center bg-black/20 backdrop-blur-sm border-b border-white/10">
- <img src={souLogo} alt="SOU" className="h-4 object-contain" />
- <img src={ieeeLogo} alt="IEEE" className="h-4 object-contain" />
- <img src={ieeeSpsLogo} alt="IEEE SPS" className="h-4 object-contain" />
- <img src={gdgLogo} alt="GDG" className="h-3 object-contain" />
- </div>
+                                        {/* Role Overlay */}
+                                        <div className="absolute left-0 bottom-[140px] w-full flex flex-col items-center px-6 z-20">
+                                            {safeRole && (
+                                                <span className="text-[#50e3c2] font-black text-[24px] tracking-widest uppercase drop-shadow-lg">
+                                                    {safeRole}
+                                                </span>
+                                            )}
+                                        </div>
 
- {/* Title */}
- <div className="relative z-10 mt-6 flex flex-col items-center">
- <div className="flex items-center justify-center gap-2">
- <span className="font-black text-4xl text-cyan-400 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]">AI</span>
- <span className="font-black text-4xl text-white/10 tracking-widest" style={{ WebkitTextStroke: '1.5px rgba(255,255,255,0.9)' }}>CONCLAVE</span>
- </div>
- <div className="flex items-center gap-2 mt-1">
- <span className="text-cyan-400 font-mono text-[10px] tracking-widest">// 2026 EDITION</span>
- <span className="text-cyan-400 font-black text-xl drop-shadow-[0_0_8px_rgba(34,211,238,0.8)]">3.0</span>
- </div>
- </div>
-
- {/* Photo */}
- <div className="relative z-10 mt-8 mb-4">
- <div className="w-48 h-48 rounded-full border-4 border-cyan-400/80 shadow-[0_0_25px_rgba(34,211,238,0.4)] p-1 bg-black/40 overflow-hidden">
- {photo ? (
- <img src={photo} alt="Profile" className="w-full h-full object-cover rounded-full" />
- ) : (
- <div className="w-full h-full bg-blue-900/40 rounded-full flex items-center justify-center text-white/30 text-4xl font-bold">
- ?
- </div>
- )}
- </div>
- </div>
-
- {/* Name & Role */}
- <div className="relative z-10 flex flex-col items-center w-full px-4 mb-auto">
- <h2 className="font-black text-[24px] sm:text-[26px] text-white tracking-widest text-center uppercase leading-tight drop-shadow-md break-words max-w-full">
- {safeName}
- </h2>
- {safeRole && (
- <div className="mt-3 px-6 py-1.5 rounded-lg border border-blue-400/50 bg-blue-900/40 backdrop-blur-sm">
- <span className="text-white font-mono text-sm tracking-[0.2em] uppercase">
- &lt; {safeRole} /&gt;
- </span>
- </div>
- )}
- </div>
-
- {/* Bottom Section */}
- <div className="relative z-10 w-full p-5 flex justify-between items-end mt-auto">
- {/* Curved SVG Background */}
- <div className="absolute bottom-0 left-0 w-full h-[150px] -z-10 pointer-events-none">
- <svg viewBox="0 0 360 150" className="w-full h-full" preserveAspectRatio="none">
- <path d="M0,40 Q180,0 360,40 L360,150 L0,150 Z" fill="#0a1325" />
- </svg>
- </div>
- 
- <div className="flex flex-col gap-4">
- <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded border border-blue-500/50 flex items-center justify-center bg-blue-900/20 text-cyan-400">
- <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
- </div>
- <div className="flex flex-col">
- <span className="text-blue-400 text-[10px] font-bold tracking-widest">DATE</span>
- <span className="text-white font-bold text-sm">21 JULY, 2026</span>
- </div>
- </div>
- <div className="flex items-center gap-3">
- <div className="w-8 h-8 rounded border border-blue-500/50 flex items-center justify-center bg-blue-900/20 text-cyan-400">
- <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
- </div>
- <div className="flex flex-col">
- <span className="text-blue-400 text-[10px] font-bold tracking-widest">LOCATION</span>
- <span className="text-white font-bold text-[9px] sm:text-[10px] max-w-[140px] leading-tight">Silver Oak University , Ahmedabad, Gujarat, IN</span>
- </div>
- </div>
- </div>
- 
- <div className="p-2 bg-white rounded-xl shadow-lg border border-white/20">
- <QRCode
- value={safeRegNo}
- size={70}
- level="H"
- fgColor="#000000"
- bgColor="#ffffff"
- />
- </div>
- </div>
- </div>
+                                    </div>
  </div>
  </div>
 
@@ -630,7 +534,7 @@ export default function IdCardGenerator({ onClose }) {
  <div className="w-full max-w-[360px] flex flex-col gap-3 mt-2 mx-auto md:mx-0 box-border">
  <button
  onClick={handleDownload}
- disabled={isGenerating || (!safeName)}
+ disabled={isGenerating || (!photo)}
  className="w-full h-12 bg-[#10b981] hover:bg-[#059669] disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all flex justify-center items-center gap-2 flex-shrink-0"
  >
  {isGenerating && toast.type === 'loading' && toast.message.includes('download') ? (
@@ -653,7 +557,7 @@ export default function IdCardGenerator({ onClose }) {
  
  <button 
  onClick={handleCopy}
- disabled={isGenerating || (!safeName)}
+ disabled={isGenerating || (!photo)}
  className="w-full h-12 bg-[#3b82f6] hover:bg-[#2563eb] disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all flex justify-center items-center gap-2 flex-shrink-0"
  >
  {isGenerating && toast.type === 'loading' && toast.message.includes('clipboard') ? (
@@ -676,7 +580,7 @@ export default function IdCardGenerator({ onClose }) {
  
  <button 
  onClick={handleShare}
- disabled={isGenerating || (!safeName)}
+ disabled={isGenerating || (!photo)}
  className="w-full h-12 bg-white/10 hover:bg-white/20 disabled:bg-gray-600 disabled:cursor-not-allowed text-white font-bold rounded-xl transition-all flex justify-center items-center gap-2 border border-white/10 flex-shrink-0"
  >
  {isGenerating && toast.type === 'loading' && toast.message.includes('share') ? (
@@ -701,21 +605,21 @@ export default function IdCardGenerator({ onClose }) {
  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-1 w-full box-border">
  <button 
  onClick={() => handleSocialShare('twitter')}
- disabled={isGenerating || (!safeName)}
+ disabled={isGenerating || (!photo)}
  className="col-span-1 sm:col-span-1 h-12 bg-[#1DA1F2]/20 hover:bg-[#1DA1F2]/40 disabled:bg-gray-600 disabled:cursor-not-allowed text-[#1DA1F2] border border-[#1DA1F2]/30 font-bold rounded-xl transition-all text-sm flex justify-center items-center"
  >
  Twitter
  </button>
  <button 
  onClick={() => handleSocialShare('linkedin')}
- disabled={isGenerating || (!safeName)}
+ disabled={isGenerating || (!photo)}
  className="col-span-1 sm:col-span-1 h-12 bg-[#0A66C2]/20 hover:bg-[#0A66C2]/40 disabled:bg-gray-600 disabled:cursor-not-allowed text-[#0A66C2] border border-[#0A66C2]/30 font-bold rounded-xl transition-all text-sm flex justify-center items-center"
  >
  LinkedIn
  </button>
  <button 
  onClick={() => handleSocialShare('facebook')}
- disabled={isGenerating || (!safeName)}
+ disabled={isGenerating || (!photo)}
  className="col-span-2 sm:col-span-1 h-12 bg-[#1877F2]/20 hover:bg-[#1877F2]/40 disabled:bg-gray-600 disabled:cursor-not-allowed text-[#1877F2] border border-[#1877F2]/30 font-bold rounded-xl transition-all text-sm flex justify-center items-center"
  >
  Facebook

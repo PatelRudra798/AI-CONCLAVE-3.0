@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { NAV_LINKS } from '../../data';
 import sousps from '../../assets/icons/Group.png';
 import sou from '../../assets/icons/Group 16.png';
-import titlelogo from '../../assets/icons/titlelogo.png';
+
 
 
 

@@ -65,7 +65,7 @@
     box-shadow: 0 18px 50px var(--glow);
   }
   .t-card-purple:hover {
-    border-color: var(--accent2) !important;
+    border-color: var(--card-border) !important;
     box-shadow: 0 18px 50px var(--glow) !important;
   }
   .t-text     { color: var(--text); }
@@ -305,11 +305,11 @@
   z-index: -1;
 }
 
-.hero-glitch:hover::before {
+.hero-glitch.is-glitching::before {
   animation: hero-glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both 5;
 }
 
-.hero-glitch:hover::after {
+.hero-glitch.is-glitching::after {
   animation: hero-glitch-anim 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) reverse both 5;
 }
 
