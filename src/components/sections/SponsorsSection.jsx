@@ -4,8 +4,8 @@ import gdgLogo from '../../assets/icons/gdg white logo.png';
 import maskGroupLogo from '../../assets/icons/Mask group.png';
 
 const COLLABORATORS = [
- { src: gdgLogo, alt: 'GDG' },
  { src: maskGroupLogo, alt: 'Mask Group' },
+ { src: gdgLogo, alt: 'GDG' },
 ];
 
 export default function SponsorsSection() {
