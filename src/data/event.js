@@ -7,7 +7,7 @@ export const NAV_LINKS = [
  { label: 'Schedule', id: 'schedule' },
  { label: 'Workshops', id: 'workshops' },
  { label: 'Speakers', id: 'speakers' },
- { label: 'Sponsors', id: 'sponsors' },
+ { label: 'Collaborators', id: 'sponsors' },
 ];
 
 export const HERO_STATS = [

@@ -23,7 +23,7 @@ export const SCHEDULE = [
     {
         time: '10:30 AM', end: '11:15 AM',
         name: 'Session 1',
-        desc: 'Next-gen Ai : Your First Rag with Gemma',
+        desc: 'Next-gen AI : Your First Rag with Gemma',
         icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
         badge: 'keynote', special: false, track: 'keynote',
         speaker: 'Jay Thakkar',
@@ -31,7 +31,7 @@ export const SCHEDULE = [
     {
         time: '11:20 AM', end: '12:35 PM',
         name: 'Workshop',
-        desc: 'Ai in Healthcare: Deep Learning For Medical Imaging',
+        desc: 'AI in Healthcare: Deep Learning For Medical Imaging',
         icon: 'https://img.icons8.com/3d-fluency/94/brain.png',
         badge: 'workshop', special: false, track: 'workshop',
         speaker: 'Maitrik Shah',
@@ -46,7 +46,7 @@ export const SCHEDULE = [
     {
         time: '01:50 PM', end: '02:45 PM',
         name: 'Session 2',
-        desc: 'Ai in space application',
+        desc: 'AI in space application',
         icon: 'https://img.icons8.com/3d-fluency/94/lightning-bolt.png',
         badge: 'keynote', special: false, track: 'keynote',
         speaker: 'Deepak Mishra',
@@ -54,7 +54,7 @@ export const SCHEDULE = [
     {
         time: '02:50 PM', end: '04:05 PM',
         name: 'Workshop',
-        desc: 'AI vs Ai: The future of cyber Warfare',
+        desc: 'AI vs AI: The future of cyber Warfare',
         icon: 'https://img.icons8.com/3d-fluency/94/laptop.png',
         badge: 'workshop', special: false, track: 'workshop',
         speaker: 'Drijesh Patel',
