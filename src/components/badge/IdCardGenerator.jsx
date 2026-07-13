@@ -368,7 +368,6 @@ export default function IdCardGenerator({ onClose }) {
                             <div className="flex flex-col gap-3">
                                 {[
                                     { label: 'Attendee', type: 'Attendee' },
-                                    { label: 'Speaker', type: 'Speaker' },
                                     { label: 'Volunteer', type: 'Volunteer' },
                                 ].map((t) => {
                                     const selected = tierType === t.type;

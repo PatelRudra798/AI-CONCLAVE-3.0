@@ -6,13 +6,7 @@ export const SCHEDULE = [
         icon: 'https://img.icons8.com/3d-fluency/94/ticket.png',
         badge: 'arrival', special: false, track: 'logistics',
     },
-    {
-        time: '09:30 AM', end: '09:50 AM',
-        name: 'Ice Breaking Activity',
-        desc: 'Fuel up and connect with fellow participants before the sessions begin.',
-        icon: 'https://img.icons8.com/3d-fluency/94/coffee-to-go.png',
-        badge: 'break', special: false, track: 'break',
-    },
+
     {
         time: '10:00 AM', end: '10:25 AM',
         name: 'Inauguration',
@@ -26,7 +20,7 @@ export const SCHEDULE = [
         desc: 'Next-gen AI : Your First Rag with Gemma',
         icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
         badge: 'keynote', special: false, track: 'keynote',
-        speaker: 'Jay Thakkar',
+        speaker: 'Mr. Jay Thakkar',
     },
     {
         time: '11:20 AM', end: '12:35 PM',
@@ -34,7 +28,7 @@ export const SCHEDULE = [
         desc: 'AI in Healthcare: Deep Learning For Medical Imaging',
         icon: 'https://img.icons8.com/3d-fluency/94/brain.png',
         badge: 'workshop', special: false, track: 'workshop',
-        speaker: 'Maitrik Shah',
+        speaker: 'Dr. Maitrik Shah',
     },
     {
         time: '12:40 PM', end: '01:45 PM',
@@ -49,7 +43,7 @@ export const SCHEDULE = [
         desc: 'AI in space application',
         icon: 'https://img.icons8.com/3d-fluency/94/lightning-bolt.png',
         badge: 'keynote', special: false, track: 'keynote',
-        speaker: 'Deepak Mishra',
+        speaker: 'Dr. Deepak Mishra',
     },
     {
         time: '02:50 PM', end: '04:05 PM',
@@ -57,15 +51,9 @@ export const SCHEDULE = [
         desc: 'AI vs AI: The future of cyber Warfare',
         icon: 'https://img.icons8.com/3d-fluency/94/laptop.png',
         badge: 'workshop', special: false, track: 'workshop',
-        speaker: 'Drijesh Patel',
+        speaker: 'Dr. Drijesh Patel',
     },
-    {
-        time: '04:10 PM', end: '04:40 PM',
-        name: 'Quiz',
-        desc: 'Test your knowledge and compete for prizes in our AI quiz.',
-        icon: 'https://img.icons8.com/3d-fluency/94/trophy.png',
-        badge: 'panel', special: false, track: 'keynote',
-    },
+
     {
         time: '04:45 PM', end: '05:00 PM',
         name: 'Closing Note',
