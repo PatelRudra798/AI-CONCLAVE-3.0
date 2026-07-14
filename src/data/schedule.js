@@ -17,10 +17,10 @@ export const SCHEDULE = [
     {
         time: '10:30 AM', end: '11:15 AM',
         name: 'Session 1',
-        desc: 'BUILD YOUR FIRST LOCAL RAG WITH GEMMA',
-        icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
+        desc: 'AI vs AI: The future of cyber Warfare',
+        icon: 'https://img.icons8.com/3d-fluency/94/laptop.png',
         badge: 'keynote', special: false, track: 'keynote',
-        speaker: 'Mr. Jay Thakkar',
+        speaker: 'Dr. Drijesh Patel',
     },
     {
         time: '11:20 AM', end: '12:35 PM',
@@ -48,10 +48,10 @@ export const SCHEDULE = [
     {
         time: '02:50 PM', end: '04:05 PM',
         name: 'Workshop',
-        desc: 'AI vs AI: The future of cyber Warfare',
-        icon: 'https://img.icons8.com/3d-fluency/94/laptop.png',
+        desc: 'Build your first local RAG with gemma',
+        icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
         badge: 'workshop', special: false, track: 'workshop',
-        speaker: 'Dr. Drijesh Patel',
+        speaker: 'Mr. Jay Thakkar',
     },
 
     {

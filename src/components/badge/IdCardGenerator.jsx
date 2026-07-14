@@ -22,12 +22,8 @@ export default function IdCardGenerator({ onClose }) {
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const [isCropping, setIsCropping] = useState(false);
 
-    const [tierType, setTierType] = useState('Attendee');
-
     const cardRef = useRef(null);
     const containerRef = useRef(null);
-
-    const safeRole = tierType;
 
 
     // Auto-scale badge preview based on the actual container width to prevent overflow/distortion
@@ -362,33 +358,7 @@ export default function IdCardGenerator({ onClose }) {
                             />
                         </div>
 
-                        {/* Step 2: Choose Template */}
-                        <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
-                            <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>2. Choose Template</h3>
-                            <div className="flex flex-col gap-3">
-                                {[
-                                    { label: 'Attendee', type: 'Attendee' },
-                                    { label: 'Volunteer', type: 'Volunteer' },
-                                ].map((t) => {
-                                    const selected = tierType === t.type;
-                                    return (
-                                        <button
-                                            key={t.type}
-                                            type="button"
-                                            onClick={() => {
-                                                setTierType(t.type);
-                                            }}
-                                            className="w-full flex items-center gap-3 t-card2-bg border t-border rounded-lg px-4 py-3.5 hover:border-accent transition-all text-left"
-                                        >
-                                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selected ? 'border-accent' : 'border-white/20 bg-transparent'}`}>
-                                                {selected && <div className="w-2 h-2 rounded-full bg-accent" />}
-                                            </div>
-                                            <span className="t-text font-semibold text-sm">{t.label}</span>
-                                        </button>
-                                    );
-                                })}
-                            </div>
-                        </div>
+
 
                         {error && (
                             <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-semibold flex items-center gap-2">
@@ -399,9 +369,9 @@ export default function IdCardGenerator({ onClose }) {
                             </div>
                         )}
 
-                        {/* Step 3: Upload and Adjust */}
+                        {/* Step 2: Upload and Adjust */}
                         <div className="t-card-bg border t-border rounded-xl p-5 w-full box-border">
-                            <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>3. Upload and Adjust</h3>
+                            <h3 className="t-text font-sora font-bold mb-4" style={{ fontSize: 'clamp(14px, 4vw, 15px)' }}>2. Upload and Adjust</h3>
 
                             {isCropping && imageSrc ? (
                                 <div className="w-full flex flex-col gap-4">
@@ -536,17 +506,15 @@ export default function IdCardGenerator({ onClose }) {
                                     )}
 
                                     {/* Name & Role Overlay */}
-                                    <div className="absolute left-0 bottom-[130px] w-full flex flex-col items-center px-4 z-20 gap-1 text-center">
+                                    <div className="absolute left-0 bottom-[140px] w-full flex flex-col items-center px-4 z-20 gap-1 text-center">
                                         {name && (
-                                            <span className="text-white font-sora font-black text-[30px] uppercase leading-[1.1] drop-shadow-xl" style={{ textShadow: '0 4px 15px rgba(0,0,0,0.7)' }}>
+                                            <span className="text-white font-sora font-black text-[38px] uppercase leading-none" style={{ textShadow: '0px 4px 20px rgba(0,0,0,0.9), 0px 2px 5px rgba(0,0,0,0.9)' }}>
                                                 {name}
                                             </span>
                                         )}
-                                        {safeRole && (
-                                            <span className="text-[#50e3c2] font-black text-[20px] tracking-[0.25em] uppercase drop-shadow-md" style={{ textShadow: '0 2px 10px rgba(0,0,0,0.8)' }}>
-                                                {safeRole}
-                                            </span>
-                                        )}
+                                        <span className="text-[#50e3c2] font-sora font-black text-[22px] tracking-[0.3em] uppercase" style={{ textShadow: '0px 4px 15px rgba(0,0,0,0.9), 0px 2px 5px rgba(0,0,0,0.9)' }}>
+                                            ATTENDEE
+                                        </span>
                                     </div>
 
                                 </div>
