@@ -17,7 +17,7 @@ export const SCHEDULE = [
     {
         time: '10:30 AM', end: '11:15 AM',
         name: 'Session 1',
-        desc: 'Next-gen AI : Your First Rag with Gemma',
+        desc: 'BUILD YOUR FIRST LOCAL RAG WITH GEMMA',
         icon: 'https://img.icons8.com/3d-fluency/94/robot.png',
         badge: 'keynote', special: false, track: 'keynote',
         speaker: 'Mr. Jay Thakkar',
