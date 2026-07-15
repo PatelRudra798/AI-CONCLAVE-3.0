@@ -83,6 +83,26 @@ export default function FaqSection() {
 
         setIsSubmitting(true);
 
+        // IP Rate Limiting (Max 10 per IP)
+        let userIP = 'unknown';
+        try {
+            const ipResponse = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipResponse.json();
+            userIP = ipData.ip;
+        } catch (error) {
+            console.error("Could not fetch IP", error);
+        }
+
+        let ipSubmissions = {};
+        if (userIP !== 'unknown') {
+            ipSubmissions = JSON.parse(localStorage.getItem('ipQuestionSubmissions') || '{}');
+            if (ipSubmissions[userIP] >= 10) {
+                showToast("You have reached the maximum number of questions allowed (10) for your IP.");
+                setIsSubmitting(false);
+                return;
+            }
+        }
+
         // Do not send honeypot field
         const data = Object.fromEntries(formData.entries());
         delete data.botCheck;
@@ -107,6 +127,12 @@ export default function FaqSection() {
             });
 
             localStorage.setItem('lastQuestionSubmit', Date.now().toString());
+            
+            if (userIP !== 'unknown') {
+                ipSubmissions[userIP] = (ipSubmissions[userIP] || 0) + 1;
+                localStorage.setItem('ipQuestionSubmissions', JSON.stringify(ipSubmissions));
+            }
+
             setSubmitStatus('success');
             e.target.reset(); // Clear the form
         } catch (error) {
