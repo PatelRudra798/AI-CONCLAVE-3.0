@@ -508,7 +508,7 @@ export default function IdCardGenerator({ onClose }) {
                                     {/* Name & Role Overlay */}
                                     <div className="absolute left-0 bottom-[140px] w-full flex flex-col items-center px-4 z-20 gap-1 text-center">
                                         {name && (
-                                            <span className="text-white font-sora font-black text-[38px] uppercase leading-none" style={{ textShadow: '0px 4px 20px rgba(0,0,0,0.9), 0px 2px 5px rgba(0,0,0,0.9)' }}>
+                                            <span className="text-white font-sora font-black uppercase leading-none" style={{ fontSize: name.length >= 20 ? '24px' : name.length >= 16 ? '28px' : name.length >= 12 ? '32px' : '38px', textShadow: '0px 4px 20px rgba(0,0,0,0.9), 0px 2px 5px rgba(0,0,0,0.9)' }}>
                                                 {name}
                                             </span>
                                         )}
