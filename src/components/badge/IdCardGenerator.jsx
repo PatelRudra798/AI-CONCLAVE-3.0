@@ -484,12 +484,12 @@ export default function IdCardGenerator({ onClose }) {
                                 <div
                                     ref={cardRef}
                                     className="relative bg-[#020813] w-[360px] h-[690px] rounded-2xl overflow-hidden shadow-2xl flex flex-col items-center border border-white/10"
-                                    style={{
-                                        backgroundImage: `url(${socialBadgeBg})`,
-                                        backgroundSize: 'cover',
-                                        backgroundPosition: 'center',
-                                    }}
                                 >
+                                    <img 
+                                        src={socialBadgeBg} 
+                                        alt="Badge Background" 
+                                        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+                                    />
 
                                     {/* Photo Overlay */}
                                     {photo && (
