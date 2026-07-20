@@ -23,7 +23,7 @@ export const SPEAKERS = [
         name: 'Dr. Deepak Mishra',
         role: 'Space & AI Researcher',
         org: '',
-        topic: 'AI in Space Application',
+        topic: 'AI in Space Technology',
         bio: 'Expert speaker on the applications of AI in space exploration and technology.',
         skills: ['Space Tech', 'AI', 'Machine Learning'],
         linkedin: 'https://www.linkedin.com/in/dr-deepak-mishra-4264597/',

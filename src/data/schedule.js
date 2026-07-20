@@ -40,7 +40,7 @@ export const SCHEDULE = [
     {
         time: '01:50 PM', end: '02:45 PM',
         name: 'Session 2',
-        desc: 'AI in space application',
+        desc: 'AI in space Technology',
         icon: 'https://img.icons8.com/3d-fluency/94/lightning-bolt.png',
         badge: 'keynote', special: false, track: 'keynote',
         speaker: 'Dr. Deepak Mishra',
