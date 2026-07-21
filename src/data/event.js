@@ -8,6 +8,7 @@ export const NAV_LINKS = [
  { label: 'Workshops', id: 'workshops' },
  { label: 'Speakers', id: 'speakers' },
  { label: 'Collaborators', id: 'sponsors' },
+ { label: 'Gallery', id: 'gallery' },
 ];
 
 export const HERO_STATS = [
